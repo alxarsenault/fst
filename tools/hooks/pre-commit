@@ -1,0 +1,11 @@
+#!/bin/sh
+
+current_version=`cat tools/version.txt`
+version=(${current_version//./ })
+
+build_version=${version[3]}
+let "build_version++"
+
+printf ${version[0]}.${version[1]}.${version[2]}.$build_version > "tools/version.txt"
+echo fst ${version[0]}.${version[1]}.${version[2]}.${build_version}
+git add --force "tools/version.txt"

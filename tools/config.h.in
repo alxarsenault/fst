@@ -1,0 +1,140 @@
+#pragma once
+
+// Platform
+#cmakedefine01 FST_PLATFORM_HAS_WINDOWS_H
+#cmakedefine01 FST_PLATFORM_HAS_UNISTD_H
+#cmakedefine01 FST_PLATFORM_HAS_FCNTL_H
+#cmakedefine01 FST_PLATFORM_HAS_SYS_MMAN_H
+#cmakedefine01 FST_PLATFORM_HAS_SYS_TYPES_H
+
+// SIMD
+#cmakedefine01 FST_PLATFORM_HAS_IMMINTRIN_H
+#cmakedefine01 FST_PLATFORM_HAS_EMMINTRIN_H
+#cmakedefine01 FST_PLATFORM_HAS_XMMINTRIN_H
+#cmakedefine01 FST_PLATFORM_HAS_TMMINTRIN_H
+#cmakedefine01 FST_PLATFORM_HAS_SSE
+#cmakedefine01 FST_PLATFORM_HAS_SSE2
+#cmakedefine01 FST_PLATFORM_HAS_SSE3
+#cmakedefine01 FST_PLATFORM_HAS_SSE4_1
+#cmakedefine01 FST_PLATFORM_HAS_AVX
+#cmakedefine01 FST_PLATFORM_HAS_AVX2
+#cmakedefine01 FST_PLATFORM_HAS_AVX_512
+#cmakedefine01 FST_PLATFORM_HAS_NEON_H
+#cmakedefine01 FST_PLATFORM_HAS_NEON
+
+
+// #cmakedefine01 FST_PLATFORM_HAS_MM_SIN_PS
+// #cmakedefine01 FST_PLATFORM_HAS_MM_COS_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_SINCOS_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_ASIN_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_ATAN_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_ATAN2_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_ADD_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_SUB_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_MUL_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_DIV_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_POW_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_FMOD_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_MIN_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_MAX_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_HADD_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_SQRT_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_INVSQRT_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_SIN_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_COS_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_TAN_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG10_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG2_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_EXP10_PS
+#cmakedefine01 FST_PLATFORM_HAS_MM_EXP2_PS
+
+#cmakedefine01 FST_PLATFORM_HAS_MM_SINCOS_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_ASIN_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_ATAN_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_ATAN2_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_ADD_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_SUB_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_MUL_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_DIV_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_POW_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_FMOD_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_MIN_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_MAX_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_HADD_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_SQRT_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_INVSQRT_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_SIN_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_COS_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_TAN_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG10_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_LOG2_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_EXP10_PD
+#cmakedefine01 FST_PLATFORM_HAS_MM_EXP2_PD
+
+// ---------------------------------------------
+// Global
+// ---------------------------------------------
+#cmakedefine FST_NAMESPACE @FST_NAMESPACE@
+
+#cmakedefine01 FST_USE_STL
+
+// ---------------------------------------------
+// Assert
+// ---------------------------------------------
+
+//
+@FST_CONFIG_ASSERT_BREAK@
+
+//
+@FST_CONFIG_ASSERT_HOOK@
+
+//
+#cmakedefine01 FST_USE_RELEASE_ASSERT
+
+//
+#cmakedefine01 FST_USE_ASSERT_COLOR
+
+//
+#cmakedefine01 FST_USE_ASSERT_MSG
+
+// ---------------------------------------------
+// Memory
+// ---------------------------------------------
+
+//
+#cmakedefine01 FST_USE_RP_MALLOC
+
+// ---------------------------------------------
+// Profiler
+// ---------------------------------------------
+
+//
+#cmakedefine01 FST_USE_PROFILER
+
+//
+#cmakedefine01 FST_PROFILER_WARNING_IS_ERROR
+
+#cmakedefine01 FST_USE_PROFILER_COLOR
+
+#define FST_PROFILER_LOG_PATH "@FST_PROFILER_LOG_PATH@"
+
+// ---------------------------------------------
+// Simd
+// ---------------------------------------------
+
+//
+#cmakedefine01 FST_USE_SIMD_128
+
+//
+#cmakedefine01 FST_USE_SIMD_256
+
+//
+#cmakedefine01 FST_USE_SIMD_512
+
+//
+#cmakedefine01 FST_USE_NEON
+
+
+

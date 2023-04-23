@@ -1,0 +1,23 @@
+file(GLOB_RECURSE FST_UTEST_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+file(GLOB_RECURSE FST_UTEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+
+set(UTEST_NAME utest)
+
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX include FILES ${FST_UTEST_HEADER_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX src FILES ${FST_UTEST_SOURCE_FILES})
+
+if(FST_BUILD_BENCHS)
+    file(GLOB_RECURSE FST_UTEST_BENCH_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/bench/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
+endif()
+
+add_library(${UTEST_NAME} STATIC ${FST_UTEST_HEADER_FILES} ${FST_UTEST_SOURCE_FILES} ${FST_UTEST_BENCH_SOURCE_FILES})
+target_link_libraries(${UTEST_NAME} PUBLIC fst)
+fst_set_compile_options(${UTEST_NAME} PUBLIC)
+
+fst_include_config(${UTEST_NAME})
+
+target_include_directories(${UTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${UTEST_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/bench)
+
+set_target_properties(${UTEST_NAME} PROPERTIES FOLDER tests)
+
