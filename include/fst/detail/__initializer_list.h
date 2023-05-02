@@ -6,68 +6,7 @@
 #else
 namespace std
 {
-#if defined(__GNUC__)
-    // Copyright (C) 2008-2020 Free Software Foundation, Inc.
-    // Copyright (C) 2020 Daniel Rossinsky <danielrossinsky@gmail.com>
-    //
-    // This file is part of GCC.
-    //
-    // GCC is free software; you can redistribute it and/or modify
-    // it under the terms of the GNU General Public License as published by
-    // the Free Software Foundation; either version 3, or (at your option)
-    // any later version.
-    //
-    // GCC is distributed in the hope that it will be useful,
-    // but WITHOUT ANY WARRANTY; without even the implied warranty of
-    // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    // GNU General Public License for more details.
-    //
-    // Under Section 7 of GPL version 3, you are granted additional
-    // permissions described in the GCC Runtime Library Exception, version
-    // 3.1, as published by the Free Software Foundation.
-
-    // You should have received a copy of the GNU General Public License and
-    // a copy of the GCC Runtime Library Exception along with this program;
-    // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-    // <http://www.gnu.org/licenses/>.
-#ifndef _INITIALIZER_LIST
-#define _INITIALIZER_LIST
-    __if_not_exists(initializer_list)
-    {
-        template <typename T>
-        class initializer_list
-        {
-          public:
-            using value_type = T;
-            using reference = const T&;
-            using const_reference = const T&;
-            using size_type = size_t;
-            using iterator = const T*;
-            using const_iterator = const T*;
-
-          private:
-            iterator m_array;
-            size_type m_len;
-
-            // The compiler can call a private constructor.
-            constexpr initializer_list(const_iterator itr, size_type st)
-                : m_array(itr)
-                , m_len(st)
-            {}
-
-          public:
-            constexpr initializer_list() noexcept
-                : m_array(0)
-                , m_len(0)
-            {}
-
-            constexpr size_type size() const noexcept { return m_len; }
-            constexpr const_iterator begin() const noexcept { return m_array; }
-            constexpr const_iterator end() const noexcept { return begin() + size(); }
-        };
-    }
-#endif
-#elif defined(__clang__)
+#if defined(__clang__)
     // Copyright (c) 2019 Chandler Carruth <https://github.com/chandlerc>
     // Copyright (c) 2018 Louis Dionne <https://github.com/ldionne>
     // Copyright (c) 2017 Eric <https://github.com/EricWF>
@@ -145,6 +84,64 @@ namespace std
     FST_PRAGMA_POP()
 #endif
 
+#elif defined(__GNUC__)
+    // Copyright (C) 2008-2020 Free Software Foundation, Inc.
+    // Copyright (C) 2020 Daniel Rossinsky <danielrossinsky@gmail.com>
+    //
+    // This file is part of GCC.
+    //
+    // GCC is free software; you can redistribute it and/or modify
+    // it under the terms of the GNU General Public License as published by
+    // the Free Software Foundation; either version 3, or (at your option)
+    // any later version.
+    //
+    // GCC is distributed in the hope that it will be useful,
+    // but WITHOUT ANY WARRANTY; without even the implied warranty of
+    // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    // GNU General Public License for more details.
+    //
+    // Under Section 7 of GPL version 3, you are granted additional
+    // permissions described in the GCC Runtime Library Exception, version
+    // 3.1, as published by the Free Software Foundation.
+
+    // You should have received a copy of the GNU General Public License and
+    // a copy of the GCC Runtime Library Exception along with this program;
+    // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+    // <http://www.gnu.org/licenses/>.
+#ifndef _INITIALIZER_LIST
+#define _INITIALIZER_LIST
+    template <typename T>
+    class initializer_list
+    {
+      public:
+        using value_type = T;
+        using reference = const T&;
+        using const_reference = const T&;
+        using size_type = size_t;
+        using iterator = const T*;
+        using const_iterator = const T*;
+
+      private:
+        iterator m_array;
+        size_type m_len;
+
+        // The compiler can call a private constructor.
+        constexpr initializer_list(const_iterator itr, size_type st)
+            : m_array(itr)
+            , m_len(st)
+        {}
+
+      public:
+        constexpr initializer_list() noexcept
+            : m_array(0)
+            , m_len(0)
+        {}
+
+        constexpr size_type size() const noexcept { return m_len; }
+        constexpr const_iterator begin() const noexcept { return m_array; }
+        constexpr const_iterator end() const noexcept { return begin() + size(); }
+    };
+#endif
 #elif defined(_MSC_VER)
     // Copyright (c) Microsoft Corporation.
     //
