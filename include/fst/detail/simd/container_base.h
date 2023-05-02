@@ -1464,7 +1464,7 @@ namespace detail
             __fst::enable_if_t<__fst::simd::has_fixed_size<_SDerived>::value && __fst::simd::has_fixed_size<_TDerived>::value, int> = 0>
         FST_ALWAYS_INLINE constexpr void validate_size(const container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>& rb) noexcept
         {
-            static_assert(size() == rb.size(), "range size mismatch");
+            fst_assert(size() == rb.size(), "range size mismatch");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SDerived = _Derived,

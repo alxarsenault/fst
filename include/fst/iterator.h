@@ -258,11 +258,6 @@ FST_BEGIN_NAMESPACE
 
         constexpr back_insert_iterator operator++(int) noexcept { return *this; }
 
-        inline void reserve(size_t size) noexcept
-        {
-            //container->reserve(size);
-        }
-
       protected:
         _Container* container;
     };
