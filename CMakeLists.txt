@@ -33,6 +33,7 @@ option(FST_USE_SIMD_128 "Use simd 128" OFF)
 option(FST_USE_SIMD_256 "Use simd 256" OFF)
 option(FST_USE_SIMD_512 "Use simd 512" OFF)
 option(FST_USE_NEON "Use neon" OFF)
+option(FST_CLANG_FORMAT_TARGET "Generate clang-format targets" OFF)
 
 # No reason to set CMAKE_CONFIGURATION_TYPES if it's not a multiconfig generator.
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
@@ -132,8 +133,10 @@ endif()
 fst_link_dependencies(${FST_STATIC_LIB_NAME})
 
 # Clang-format
-include(fst_clang_format)
-target_clangformat_setup(${FST_STATIC_LIB_NAME})
+if(FST_CLANG_FORMAT_TARGET)
+    include(fst_clang_format)
+    target_clangformat_setup(${FST_STATIC_LIB_NAME})
+endif()
 
 # Tests
 if(FST_BUILD_TESTS)
