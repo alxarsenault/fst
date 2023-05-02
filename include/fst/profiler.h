@@ -43,28 +43,28 @@ FST_BEGIN_NAMESPACE
       public:
         struct result
         {
-            _FST::memory_zone_id zid;
-            _FST::memory_category_id mid;
+            __fst::memory_zone_id zid;
+            __fst::memory_category_id mid;
             size_t size;
         };
 
-        static _FST::output_stream<char>& tracer(const char* section);
+        static __fst::output_stream<char>& tracer(const char* section);
 
         template <typename... Ts>
         static inline void trace(const char* section, const Ts&... ts)
         {
 
-            _FST::output_stream<char>& stream = tracer(section);
+            __fst::output_stream<char>& stream = tracer(section);
             if constexpr (sizeof...(ts) > 1)
             {
-                basic_print<_FST::output_stream<char>, _FST::stream_detail::sep_t, _FST::stream_detail::sep_endl_t>(stream << _FST::separator, ts...);
+                basic_print<__fst::output_stream<char>, __fst::stream_detail::sep_t, __fst::stream_detail::sep_endl_t>(stream << __fst::separator, ts...);
             }
             else if constexpr (sizeof...(ts) == 1)
             {
-                print_element(stream << _FST::separator, ts...);
-                stream << _FST::separator_endl;
+                print_element(stream << __fst::separator, ts...);
+                stream << __fst::separator_endl;
             }
-            else { stream << _FST::separator_endl; }
+            else { stream << __fst::separator_endl; }
         }
 
         struct scoped_trace
@@ -78,101 +78,101 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD static inline scoped_trace strace(const char* section, const Ts&... ts)
         {
 
-            _FST::output_stream<char>& stream = tracer("section")
-                                                << _FST::stream_detail::sep_t{} << _FST::padded_right<32>(section) << _FST::stream_detail::sep_t{} << " begin";
+            __fst::output_stream<char>& stream = tracer("section")
+                                                << __fst::stream_detail::sep_t{} << __fst::padded_right<32>(section) << __fst::stream_detail::sep_t{} << " begin";
 
             if constexpr (sizeof...(ts) > 1)
             {
-                basic_print<_FST::output_stream<char>, _FST::stream_detail::sep_t, _FST::stream_detail::sep_endl_t>(stream << _FST::stream_detail::sep_t{}, ts...);
+                basic_print<__fst::output_stream<char>, __fst::stream_detail::sep_t, __fst::stream_detail::sep_endl_t>(stream << __fst::stream_detail::sep_t{}, ts...);
             }
             else if constexpr (sizeof...(ts) == 1)
             {
-                print_element(stream << _FST::stream_detail::sep_t{}, ts...);
-                stream << _FST::stream_detail::sep_endl_t{};
+                print_element(stream << __fst::stream_detail::sep_t{}, ts...);
+                stream << __fst::stream_detail::sep_endl_t{};
             }
-            else { stream << _FST::stream_detail::sep_endl_t{}; }
+            else { stream << __fst::stream_detail::sep_endl_t{}; }
 
             return scoped_trace{ section };
         }
 
-        using result_type = _FST::vector<result, alignof(result), _FST::profiler_memory_zone, _FST::profiler_memory_category>;
+        using result_type = __fst::vector<result, alignof(result), __fst::profiler_memory_zone, __fst::profiler_memory_category>;
 
 #if FST_USE_PROFILER
 
         static result_type report();
-        static void output(_FST::output_stream<char>& stream);
+        static void output(__fst::output_stream<char>& stream);
 
-        template <class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         static inline void register_name()
         {
-            allocated(nullptr, 0, _FST::invalid_memory_zone, _MemoryCategory::id(), _MemoryCategory::name);
+            allocated(nullptr, 0, __fst::invalid_memory_zone, _MemoryCategory::id(), _MemoryCategory::name);
         }
 
-        static inline void register_name(_FST::memory_category_id mid, const char* name) { allocated(nullptr, 0, _FST::invalid_memory_zone, mid, name); }
-        static inline void register_name(_FST::memory_zone_id zid, const char* name) { allocated(nullptr, 0, zid, _FST::invalid_memory_category, name); }
+        static inline void register_name(__fst::memory_category_id mid, const char* name) { allocated(nullptr, 0, __fst::invalid_memory_zone, mid, name); }
+        static inline void register_name(__fst::memory_zone_id zid, const char* name) { allocated(nullptr, 0, zid, __fst::invalid_memory_category, name); }
 
-        template <class _MemoryZone, _FST::enable_if_t<_FST::is_memory_zone<_MemoryZone>::value, int> = 0>
+        template <class _MemoryZone, __fst::enable_if_t<__fst::is_memory_zone<_MemoryZone>::value, int> = 0>
         static inline void register_name()
         {
-            allocated(nullptr, 0, _MemoryZone::id(), _FST::invalid_memory_category, nullptr);
+            allocated(nullptr, 0, _MemoryZone::id(), __fst::invalid_memory_category, nullptr);
         }
 
-        template <class _MemoryZone, class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryZone, class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         static inline void allocated(void* ptr, size_t size)
         {
             allocated(ptr, size, _MemoryZone::id(), _MemoryCategory::id(), _MemoryCategory::name);
         }
 
         template <class _MemoryZone, class _FromMemoryCategory, class _ToMemoryCategory,
-            _FST::enable_if_t<_FST::is_memory_category<_FromMemoryCategory>::value && _FST::is_memory_category<_ToMemoryCategory>::value, int> = 0>
+            __fst::enable_if_t<__fst::is_memory_category<_FromMemoryCategory>::value && __fst::is_memory_category<_ToMemoryCategory>::value, int> = 0>
         static inline void move_allocation(void* ptr)
         {
             move_allocation(ptr, _MemoryZone::id(), _FromMemoryCategory::id(), _ToMemoryCategory::id());
         }
 
-        template <class _MemoryZone, class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryZone, class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         static inline void deallocated(void* ptr)
         {
             deallocated(ptr, _MemoryZone::id(), _MemoryCategory::id());
         }
 
-        static void move_allocation(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id from_mid, _FST::memory_category_id to_mid);
+        static void move_allocation(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id from_mid, __fst::memory_category_id to_mid);
 
-        static void allocated(void* ptr, size_t size, _FST::memory_zone_id zid, _FST::memory_category_id mid, const char* name = nullptr);
+        static void allocated(void* ptr, size_t size, __fst::memory_zone_id zid, __fst::memory_category_id mid, const char* name = nullptr);
 
-        static void deallocated(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id mid);
+        static void deallocated(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id mid);
 
 #else
 
         static result_type report() { return {}; }
-        FST_ALWAYS_INLINE static constexpr void output(_FST::output_stream<char>&) {}
+        FST_ALWAYS_INLINE static constexpr void output(__fst::output_stream<char>&) {}
 
-        template <class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         FST_ALWAYS_INLINE static constexpr void register_name()
         {}
 
-        template <class _MemoryZone, _FST::enable_if_t<_FST::is_memory_zone<_MemoryZone>::value, int> = 0>
+        template <class _MemoryZone, __fst::enable_if_t<__fst::is_memory_zone<_MemoryZone>::value, int> = 0>
         FST_ALWAYS_INLINE static constexpr void register_name()
         {}
 
-        template <class _MemoryZone, class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryZone, class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         FST_ALWAYS_INLINE static constexpr void allocated(void* ptr, size_t size)
         {}
 
         template <class _MemoryZone, class _FromMemoryCategory, class _ToMemoryCategory,
-            _FST::enable_if_t<_FST::is_memory_category<_FromMemoryCategory>::value && _FST::is_memory_category<_ToMemoryCategory>::value, int> = 0>
+            __fst::enable_if_t<__fst::is_memory_category<_FromMemoryCategory>::value && __fst::is_memory_category<_ToMemoryCategory>::value, int> = 0>
         FST_ALWAYS_INLINE static constexpr void move_allocation(void* ptr)
         {}
 
-        template <class _MemoryZone, class _MemoryCategory, _FST::enable_if_t<_FST::is_memory_category<_MemoryCategory>::value, int> = 0>
+        template <class _MemoryZone, class _MemoryCategory, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
         FST_ALWAYS_INLINE static constexpr void deallocated(void* ptr)
         {}
 
-        FST_ALWAYS_INLINE static constexpr void move_allocation(void*, _FST::memory_zone_id, _FST::memory_category_id, _FST::memory_category_id) {}
+        FST_ALWAYS_INLINE static constexpr void move_allocation(void*, __fst::memory_zone_id, __fst::memory_category_id, __fst::memory_category_id) {}
 
-        FST_ALWAYS_INLINE static constexpr void allocated(void*, size_t, _FST::memory_zone_id, _FST::memory_category_id, const char* = nullptr) {}
+        FST_ALWAYS_INLINE static constexpr void allocated(void*, size_t, __fst::memory_zone_id, __fst::memory_category_id, const char* = nullptr) {}
 
-        FST_ALWAYS_INLINE static constexpr void deallocated(void*, _FST::memory_zone_id, _FST::memory_category_id) {}
+        FST_ALWAYS_INLINE static constexpr void deallocated(void*, __fst::memory_zone_id, __fst::memory_category_id) {}
 #endif
 
       private:

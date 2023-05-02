@@ -63,9 +63,9 @@ FST_BEGIN_SUB_NAMESPACE(async)
                 {
                     _Fct& f = *(_Fct*) (data);
                     f.~_Fct();
-                    _FST::aligned_deallocate(data);
+                    __fst::aligned_deallocate(data);
                 },
-                fst_placement_new((_Fct*) _FST::aligned_allocate(sizeof(_Fct), alignof(_Fct))) _Fct(_FST::forward<_Fct>(fct)) })
+                fst_placement_new((_Fct*) __fst::aligned_allocate(sizeof(_Fct), alignof(_Fct))) _Fct(__fst::forward<_Fct>(fct)) })
         {}
 
         ~thread() noexcept;
@@ -98,7 +98,7 @@ FST_BEGIN_SUB_NAMESPACE(async)
         // static members
         //static unsigned int hardware_concurrency() noexcept;
 
-        using native_pointer = _FST::unique_ptr<native, _FST::default_memory_zone, _FST::async_memory_category>;
+        using native_pointer = __fst::unique_ptr<native, __fst::default_memory_zone, __fst::async_memory_category>;
         native_pointer _native;
         thread_data _thread_data;
     };

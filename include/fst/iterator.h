@@ -66,7 +66,7 @@ FST_BEGIN_NAMESPACE
         using difference_type = ptrdiff_t;
         using pointer = value_type*;
         using reference = value_type&;
-        using iterator_category = _FST::contiguous_iterator_tag;
+        using iterator_category = __fst::contiguous_iterator_tag;
     };
 
     template <class _T>
@@ -77,34 +77,34 @@ FST_BEGIN_NAMESPACE
         using difference_type = ptrdiff_t;
         using pointer = const value_type*;
         using reference = const value_type&;
-        using iterator_category = _FST::contiguous_iterator_tag;
+        using iterator_category = __fst::contiguous_iterator_tag;
     };
 #endif
 
     // iterator_value_type
     template <class _T>
-    using iterator_value_type = _FST::type_identity<typename _FST::iterator_traits<_T>::value_type>;
+    using iterator_value_type = __fst::type_identity<typename __fst::iterator_traits<_T>::value_type>;
     template <class _T>
-    using iterator_value_type_t = typename _FST::iterator_value_type<_T>::type;
+    using iterator_value_type_t = typename __fst::iterator_value_type<_T>::type;
 
     // iterator_pointer_type
     template <class _T>
-    using iterator_pointer_type = _FST::type_identity<typename _FST::iterator_traits<_T>::pointer>;
+    using iterator_pointer_type = __fst::type_identity<typename __fst::iterator_traits<_T>::pointer>;
     template <class _T>
-    using iterator_pointer_type_t = typename _FST::iterator_pointer_type<_T>::type;
+    using iterator_pointer_type_t = typename __fst::iterator_pointer_type<_T>::type;
 
     // iterator_category
     template <class _T>
-    using iterator_category = _FST::type_identity<typename _FST::iterator_traits<_T>::iterator_category>;
+    using iterator_category = __fst::type_identity<typename __fst::iterator_traits<_T>::iterator_category>;
 
     template <class _T>
-    using iterator_category_t = typename _FST::iterator_category<_T>::type;
+    using iterator_category_t = typename __fst::iterator_category<_T>::type;
 
     template <typename _Iterator>
-    using is_random_access_iterator = _FST::is_base_of<_FST::random_access_iterator_tag, _FST::iterator_category_t<_Iterator>>;
+    using is_random_access_iterator = __fst::is_base_of<__fst::random_access_iterator_tag, __fst::iterator_category_t<_Iterator>>;
 
     template <typename _Iterator>
-    using is_contiguous_iterator = _FST::is_base_of<_FST::contiguous_iterator_tag, _FST::iterator_category_t<_Iterator>>;
+    using is_contiguous_iterator = __fst::is_base_of<__fst::contiguous_iterator_tag, __fst::iterator_category_t<_Iterator>>;
 
     template <class _Category, class _Ty, class _Diff = ptrdiff_t, class _Pointer = _Ty*, class _Reference = _Ty&>
     struct iterator_t
@@ -131,8 +131,8 @@ FST_BEGIN_NAMESPACE
         using _Wrapped_iter = typename _Container::iterator;
 
         constexpr insert_iterator(_Container& _Cont, _Wrapped_iter _Where)
-            : container(_FST::addressof(_Cont))
-            , iter(_FST::move(_Where))
+            : container(__fst::addressof(_Cont))
+            , iter(__fst::move(_Where))
         {}
 
         constexpr insert_iterator& operator=(const typename _Container::value_type& _Val)
@@ -145,7 +145,7 @@ FST_BEGIN_NAMESPACE
 
         constexpr insert_iterator& operator=(typename _Container::value_type&& _Val)
         { // push value into container
-            iter = container->insert(iter, _FST::move(_Val));
+            iter = container->insert(iter, __fst::move(_Val));
             ++iter;
             return *this;
         }
@@ -199,8 +199,8 @@ FST_BEGIN_NAMESPACE
 
         raw_storage_iterator& operator=(_Ty&& _Val)
         { // construct value designated by stored iterator
-            //_Construct_in_place(*_Next, _FST::move(_Val));
-            fst_placement_new(_Next) _Ty(_FST::move(_Val));
+            //_Construct_in_place(*_Next, __fst::move(_Val));
+            fst_placement_new(_Next) _Ty(__fst::move(_Val));
             return *this;
         }
 
@@ -237,7 +237,7 @@ FST_BEGIN_NAMESPACE
         using container_value_type = typename _Container::value_type;
 
         constexpr explicit back_insert_iterator(_Container& _Cont) noexcept /* strengthened */
-            : container(_FST::addressof(_Cont))
+            : container(__fst::addressof(_Cont))
         {}
 
         constexpr back_insert_iterator& operator=(const container_value_type& _Val)
@@ -248,7 +248,7 @@ FST_BEGIN_NAMESPACE
 
         constexpr back_insert_iterator& operator=(container_value_type&& _Val)
         {
-            container->push_back(_FST::move(_Val));
+            container->push_back(__fst::move(_Val));
             return *this;
         }
 
@@ -271,36 +271,36 @@ FST_BEGIN_NAMESPACE
     FST_NODISCARD constexpr back_insert_iterator<_Container> back_inserter(_Container & _Cont) noexcept
     {
         // return a back_insert_iterator
-        return _FST::back_insert_iterator<_Container>(_Cont);
+        return __fst::back_insert_iterator<_Container>(_Cont);
     }
 
     template <class T>
-    struct output_iterator_traits : _FST::iterator_traits<T>
+    struct output_iterator_traits : __fst::iterator_traits<T>
     {};
 
     template <class OutputIt, class T>
-    struct output_iterator_traits<_FST::raw_storage_iterator<OutputIt, T>> : _FST::iterator_t<_FST::output_iterator_tag, T>
+    struct output_iterator_traits<__fst::raw_storage_iterator<OutputIt, T>> : __fst::iterator_t<__fst::output_iterator_tag, T>
     {};
 
     template <class Container>
-    struct output_iterator_traits<_FST::back_insert_iterator<Container>> : _FST::iterator_t<_FST::output_iterator_tag, typename Container::value_type>
+    struct output_iterator_traits<__fst::back_insert_iterator<Container>> : __fst::iterator_t<__fst::output_iterator_tag, typename Container::value_type>
     {};
 
     //template <class Container>
-    //struct output_iterator_traits<_FST::front_insert_iterator<Container>>
-    //: _FST::iterator<_FST::output_iterator_tag, typename Container::value_type> {};
+    //struct output_iterator_traits<__fst::front_insert_iterator<Container>>
+    //: __fst::iterator<__fst::output_iterator_tag, typename Container::value_type> {};
 
     template <class Container>
-    struct output_iterator_traits<_FST::insert_iterator<Container>> : _FST::iterator_t<_FST::output_iterator_tag, typename Container::value_type>
+    struct output_iterator_traits<__fst::insert_iterator<Container>> : __fst::iterator_t<__fst::output_iterator_tag, typename Container::value_type>
     {};
 
     //template <class T, class charT, class traits>
-    //struct output_iterator_traits<_FST::ostream_iterator<T, charT, traits>> : _FST::iterator<_FST::output_iterator_tag, T> {
+    //struct output_iterator_traits<__fst::ostream_iterator<T, charT, traits>> : __fst::iterator<__fst::output_iterator_tag, T> {
     //};
 
     //template <class charT, class traits>
-    //struct output_iterator_traits<_FST::ostreambuf_iterator<charT, traits>>
-    //: _FST::iterator<_FST::output_iterator_tag, charT> {};
+    //struct output_iterator_traits<__fst::ostreambuf_iterator<charT, traits>>
+    //: __fst::iterator<__fst::output_iterator_tag, charT> {};
 
     template <class T>
     using output_iterator_value_type_t = typename output_iterator_traits<T>::value_type;
@@ -308,11 +308,11 @@ FST_BEGIN_NAMESPACE
     template <class It, class Distance>
     constexpr void advance(It & it, Distance n)
     {
-        using category = typename _FST::iterator_traits<It>::iterator_category;
-        static_assert(_FST::is_base_of_v<_FST::input_iterator_tag, category>);
+        using category = typename __fst::iterator_traits<It>::iterator_category;
+        static_assert(__fst::is_base_of_v<__fst::input_iterator_tag, category>);
 
-        auto dist = typename _FST::iterator_traits<It>::difference_type(n);
-        if constexpr (_FST::is_base_of_v<_FST::random_access_iterator_tag, category>)
+        auto dist = typename __fst::iterator_traits<It>::difference_type(n);
+        if constexpr (__fst::is_base_of_v<__fst::random_access_iterator_tag, category>)
             it += dist;
         else
         {
@@ -321,7 +321,7 @@ FST_BEGIN_NAMESPACE
                 --dist;
                 ++it;
             }
-            if constexpr (_FST::is_base_of_v<_FST::bidirectional_iterator_tag, category>)
+            if constexpr (__fst::is_base_of_v<__fst::bidirectional_iterator_tag, category>)
             {
                 while (dist < 0)
                 {
@@ -337,11 +337,11 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using iterator_type = _IteratorType;
-        using iterator_category = typename _FST::iterator_traits<iterator_type>::iterator_category;
-        using value_type = typename _FST::iterator_traits<iterator_type>::value_type;
-        using difference_type = typename _FST::iterator_traits<iterator_type>::difference_type;
-        using pointer = typename _FST::iterator_traits<iterator_type>::pointer;
-        using reference = typename _FST::iterator_traits<iterator_type>::reference;
+        using iterator_category = typename __fst::iterator_traits<iterator_type>::iterator_category;
+        using value_type = typename __fst::iterator_traits<iterator_type>::value_type;
+        using difference_type = typename __fst::iterator_traits<iterator_type>::difference_type;
+        using pointer = typename __fst::iterator_traits<iterator_type>::pointer;
+        using reference = typename __fst::iterator_traits<iterator_type>::reference;
 
         iterator() noexcept = default;
         ~iterator() noexcept = default;
@@ -351,11 +351,11 @@ FST_BEGIN_NAMESPACE
         {}
 
         template <class U>
-        inline explicit iterator(const iterator<U>& other, typename _FST::enable_if<_FST::is_convertible<U, iterator_type>::value>::type* = 0) noexcept
+        inline explicit iterator(const iterator<U>& other, typename __fst::enable_if<__fst::is_convertible<U, iterator_type>::value>::type* = 0) noexcept
             : _it(other.base())
         {}
 
-        template <class U, typename _FST::enable_if<_FST::is_convertible<U, iterator_type>::value>::type* = 0>
+        template <class U, typename __fst::enable_if<__fst::is_convertible<U, iterator_type>::value>::type* = 0>
         inline iterator& operator=(const iterator<U>& other) noexcept
         {
             _it = other.base();
@@ -413,11 +413,11 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using iterator_type = _IteratorType;
-        using iterator_category = typename _FST::iterator_traits<iterator_type>::iterator_category;
-        using value_type = typename _FST::iterator_traits<iterator_type>::value_type;
-        using difference_type = typename _FST::iterator_traits<iterator_type>::difference_type;
-        using pointer = typename _FST::iterator_traits<iterator_type>::pointer;
-        using reference = typename _FST::iterator_traits<iterator_type>::reference;
+        using iterator_category = typename __fst::iterator_traits<iterator_type>::iterator_category;
+        using value_type = typename __fst::iterator_traits<iterator_type>::value_type;
+        using difference_type = typename __fst::iterator_traits<iterator_type>::difference_type;
+        using pointer = typename __fst::iterator_traits<iterator_type>::pointer;
+        using reference = typename __fst::iterator_traits<iterator_type>::reference;
         using index_iterator_type = _IndexIt;
 
         index_iterator() noexcept = default;
@@ -430,12 +430,12 @@ FST_BEGIN_NAMESPACE
 
         template <class U>
         inline explicit index_iterator(
-            const index_iterator<_IndexIt, U>& other, typename _FST::enable_if<_FST::is_convertible<U, iterator_type>::value>::type* = 0) noexcept
+            const index_iterator<_IndexIt, U>& other, typename __fst::enable_if<__fst::is_convertible<U, iterator_type>::value>::type* = 0) noexcept
             : _it(other.index_base())
             , _data(other.base())
         {}
 
-        template <class U, typename _FST::enable_if<_FST::is_convertible<U, iterator_type>::value>::type* = 0>
+        template <class U, typename __fst::enable_if<__fst::is_convertible<U, iterator_type>::value>::type* = 0>
         inline index_iterator& operator=(const index_iterator<_IndexIt, U>& other) noexcept
         {
             _it = other.index_base();
@@ -493,61 +493,61 @@ FST_BEGIN_NAMESPACE
 FST_END_NAMESPACE
 
 template <typename T>
-FST_NODISCARD inline _FST::iterator<T> begin(T* val) noexcept
+FST_NODISCARD inline __fst::iterator<T> begin(T* val) noexcept
 {
-    return _FST::iterator<T>(val);
+    return __fst::iterator<T>(val);
 }
 
 template <typename T, typename Tsize>
-FST_NODISCARD inline _FST::iterator<T> end(T* val, Tsize size) noexcept
+FST_NODISCARD inline __fst::iterator<T> end(T* val, Tsize size) noexcept
 {
-    return _FST::iterator<T>(val) + size;
+    return __fst::iterator<T>(val) + size;
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator==(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
-{
-    return lhs.base() != rhs.base();
-}
-
-template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator!=(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline bool operator==(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() != rhs.base();
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator>(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline bool operator!=(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
+{
+    return lhs.base() != rhs.base();
+}
+
+template <class _Iterator1, class _Iterator2>
+FST_NODISCARD inline bool operator>(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() > rhs.base();
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator>=(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline bool operator>=(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() >= rhs.base();
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator<(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline bool operator<(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() < rhs.base();
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline bool operator<=(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline bool operator<=(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() <= rhs.base();
 }
 
 template <class Iterator>
-FST_NODISCARD inline _FST::iterator<Iterator> operator+(typename _FST::iterator<Iterator>::difference_type n, const _FST::iterator<Iterator>& it) noexcept
+FST_NODISCARD inline __fst::iterator<Iterator> operator+(typename __fst::iterator<Iterator>::difference_type n, const __fst::iterator<Iterator>& it) noexcept
 {
     return it.base() + n;
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline typename _FST::iterator<_Iterator1>::difference_type operator-(const _FST::iterator<_Iterator1>& lhs, const _FST::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline typename __fst::iterator<_Iterator1>::difference_type operator-(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() - rhs.base();
 }
@@ -557,51 +557,51 @@ FST_NODISCARD inline typename _FST::iterator<_Iterator1>::difference_type operat
 //
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator==(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator==(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() != rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator!=(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator!=(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() != rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator>(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator>(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() > rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator>=(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator>=(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() >= rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator<(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator<(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() < rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline bool operator<=(const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline bool operator<=(const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() <= rhs.base();
 }
 
 template <class _Index1It, class _Iterator1Type>
-FST_NODISCARD inline _FST::index_iterator<_Index1It, _Iterator1Type> operator+(
-    typename _FST::index_iterator<_Index1It, _Iterator1Type>::difference_type n, const _FST::index_iterator<_Index1It, _Iterator1Type>& it) noexcept
+FST_NODISCARD inline __fst::index_iterator<_Index1It, _Iterator1Type> operator+(
+    typename __fst::index_iterator<_Index1It, _Iterator1Type>::difference_type n, const __fst::index_iterator<_Index1It, _Iterator1Type>& it) noexcept
 {
     return it.base() + n;
 }
 
 template <class _Index1It, class _Iterator1Type, class _IndexIt2, class _Iterator2Type>
-FST_NODISCARD inline typename _FST::index_iterator<_Index1It, _Iterator1Type>::difference_type operator-(
-    const _FST::index_iterator<_Index1It, _Iterator1Type>& lhs, const _FST::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
+FST_NODISCARD inline typename __fst::index_iterator<_Index1It, _Iterator1Type>::difference_type operator-(
+    const __fst::index_iterator<_Index1It, _Iterator1Type>& lhs, const __fst::index_iterator<_IndexIt2, _Iterator2Type>& rhs) noexcept
 {
     return lhs.base() - rhs.base();
 }

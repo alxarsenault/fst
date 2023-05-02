@@ -17,8 +17,8 @@ namespace detail
         using iterator = typename data_base_type::iterator;
         using const_iterator = typename data_base_type::const_iterator;
 
-        using vector_type = _FST::simd::vector_type_t<value_type>;
-        using vector_op = _FST::simd::vector_op<vector_type, value_type>;
+        using vector_type = __fst::simd::vector_type_t<value_type>;
+        using vector_op = __fst::simd::vector_op<vector_type, value_type>;
 
         static constexpr size_t vector_alignment = alignof(vector_type);
         static constexpr size_t vector_size = sizeof(vector_type) / sizeof(value_type);
@@ -29,29 +29,29 @@ namespace detail
         using op = vector_op;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
-        static constexpr bool is_valid_range = _FST::is_convertible_v<_TT*, _T*> && !_FST::is_constructible_v<_SBase, _TBase>
-                                               && !_FST::is_same_v<container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>, container_base>
-                                               && _FST::is_same_v<_SBase, data_base_type> && _FST::is_same_v<_SDerived, _Derived>;
+        static constexpr bool is_valid_range = __fst::is_convertible_v<_TT*, _T*> && !__fst::is_constructible_v<_SBase, _TBase>
+                                               && !__fst::is_same_v<container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>, container_base>
+                                               && __fst::is_same_v<_SBase, data_base_type> && __fst::is_same_v<_SDerived, _Derived>;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
         using enable_if_array_t
-            = _FST::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && _FST::simd::is_array<_SDerived>::value, int>;
+            = __fst::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && __fst::simd::is_array<_SDerived>::value, int>;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
         using enable_if_fixed_range_t
-            = _FST::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && _FST::simd::is_fixed_range<_SDerived>::value, int>;
+            = __fst::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && __fst::simd::is_fixed_range<_SDerived>::value, int>;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
         using enable_if_range_t
-            = _FST::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && _FST::simd::is_range<_SDerived>::value, int>;
+            = __fst::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && __fst::simd::is_range<_SDerived>::value, int>;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
         using enable_if_buffer_t
-            = _FST::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && _FST::simd::is_buffer<_SDerived>::value, int>;
+            = __fst::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && __fst::simd::is_buffer<_SDerived>::value, int>;
 
         template <class _TT, size_t _TSize, size_t _TAlign, class _TBase, class _TDerived, class _SBase, class _SDerived>
         using enable_if_fixed_buffer_t
-            = _FST::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && _FST::simd::is_fixed_buffer<_SDerived>::value, int>;
+            = __fst::enable_if_t<is_valid_range<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> && __fst::simd::is_fixed_buffer<_SDerived>::value, int>;
 
       public:
         using data_base_type::alignment;
@@ -68,7 +68,7 @@ namespace detail
         inline constexpr container_base(const container_base&) noexcept = default;
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase,
-            _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*> && _FST::is_constructible_v<_SBase, _TBase>, int> = 0>
+            __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*> && __fst::is_constructible_v<_SBase, _TBase>, int> = 0>
         FST_ALWAYS_INLINE constexpr container_base(const container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>& rb) noexcept
             : data_base_type((const _TBase&) rb)
         {
@@ -138,9 +138,9 @@ namespace detail
         inline constexpr container_base(container_base&&) noexcept = default;
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase,
-            _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*> && _FST::is_constructible_v<_SBase, _TBase>, int> = 0>
+            __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*> && __fst::is_constructible_v<_SBase, _TBase>, int> = 0>
         FST_ALWAYS_INLINE constexpr container_base(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&& rb) noexcept
-            : data_base_type(_FST::move((_TBase&) rb))
+            : data_base_type(__fst::move((_TBase&) rb))
         {
             static_assert(_TAlign >= vector_alignment, "wrong alignment");
         }
@@ -159,14 +159,14 @@ namespace detail
             enable_if_fixed_range_t<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> = 0>
         FST_ALWAYS_INLINE constexpr container_base(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&&) noexcept
         {
-            static_assert(_FST::always_false<_Derived>, "Can't assign an rvalue into a range");
+            static_assert(__fst::always_false<_Derived>, "Can't assign an rvalue into a range");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase, class _SDerived = _Derived,
             enable_if_range_t<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> = 0>
         FST_ALWAYS_INLINE constexpr container_base(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&&) noexcept
         {
-            static_assert(_FST::always_false<_Derived>, "Can't assign an rvalue into a range");
+            static_assert(__fst::always_false<_Derived>, "Can't assign an rvalue into a range");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase, class _SDerived = _Derived,
@@ -195,7 +195,7 @@ namespace detail
         FST_ALWAYS_INLINE constexpr container_base& operator=(const container_base&) noexcept = default;
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase,
-            _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*> && _FST::is_constructible_v<_SBase, _TBase>, int> = 0>
+            __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*> && __fst::is_constructible_v<_SBase, _TBase>, int> = 0>
         FST_ALWAYS_INLINE constexpr container_base& operator=(const container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>& rb) noexcept
         {
             static_assert(_TAlign >= vector_alignment, "wrong alignment");
@@ -262,13 +262,13 @@ namespace detail
         FST_ALWAYS_INLINE constexpr container_base& operator=(container_base&&) noexcept = default;
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase,
-            _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*> && _FST::is_constructible_v<_SBase, _TBase>, int> = 0>
+            __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*> && __fst::is_constructible_v<_SBase, _TBase>, int> = 0>
         FST_ALWAYS_INLINE constexpr container_base& operator=(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&& rb) noexcept
         {
             static_assert(_TAlign >= vector_alignment, "wrong alignment");
             validate_size(rb);
 
-            (data_base_type&) (*this) = _FST::move((_TBase&) rb);
+            (data_base_type&) (*this) = __fst::move((_TBase&) rb);
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase, class _SDerived = _Derived,
@@ -285,14 +285,14 @@ namespace detail
             enable_if_fixed_range_t<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> = 0>
         FST_ALWAYS_INLINE constexpr container_base& operator=(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&&) noexcept
         {
-            static_assert(_FST::always_false<_Derived>, "Can't assign an rvalue into a range");
+            static_assert(__fst::always_false<_Derived>, "Can't assign an rvalue into a range");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase, class _SDerived = _Derived,
             enable_if_range_t<_TT, _TSize, _TAlign, _TBase, _TDerived, _SBase, _SDerived> = 0>
         FST_ALWAYS_INLINE constexpr container_base& operator=(container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>&&) noexcept
         {
-            static_assert(_FST::always_false<_Derived>, "Can't assign an rvalue into a range");
+            static_assert(__fst::always_false<_Derived>, "Can't assign an rvalue into a range");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SBase = _DataBase, class _SDerived = _Derived,
@@ -331,7 +331,7 @@ namespace detail
 //
 //
 #define FST_SIMD_LOOP(...)                                                      \
-    if constexpr (_Size == _FST::dynamic_size)                                  \
+    if constexpr (_Size == __fst::dynamic_size)                                  \
     {                                                                           \
         for (size_type I = 0; I < size(); I += vector_size)                     \
         {                                                                       \
@@ -341,30 +341,30 @@ namespace detail
     else                                                                        \
     {                                                                           \
         static constexpr size_t loop_size = size() / vector_size;               \
-        _FST::unroll<loop_size, vector_size>([&]<size_t I>() { __VA_ARGS__; }); \
+        __fst::unroll<loop_size, vector_size>([&]<size_t I>() { __VA_ARGS__; }); \
     }                                                                           \
     (void) 0
 
 #define FST_SIMD_SEQ_LOOP(__InSize, __InAlign, __InDerived, __InName, OP)                                             \
     if constexpr (_Size == __InSize) { OP(__InName); }                                                                \
-    else if constexpr (_FST::simd::has_fixed_size<_Derived>::value && _FST::simd::has_fixed_size<__InDerived>::value) \
+    else if constexpr (__fst::simd::has_fixed_size<_Derived>::value && __fst::simd::has_fixed_size<__InDerived>::value) \
     {                                                                                                                 \
         static_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");              \
         constexpr size_type count = size() / __InName.size();                                                         \
-        constexpr size_type salign = _FST::minimum(_Alignment, __InAlign);                                            \
+        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                            \
         for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                            \
         {                                                                                                             \
-            _FST::simd::detail::range_base<_T, __InSize, salign>(data(k)).OP(__InName);                               \
+            __fst::simd::detail::range_base<_T, __InSize, salign>(data(k)).OP(__InName);                               \
         }                                                                                                             \
     }                                                                                                                 \
     else                                                                                                              \
     {                                                                                                                 \
         fst_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");                 \
         const size_type count = size() / __InName.size();                                                             \
-        constexpr size_type salign = _FST::minimum(_Alignment, __InAlign);                                            \
+        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                            \
         for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                            \
         {                                                                                                             \
-            _FST::simd::detail::range_base<_T, _FST::dynamic_size, salign>(data(k), __InName.size()).OP(__InName);    \
+            __fst::simd::detail::range_base<_T, __fst::dynamic_size, salign>(data(k), __InName.size()).OP(__InName);    \
         }                                                                                                             \
     }                                                                                                                 \
     (void) 0
@@ -1429,10 +1429,10 @@ namespace detail
         {
             // hadd [a0 + a1, a2 + a3, b0 + b1, b2 + b3]
             vector_type value = op::load_zero();
-            if constexpr (_FST::simd::has_fixed_size<container_base>::value)
+            if constexpr (__fst::simd::has_fixed_size<container_base>::value)
             {
                 static constexpr size_t loop_size = data_base_type::size() / vector_size;
-                _FST::unroll<loop_size / 2, vector_size * 2>([&]<size_t I>() { value = op::add(value, op::hadd(op::load(data(I)), op::load(data(I + vector_size)))); });
+                __fst::unroll<loop_size / 2, vector_size * 2>([&]<size_t I>() { value = op::add(value, op::hadd(op::load(data(I)), op::load(data(I + vector_size)))); });
             }
             else
             {
@@ -1461,20 +1461,20 @@ namespace detail
 
       private:
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SDerived = _Derived,
-            _FST::enable_if_t<_FST::simd::has_fixed_size<_SDerived>::value && _FST::simd::has_fixed_size<_TDerived>::value, int> = 0>
+            __fst::enable_if_t<__fst::simd::has_fixed_size<_SDerived>::value && __fst::simd::has_fixed_size<_TDerived>::value, int> = 0>
         FST_ALWAYS_INLINE constexpr void validate_size(const container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>& rb) noexcept
         {
             static_assert(size() == rb.size(), "range size mismatch");
         }
 
         template <class _TT, class _TBase, class _TDerived, size_t _TSize, size_t _TAlign, class _SDerived = _Derived,
-            _FST::enable_if_t<_FST::simd::has_dynamic_size<_SDerived>::value || _FST::simd::has_dynamic_size<_TDerived>::value, int> = 0>
+            __fst::enable_if_t<__fst::simd::has_dynamic_size<_SDerived>::value || __fst::simd::has_dynamic_size<_TDerived>::value, int> = 0>
         FST_ALWAYS_INLINE constexpr void validate_size(const container_base<_TT, _TSize, _TAlign, _TBase, _TDerived>& rb) noexcept
         {
 #if FST_HAS_ASSERT
             fst_assert(size() == rb.size(), "range size mismatch");
 #else
-            _FST::unused(rb);
+            __fst::unused(rb);
 #endif // FST_HAS_ASSERT
         }
     };

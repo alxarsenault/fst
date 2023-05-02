@@ -62,15 +62,15 @@ FST_BEGIN_SUB_NAMESPACE(simd)
         inline double operator[](size_t index) const noexcept { return a[index]; }
     };
 
-    static const _FST::array<int, 4, 16> _mm_cst_sign_mask_ps = { to_int(0x80000000), to_int(0x80000000), to_int(0x80000000), to_int(0x80000000) };
-    static const _FST::array<int, 4, 16> _mm_cst_inv_sign_mask_ps = { to_int(~0x80000000), to_int(~0x80000000), to_int(~0x80000000), to_int(~0x80000000) };
-    static const _FST::array<int, 4, 16> _mm_cst_sign_mask_pd = { 0, to_int(0x80000000), 0, to_int(0x80000000) };
-    static const _FST::array<int, 4, 16> _mm_cst_inv_sign_mask_pd = { to_int(~0), to_int(~0x80000000), to_int(~0), to_int(~0x80000000) };
+    static const __fst::array<int, 4, 16> _mm_cst_sign_mask_ps = { to_int(0x80000000), to_int(0x80000000), to_int(0x80000000), to_int(0x80000000) };
+    static const __fst::array<int, 4, 16> _mm_cst_inv_sign_mask_ps = { to_int(~0x80000000), to_int(~0x80000000), to_int(~0x80000000), to_int(~0x80000000) };
+    static const __fst::array<int, 4, 16> _mm_cst_sign_mask_pd = { 0, to_int(0x80000000), 0, to_int(0x80000000) };
+    static const __fst::array<int, 4, 16> _mm_cst_inv_sign_mask_pd = { to_int(~0), to_int(~0x80000000), to_int(~0), to_int(~0x80000000) };
 
-    // static const _FST::array<int, 4, 16> _mm_cst_one = { 1, 1, 1, 1 };
-    // static const _FST::array<int, 4, 16> _mm_cst_inv1 = { ~1, ~1, ~1, ~1 };
-    // static const _FST::array<int, 4, 16> _mm_cst_two = { 2, 2, 2, 2 };
-    // static const _FST::array<int, 4, 16> _mm_cst_four = { 4, 4, 4, 4 };
+    // static const __fst::array<int, 4, 16> _mm_cst_one = { 1, 1, 1, 1 };
+    // static const __fst::array<int, 4, 16> _mm_cst_inv1 = { ~1, ~1, ~1, ~1 };
+    // static const __fst::array<int, 4, 16> _mm_cst_two = { 2, 2, 2, 2 };
+    // static const __fst::array<int, 4, 16> _mm_cst_four = { 4, 4, 4, 4 };
 
     static const __m128 _mm_cst_ps_one = _mm_set_ps1(1.0f);
     static const __m128 _mm_cst_ps_mone = _mm_set_ps1(-1.0f);
@@ -96,11 +96,11 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     static const __m128 _mm_cst_ps_mpio2 = _mm_set1_ps(-1.5707963267948966f);
     static const __m128 _mm_cst_ps_pio4 = _mm_set1_ps(0.7853981633974483f);
 
-    static const __m128d _mm_cst_pd_pi = _mm_set1_pd(_FST::pi<double>);
-    static const __m128d _mm_cst_pd_mpi = _mm_set1_pd(-_FST::pi<double>);
-    static const __m128d _mm_cst_pd_pio2 = _mm_set1_pd(_FST::pi_over_two<double>);
-    static const __m128d _mm_cst_pd_mpio2 = _mm_set1_pd(-_FST::pi_over_two<double>);
-    static const __m128d _mm_cst_pd_pio4 = _mm_set1_pd(_FST::pi_over_four<double>);
+    static const __m128d _mm_cst_pd_pi = _mm_set1_pd(__fst::pi<double>);
+    static const __m128d _mm_cst_pd_mpi = _mm_set1_pd(-__fst::pi<double>);
+    static const __m128d _mm_cst_pd_pio2 = _mm_set1_pd(__fst::pi_over_two<double>);
+    static const __m128d _mm_cst_pd_mpio2 = _mm_set1_pd(-__fst::pi_over_two<double>);
+    static const __m128d _mm_cst_pd_pio4 = _mm_set1_pd(__fst::pi_over_four<double>);
 
     static const __m128 _mm_cst_ps_DP1 = _mm_set1_ps(0.78515625f);
     static const __m128 _mm_cst_ps_DP2 = _mm_set1_ps(2.4187564849853515625e-4f);
@@ -892,7 +892,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128 v1(x);
         m128 v2(y);
-        return _mm_set_ps(_FST::pow(v1[0], v2[0]), _FST::pow(v1[1], v2[1]), _FST::pow(v1[2], v2[2]), _FST::pow(v1[3], v2[3]));
+        return _mm_set_ps(__fst::pow(v1[0], v2[0]), __fst::pow(v1[1], v2[1]), __fst::pow(v1[2], v2[2]), __fst::pow(v1[3], v2[3]));
     }
 #endif
 
@@ -901,7 +901,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128 v1(x);
         m128 v2(y);
-        return _mm_set_ps(_FST::fmod(v1[0], v2[0]), _FST::fmod(v1[1], v2[1]), _FST::fmod(v1[2], v2[2]), _FST::fmod(v1[3], v2[3]));
+        return _mm_set_ps(__fst::fmod(v1[0], v2[0]), __fst::fmod(v1[1], v2[1]), __fst::fmod(v1[2], v2[2]), __fst::fmod(v1[3], v2[3]));
     }
 #endif
 
@@ -910,7 +910,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128 v1(x);
         m128 v2(y);
-        return _mm_set_ps(_FST::fmin(v1[0], v2[0]), _FST::fmin(v1[1], v2[1]), _FST::fmin(v1[2], v2[2]), _FST::fmin(v1[3], v2[3]));
+        return _mm_set_ps(__fst::fmin(v1[0], v2[0]), __fst::fmin(v1[1], v2[1]), __fst::fmin(v1[2], v2[2]), __fst::fmin(v1[3], v2[3]));
     }
 #endif
 
@@ -919,7 +919,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128 v1(x);
         m128 v2(y);
-        return _mm_set_ps(_FST::fmax(v1[0], v2[0]), _FST::fmax(v1[1], v2[1]), _FST::fmax(v1[2], v2[2]), _FST::fmax(v1[3], v2[3]));
+        return _mm_set_ps(__fst::fmax(v1[0], v2[0]), __fst::fmax(v1[1], v2[1]), __fst::fmax(v1[2], v2[2]), __fst::fmax(v1[3], v2[3]));
     }
 #endif
 
@@ -931,7 +931,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     /*inline __m128 _mm_sqrt_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::sqrt(v1[0]), _FST::sqrt(v1[1]), _FST::sqrt(v1[2]), _FST::sqrt(v1[3]));
+        return _mm_set_ps(__fst::sqrt(v1[0]), __fst::sqrt(v1[1]), __fst::sqrt(v1[2]), __fst::sqrt(v1[3]));
     }*/
     static inline __m128 _mm_sqrt_ps(__m128 x)
     {
@@ -952,7 +952,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_tan_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::tan(v1[0]), _FST::tan(v1[1]), _FST::tan(v1[2]), _FST::tan(v1[3]));
+        return _mm_set_ps(__fst::tan(v1[0]), __fst::tan(v1[1]), __fst::tan(v1[2]), __fst::tan(v1[3]));
     }
 #endif
 
@@ -960,7 +960,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_log_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::log(v1[0]), _FST::log(v1[1]), _FST::log(v1[2]), _FST::log(v1[3]));
+        return _mm_set_ps(__fst::log(v1[0]), __fst::log(v1[1]), __fst::log(v1[2]), __fst::log(v1[3]));
     }
 #endif
 
@@ -968,7 +968,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_log10_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::log10(v1[0]), _FST::log10(v1[1]), _FST::log10(v1[2]), _FST::log10(v1[3]));
+        return _mm_set_ps(__fst::log10(v1[0]), __fst::log10(v1[1]), __fst::log10(v1[2]), __fst::log10(v1[3]));
     }
 #endif
 
@@ -976,7 +976,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_log2_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::log2(v1[0]), _FST::log2(v1[1]), _FST::log2(v1[2]), _FST::log2(v1[3]));
+        return _mm_set_ps(__fst::log2(v1[0]), __fst::log2(v1[1]), __fst::log2(v1[2]), __fst::log2(v1[3]));
     }
 #endif
 
@@ -984,7 +984,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_exp10_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::exp10(v1[0]), _FST::log2(v1[1]), _FST::log2(v1[2]), _FST::log2(v1[3]));
+        return _mm_set_ps(__fst::exp10(v1[0]), __fst::log2(v1[1]), __fst::log2(v1[2]), __fst::log2(v1[3]));
     }
 #endif
 
@@ -992,7 +992,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_exp2_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(_FST::exp2(v1[0]), _FST::exp2(v1[1]), _FST::exp2(v1[2]), _FST::exp2(v1[3]));
+        return _mm_set_ps(__fst::exp2(v1[0]), __fst::exp2(v1[1]), __fst::exp2(v1[2]), __fst::exp2(v1[3]));
     }
 #endif
 
@@ -1000,7 +1000,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128 _mm_invsqrt_ps(__m128 x) noexcept
     {
         m128 v1(x);
-        return _mm_set_ps(1.0f / _FST::sqrt(v1[0]), 1.0f / _FST::sqrt(v1[1]), 1.0f / _FST::sqrt(v1[2]), 1.0f / _FST::sqrt(v1[3]));
+        return _mm_set_ps(1.0f / __fst::sqrt(v1[0]), 1.0f / __fst::sqrt(v1[1]), 1.0f / __fst::sqrt(v1[2]), 1.0f / __fst::sqrt(v1[3]));
     }
 #endif
 
@@ -1045,7 +1045,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128d v1(x);
         m128d v2(y);
-        return _mm_set_pd(_FST::pow(v1[0], v2[0]), _FST::pow(v1[1], v2[1]));
+        return _mm_set_pd(__fst::pow(v1[0], v2[0]), __fst::pow(v1[1], v2[1]));
     }
 #endif
 
@@ -1054,7 +1054,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128d v1(x);
         m128d v2(y);
-        return _mm_set_pd(_FST::fmod(v1[0], v2[0]), _FST::fmod(v1[1], v2[1]));
+        return _mm_set_pd(__fst::fmod(v1[0], v2[0]), __fst::fmod(v1[1], v2[1]));
     }
 #endif
 
@@ -1063,7 +1063,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128d v1(x);
         m128d v2(y);
-        return _mm_set_pd(_FST::fmin(v1[0], v2[0]), _FST::fmin(v1[1], v2[1]));
+        return _mm_set_pd(__fst::fmin(v1[0], v2[0]), __fst::fmin(v1[1], v2[1]));
     }
 #endif
 
@@ -1072,7 +1072,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     {
         m128d v1(x);
         m128d v2(y);
-        return _mm_set_pd(_FST::fmax(v1[0], v2[0]), _FST::fmax(v1[1], v2[1]));
+        return _mm_set_pd(__fst::fmax(v1[0], v2[0]), __fst::fmax(v1[1], v2[1]));
     }
 #endif
 
@@ -1083,7 +1083,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_sqrt_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::sqrt(v1[0]), _FST::sqrt(v1[1]));
+        return _mm_set_pd(__fst::sqrt(v1[0]), __fst::sqrt(v1[1]));
     }
 
 #endif
@@ -1092,7 +1092,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_sin_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::sin(v1[0]), _FST::sin(v1[1]));
+        return _mm_set_pd(__fst::sin(v1[0]), __fst::sin(v1[1]));
     }
 #endif
 
@@ -1100,7 +1100,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_cos_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::cos(v1[0]), _FST::cos(v1[1]));
+        return _mm_set_pd(__fst::cos(v1[0]), __fst::cos(v1[1]));
     }
 #endif
 
@@ -1108,7 +1108,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_tan_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::tan(v1[0]), _FST::tan(v1[1]));
+        return _mm_set_pd(__fst::tan(v1[0]), __fst::tan(v1[1]));
     }
 #endif
 
@@ -1116,7 +1116,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_log_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::log(v1[0]), _FST::log(v1[1]));
+        return _mm_set_pd(__fst::log(v1[0]), __fst::log(v1[1]));
     }
 #endif
 
@@ -1124,7 +1124,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_log10_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::log10(v1[0]), _FST::log10(v1[1]));
+        return _mm_set_pd(__fst::log10(v1[0]), __fst::log10(v1[1]));
     }
 #endif
 
@@ -1132,7 +1132,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_log2_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::log2(v1[0]), _FST::log2(v1[1]));
+        return _mm_set_pd(__fst::log2(v1[0]), __fst::log2(v1[1]));
     }
 #endif
 
@@ -1140,7 +1140,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_exp10_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::exp10(v1[0]), _FST::log2(v1[1]));
+        return _mm_set_pd(__fst::exp10(v1[0]), __fst::log2(v1[1]));
     }
 #endif
 
@@ -1148,7 +1148,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_exp2_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(_FST::exp2(v1[0]), _FST::exp2(v1[1]));
+        return _mm_set_pd(__fst::exp2(v1[0]), __fst::exp2(v1[1]));
     }
 #endif
 
@@ -1156,7 +1156,7 @@ FST_BEGIN_SUB_NAMESPACE(simd)
     inline __m128d _mm_invsqrt_pd(__m128d x) noexcept
     {
         m128d v1(x);
-        return _mm_set_pd(1.0f / _FST::sqrt(v1[0]), 1.0f / _FST::sqrt(v1[1]));
+        return _mm_set_pd(1.0f / __fst::sqrt(v1[0]), 1.0f / __fst::sqrt(v1[1]));
     }
 #endif
 FST_END_SUB_NAMESPACE

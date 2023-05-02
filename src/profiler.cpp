@@ -17,12 +17,12 @@
 namespace prof_detail
 {
     template <class _Key, class _Value>
-    using unordered_map = _FST::small_unordered_map<_Key, _Value, 32, alignof(_Value), _FST::profiler_memory_zone,
-        _FST::profiler_memory_category>; //, std::hash<_Key>, std::equal_to<_Key>, map_allocator<_Key, _Value>>;
+    using unordered_map = __fst::small_unordered_map<_Key, _Value, 32, alignof(_Value), __fst::profiler_memory_zone,
+        __fst::profiler_memory_category>; //, std::hash<_Key>, std::equal_to<_Key>, map_allocator<_Key, _Value>>;
 
     //template <class _Key, class _Value>
-    //using unordered_map = _FST::unordered_map<_Key, _Value, alignof(_Value), _FST::profiler_memory_zone,
-    //_FST::profiler_memory_category>; //, std::hash<_Key>, std::equal_to<_Key>, map_allocator<_Key, _Value>>;
+    //using unordered_map = __fst::unordered_map<_Key, _Value, alignof(_Value), __fst::profiler_memory_zone,
+    //__fst::profiler_memory_category>; //, std::hash<_Key>, std::equal_to<_Key>, map_allocator<_Key, _Value>>;
 
 } // namespace prof_detail
 
@@ -51,7 +51,7 @@ FST_BEGIN_NAMESPACE
             ~tracer() { ::fclose(_file); }
 
             FILE* _file;
-            _FST::output_stream<char> _stream;
+            __fst::output_stream<char> _stream;
         };
 
         FST_PRAGMA_PUSH()
@@ -66,52 +66,52 @@ FST_BEGIN_NAMESPACE
 
     } // namespace.
 
-    _FST::output_stream<char>& profiler::tracer(const char* section)
+    __fst::output_stream<char>& profiler::tracer(const char* section)
     {
         static size_t count = 0;
 
 #if FST_USE_PROFILER_COLOR
 
-        _FST::term_color col = _FST::term_color::white;
-        if (_FST::strncmp(section, "profiler", 8) == 0) { col = _FST::term_color::cyan; }
-        else if (_FST::strncmp(section, "unit_test", 9) == 0) { col = _FST::term_color::green; }
+        __fst::term_color col = __fst::term_color::white;
+        if (__fst::strncmp(section, "profiler", 8) == 0) { col = __fst::term_color::cyan; }
+        else if (__fst::strncmp(section, "unit_test", 9) == 0) { col = __fst::term_color::green; }
 
-        else if (_FST::strncmp(section, "memory", 6) == 0) { col = _FST::term_color::yellow; }
+        else if (__fst::strncmp(section, "memory", 6) == 0) { col = __fst::term_color::yellow; }
 
-        else if (_FST::strncmp(section, "section", 7) == 0) { col = _FST::term_color::magenta; }
+        else if (__fst::strncmp(section, "section", 7) == 0) { col = __fst::term_color::magenta; }
 
-        return get_tracer()._stream << _FST::stream_detail::sep_t{} << _FST::padded_right<6>(++count) << _FST::stream_detail::sep_t{} << _FST::term_color::cyan
-                                    << _FST::format_time_ms(std::chrono::system_clock::now()) << _FST::term_color::reset << _FST::stream_detail::sep_t{} << col
-                                    << _FST::term_color::bold << _FST::padded<14>(section) << _FST::term_color::reset;
+        return get_tracer()._stream << __fst::stream_detail::sep_t{} << __fst::padded_right<6>(++count) << __fst::stream_detail::sep_t{} << __fst::term_color::cyan
+                                    << __fst::format_time_ms(std::chrono::system_clock::now()) << __fst::term_color::reset << __fst::stream_detail::sep_t{} << col
+                                    << __fst::term_color::bold << __fst::padded<14>(section) << __fst::term_color::reset;
 #else
 
-        return get_tracer()._stream << _FST::separator << _FST::padded_right<6>(++count) << _FST::separator << _FST::system_clock::now() << _FST::separator
-                                    << _FST::padded<14>(section);
+        return get_tracer()._stream << __fst::separator << __fst::padded_right<6>(++count) << __fst::separator << __fst::system_clock::now() << __fst::separator
+                                    << __fst::padded<14>(section);
 #endif
     }
 
     struct profiler_content
     {
-        using string_type = _FST::basic_string<char, _FST::allocator<char, _FST::profiler_memory_category, _FST::profiler_memory_zone>>;
-        using vector_type = _FST::small_vector<string_type, 32, alignof(string_type), _FST::profiler_memory_zone, _FST::profiler_memory_category>;
+        using string_type = __fst::basic_string<char, __fst::allocator<char, __fst::profiler_memory_category, __fst::profiler_memory_zone>>;
+        using vector_type = __fst::small_vector<string_type, 32, alignof(string_type), __fst::profiler_memory_zone, __fst::profiler_memory_category>;
         vector_type zones;
         vector_type categories;
 
-        inline const char* get_category_name(_FST::memory_category_id mid) const noexcept
+        inline const char* get_category_name(__fst::memory_category_id mid) const noexcept
         {
             return categories.size() > mid ? categories[(size_t) mid].c_str() : "unknown";
         }
 
-        inline void add_category(_FST::memory_category_id mid, const char* name) noexcept
+        inline void add_category(__fst::memory_category_id mid, const char* name) noexcept
         {
             if (categories.size() <= mid) categories.resize((size_t) mid + 1);
 
             categories[(size_t) mid] = name;
         }
 
-        inline const char* get_zone_name(_FST::memory_zone_id zid) const noexcept { return zones.size() > zid ? zones[(size_t) zid].c_str() : "unknown"; }
+        inline const char* get_zone_name(__fst::memory_zone_id zid) const noexcept { return zones.size() > zid ? zones[(size_t) zid].c_str() : "unknown"; }
 
-        inline void add_zone(_FST::memory_zone_id zid, const char* name) noexcept
+        inline void add_zone(__fst::memory_zone_id zid, const char* name) noexcept
         {
             if (zones.size() <= zid) zones.resize((size_t) zid + 1);
             zones[(size_t) zid] = name;
@@ -171,14 +171,14 @@ FST_BEGIN_NAMESPACE
 
     struct profiler_data
     {
-        using category_vector = _FST::small_vector<pointer_map, 32, alignof(pointer_map), _FST::profiler_memory_zone, _FST::profiler_memory_category>;
-        using zone_vector = _FST::small_vector<category_vector, 32, alignof(category_vector), _FST::profiler_memory_zone, _FST::profiler_memory_category>;
+        using category_vector = __fst::small_vector<pointer_map, 32, alignof(pointer_map), __fst::profiler_memory_zone, __fst::profiler_memory_category>;
+        using zone_vector = __fst::small_vector<category_vector, 32, alignof(category_vector), __fst::profiler_memory_zone, __fst::profiler_memory_category>;
 
         zone_vector zones;
 
-        inline category_vector* get_zone(_FST::memory_zone_id zid) noexcept { return zones.size() > zid ? &zones[(size_t) zid] : nullptr; }
+        inline category_vector* get_zone(__fst::memory_zone_id zid) noexcept { return zones.size() > zid ? &zones[(size_t) zid] : nullptr; }
 
-        inline category_vector& operator[](_FST::memory_zone_id zid) noexcept
+        inline category_vector& operator[](__fst::memory_zone_id zid) noexcept
         {
             if (zones.size() <= zid) zones.resize((size_t) zid + 1);
 
@@ -205,16 +205,16 @@ FST_BEGIN_NAMESPACE
 
         struct item_content
         {
-            _FST::memory_category_id mid;
+            __fst::memory_category_id mid;
             size_t size;
             void* ptr;
             time_point time;
             item_type type;
 
-            friend inline _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, const item_content& it)
+            friend inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const item_content& it)
             {
-                stream << _FST::space_padding(14, ((it.type == impl::item_type::alloc) ? "alloc   " : "dealloc ")) << _FST::space_padding(14, it.size) << " "
-                       << _FST::space_padding(14, (uintptr_t) it.ptr) << " ";
+                stream << __fst::space_padding(14, ((it.type == impl::item_type::alloc) ? "alloc   " : "dealloc ")) << __fst::space_padding(14, it.size) << " "
+                       << __fst::space_padding(14, (uintptr_t) it.ptr) << " ";
 
                 FST_PRAGMA_PUSH()
                 FST_PRAGMA_DISABLE_WARNING_CLANG("-Wctad-maybe-unsupported")
@@ -230,11 +230,11 @@ FST_BEGIN_NAMESPACE
         static inline void trace_event(const char* zone_name, const char* cat_name, void* ptr, size_t size, item_type type)
         {
             const char* label = type == impl::item_type::alloc ? "alloc" : "dealloc";
-            _FST::profiler::trace("memory", _FST::padded<14>(zone_name ? zone_name : "unknown"), _FST::padded<32>(label), _FST::padded_right<14>(size),
-                _FST::padded_right<14>((uintptr_t) ptr), _FST::padded<14>(cat_name ? cat_name : "unknown"));
+            __fst::profiler::trace("memory", __fst::padded<14>(zone_name ? zone_name : "unknown"), __fst::padded<32>(label), __fst::padded_right<14>(size),
+                __fst::padded_right<14>((uintptr_t) ptr), __fst::padded<14>(cat_name ? cat_name : "unknown"));
         }
 
-        static inline void add_event(_FST::memory_zone_id zid, item_content it)
+        static inline void add_event(__fst::memory_zone_id zid, item_content it)
         {
             const char* zone_name = get_profiler_names().get_zone_name(zid);
             if (!zone_name) { zone_name = "unknown memory zone"; }
@@ -246,14 +246,14 @@ FST_BEGIN_NAMESPACE
         }
 
         static inline void add_profiler_event(
-            FST_ATTRIBUTE_UNUSED _FST::memory_zone_id zid, FST_ATTRIBUTE_UNUSED _FST::memory_category_id mid, void* ptr, size_t size, item_type type)
+            FST_ATTRIBUTE_UNUSED __fst::memory_zone_id zid, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid, void* ptr, size_t size, item_type type)
         {
             trace_event("profiler", "profiler", ptr, size, type);
         }
 
         static inline bool has_pointers(const pointer_map& it) { return !it.empty(); }
 
-        void move_allocation(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id from_mid, FST_ATTRIBUTE_UNUSED _FST::memory_category_id to_mid)
+        void move_allocation(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id from_mid, FST_ATTRIBUTE_UNUSED __fst::memory_category_id to_mid)
         {
             if (auto z = get_profiler_zones().get_zone(zid))
             {
@@ -291,7 +291,7 @@ FST_BEGIN_NAMESPACE
             fst_error("DLKJDAKLJDA");
         }
 
-        static void allocated(void* ptr, size_t size, _FST::memory_zone_id zid, _FST::memory_category_id mid, const char* name)
+        static void allocated(void* ptr, size_t size, __fst::memory_zone_id zid, __fst::memory_category_id mid, const char* name)
         {
             if (ptr == nullptr)
             {
@@ -303,8 +303,8 @@ FST_BEGIN_NAMESPACE
 
                 if (name)
                 {
-                    if (zid == _FST::invalid_memory_zone) { get_profiler_names().add_category(mid, name); }
-                    else if (mid == _FST::invalid_memory_category) { get_profiler_names().add_zone(zid, name); }
+                    if (zid == __fst::invalid_memory_zone) { get_profiler_names().add_category(mid, name); }
+                    else if (mid == __fst::invalid_memory_category) { get_profiler_names().add_zone(zid, name); }
                     return;
                 }
 
@@ -312,7 +312,7 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            add_event(zid, item_content{ mid, size, ptr, _FST::system_clock::now(), item_type::alloc });
+            add_event(zid, item_content{ mid, size, ptr, __fst::system_clock::now(), item_type::alloc });
 
             auto& z = get_profiler_zones()[zid];
             if (z.size() <= mid) { z.resize((size_t) mid + 1); }
@@ -322,8 +322,8 @@ FST_BEGIN_NAMESPACE
 
         struct pointer_result
         {
-            _FST::memory_zone_id zid;
-            _FST::memory_category_id mid;
+            __fst::memory_zone_id zid;
+            __fst::memory_category_id mid;
             pointer_map* ptr_map;
             typename pointer_map::iterator ptr_iterator;
 
@@ -341,17 +341,17 @@ FST_BEGIN_NAMESPACE
                 {
                     if (typename pointer_map::iterator pit = k.find(ptr); pit != k.end())
                     {
-                        return pointer_result{ (_FST::memory_zone_id) i, (_FST::memory_category_id) n, &k, pit };
+                        return pointer_result{ (__fst::memory_zone_id) i, (__fst::memory_category_id) n, &k, pit };
                     }
 
                     n++;
                 }
             }
 
-            return { _FST::invalid_memory_zone, _FST::invalid_memory_category, nullptr, {} };
+            return { __fst::invalid_memory_zone, __fst::invalid_memory_category, nullptr, {} };
         }
 
-        static pointer_result find_ptr(_FST::memory_zone_id zid, void* ptr)
+        static pointer_result find_ptr(__fst::memory_zone_id zid, void* ptr)
         {
             if (auto z = get_profiler_zones().get_zone(zid))
             {
@@ -359,7 +359,7 @@ FST_BEGIN_NAMESPACE
 
                 for (auto& k : *z)
                 {
-                    if (typename pointer_map::iterator pit = k.find(ptr); pit != k.end()) { return pointer_result{ zid, (_FST::memory_category_id) n, &k, pit }; }
+                    if (typename pointer_map::iterator pit = k.find(ptr); pit != k.end()) { return pointer_result{ zid, (__fst::memory_category_id) n, &k, pit }; }
 
                     n++;
                 }
@@ -368,7 +368,7 @@ FST_BEGIN_NAMESPACE
             return find_ptr(ptr);
         }
 
-        static void deallocated(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id mid)
+        static void deallocated(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id mid)
         {
             enum class state_enum {
                 searching,
@@ -385,7 +385,7 @@ FST_BEGIN_NAMESPACE
                 {
                     if (typename pointer_map::iterator ptr_it = it->find(ptr); ptr_it != it->end())
                     {
-                        add_event(zid, item_content{ mid, ptr_it->size, ptr, _FST::system_clock::now(), item_type::dealloc });
+                        add_event(zid, item_content{ mid, ptr_it->size, ptr, __fst::system_clock::now(), item_type::dealloc });
                         it->remove(ptr_it);
                         return;
                     }
@@ -393,13 +393,13 @@ FST_BEGIN_NAMESPACE
                 }
                 else { state = state_enum::cant_find_memory_category; }
 
-                _FST::unused(state);
+                __fst::unused(state);
 
                 if (pointer_result sr = find_ptr(zid, ptr))
                 {
-                    add_event(zid, item_content{ mid, sr.ptr_iterator->size, ptr, _FST::system_clock::now(), item_type::dealloc });
+                    add_event(zid, item_content{ mid, sr.ptr_iterator->size, ptr, __fst::system_clock::now(), item_type::dealloc });
                     sr.ptr_map->remove(sr.ptr_iterator);
-                    _FST::profiler::trace("memory", " warning wrong dealloc");
+                    __fst::profiler::trace("memory", " warning wrong dealloc");
                     FST_PROFILER_WARNING("WRONG DEALLOC MEMORY CATEGORY");
                     return;
                 }
@@ -408,15 +408,15 @@ FST_BEGIN_NAMESPACE
 
             if (pointer_result sr = find_ptr(ptr))
             {
-                add_event(zid, item_content{ mid, sr.ptr_iterator->size, ptr, _FST::system_clock::now(), item_type::dealloc });
+                add_event(zid, item_content{ mid, sr.ptr_iterator->size, ptr, __fst::system_clock::now(), item_type::dealloc });
                 sr.ptr_map->remove(sr.ptr_iterator);
-                _FST::profiler::trace("memory", " warning wrong dealloc");
+                __fst::profiler::trace("memory", " warning wrong dealloc");
 
                 FST_PROFILER_WARNING("WRONG DEALLOC MEMORY ZONE");
                 return;
             }
 
-            _FST::profiler::trace("memory", " warning wrong dealloc");
+            __fst::profiler::trace("memory", " warning wrong dealloc");
 
             fst_error("WRONG DEALLOC");
         }
@@ -432,17 +432,17 @@ FST_BEGIN_NAMESPACE
     }
     FST_PRAGMA_POP()
 
-    void profiler::move_allocation(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id from_mid, _FST::memory_category_id to_mid)
+    void profiler::move_allocation(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id from_mid, __fst::memory_category_id to_mid)
     {
         get_profiler_impl().move_allocation(ptr, zid, from_mid, to_mid);
     }
 
-    void profiler::allocated(void* ptr, size_t size, _FST::memory_zone_id zid, _FST::memory_category_id mid, const char* name)
+    void profiler::allocated(void* ptr, size_t size, __fst::memory_zone_id zid, __fst::memory_category_id mid, const char* name)
     {
         impl::allocated(ptr, size, zid, mid, name);
     }
 
-    void profiler::deallocated(void* ptr, _FST::memory_zone_id zid, _FST::memory_category_id mid)
+    void profiler::deallocated(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id mid)
     {
         impl::deallocated(ptr, zid, mid);
     }
@@ -461,7 +461,7 @@ FST_BEGIN_NAMESPACE
                 {
                     for (auto ptr_it : it)
                     {
-                        results.push_back({ (_FST::memory_zone_id) z_count, (_FST::memory_category_id) c_count, ptr_it.size });
+                        results.push_back({ (__fst::memory_zone_id) z_count, (__fst::memory_category_id) c_count, ptr_it.size });
                     }
                 }
                 c_count++;
@@ -473,7 +473,7 @@ FST_BEGIN_NAMESPACE
         return results;
     }
 
-    void profiler::output(_FST::output_stream<char> & stream)
+    void profiler::output(__fst::output_stream<char> & stream)
     {
         for (const auto& zit : get_profiler_zones().zones)
         {
@@ -482,12 +482,12 @@ FST_BEGIN_NAMESPACE
             {
                 if (!it.empty())
                 {
-                    stream << "Wrong deallocation" << _FST::endl;
-                    stream << get_profiler_names().get_category_name((_FST::memory_category_id) c_count) << " " << it._used << _FST::endl;
+                    stream << "Wrong deallocation" << __fst::endl;
+                    stream << get_profiler_names().get_category_name((__fst::memory_category_id) c_count) << " " << it._used << __fst::endl;
 
                     for (size_t i = 0; i < it.size(); i++)
                     {
-                        stream << "    " << it.keys()[i] << " " << it.values()[i].size << _FST::endl;
+                        stream << "    " << it.keys()[i] << " " << it.values()[i].size << __fst::endl;
                     }
                 }
 
@@ -496,20 +496,20 @@ FST_BEGIN_NAMESPACE
         }
     }
 
-    void* profiler_memory_zone::allocate(size_t size, FST_ATTRIBUTE_UNUSED _FST::memory_category_id mid) noexcept
+    void* profiler_memory_zone::allocate(size_t size, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid) noexcept
     {
         void* ptr = ::malloc(size);
         FST_IF_PROFILE(impl::add_profiler_event(profiler_memory_zone::id(), mid, ptr, size, impl::item_type::alloc));
         return ptr;
     }
 
-    void profiler_memory_zone::deallocate(void* ptr, FST_ATTRIBUTE_UNUSED _FST::memory_category_id mid) noexcept
+    void profiler_memory_zone::deallocate(void* ptr, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid) noexcept
     {
         FST_IF_PROFILE(impl::add_profiler_event(profiler_memory_zone::id(), mid, ptr, 0, impl::item_type::dealloc));
         ::free(ptr);
     }
 
-    void* profiler_memory_zone::aligned_allocate(size_t size, size_t alignment, FST_ATTRIBUTE_UNUSED _FST::memory_category_id mid) noexcept
+    void* profiler_memory_zone::aligned_allocate(size_t size, size_t alignment, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid) noexcept
     {
 #if __FST_WINDOWS__
         void* ptr = ::_aligned_malloc(size, alignment);
@@ -522,7 +522,7 @@ FST_BEGIN_NAMESPACE
         return ptr;
     }
 
-    void profiler_memory_zone::aligned_deallocate(void* ptr, FST_ATTRIBUTE_UNUSED _FST::memory_category_id mid) noexcept
+    void profiler_memory_zone::aligned_deallocate(void* ptr, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid) noexcept
     {
         FST_IF_PROFILE(impl::add_profiler_event(profiler_memory_zone::id(), mid, ptr, 0, impl::item_type::dealloc));
 

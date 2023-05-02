@@ -59,7 +59,7 @@ FST_BEGIN_NAMESPACE
     //
     //
 
-    template <typename T, _FST::enable_if_t<_FST::is_integral_v<T>>* = nullptr>
+    template <typename T, __fst::enable_if_t<__fst::is_integral_v<T>>* = nullptr>
     FST_NODISCARD FST_ALWAYS_INLINE constexpr T is_power_of_two(T v)
     {
         return v && !(v & (v - 1));
@@ -86,7 +86,7 @@ FST_BEGIN_NAMESPACE
     }
 
     // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-    template <typename T, _FST::enable_if_t<_FST::is_arithmetic_v<T>>* = nullptr>
+    template <typename T, __fst::enable_if_t<__fst::is_arithmetic_v<T>>* = nullptr>
     FST_NODISCARD FST_ALWAYS_INLINE constexpr T round_to_power_of_two(T value) noexcept
     {
         // Compute the next highest power of 2 of 32-bit v.
@@ -115,23 +115,23 @@ FST_BEGIN_NAMESPACE
     //
 
 #define FST_DELARE_MATH_OP1(NAME)                                                                \
-    template <typename T, _FST::enable_if_t<_FST::is_floating_point_v<T>, int> = 0>              \
+    template <typename T, __fst::enable_if_t<__fst::is_floating_point_v<T>, int> = 0>              \
     FST_NODISCARD FST_ALWAYS_INLINE T NAME(T x) noexcept                                         \
     {                                                                                            \
-        if constexpr (_FST::is_same_v<float, T>) { return ::FST_CONCAT(NAME, f)(x); }            \
-        else if constexpr (_FST::is_same_v<double, T>) { return ::NAME(x); }                     \
-        else if constexpr (_FST::is_same_v<long double, T>) { return ::FST_CONCAT(NAME, l)(x); } \
-        else { static_assert(_FST::always_false<T>, "Unsupported type"); }                       \
+        if constexpr (__fst::is_same_v<float, T>) { return ::FST_CONCAT(NAME, f)(x); }            \
+        else if constexpr (__fst::is_same_v<double, T>) { return ::NAME(x); }                     \
+        else if constexpr (__fst::is_same_v<long double, T>) { return ::FST_CONCAT(NAME, l)(x); } \
+        else { static_assert(__fst::always_false<T>, "Unsupported type"); }                       \
     }
 
 #define FST_DELARE_MATH_OP2(NAME)                                                                   \
-    template <typename T, _FST::enable_if_t<_FST::is_floating_point_v<T>, int> = 0>                 \
+    template <typename T, __fst::enable_if_t<__fst::is_floating_point_v<T>, int> = 0>                 \
     FST_NODISCARD FST_ALWAYS_INLINE T NAME(T x, T y) noexcept                                       \
     {                                                                                               \
-        if constexpr (_FST::is_same_v<float, T>) { return ::FST_CONCAT(NAME, f)(x, y); }            \
-        else if constexpr (_FST::is_same_v<double, T>) { return ::NAME(x, y); }                     \
-        else if constexpr (_FST::is_same_v<long double, T>) { return ::FST_CONCAT(NAME, l)(x, y); } \
-        else { static_assert(_FST::always_false<T>, "Unsupported type"); }                          \
+        if constexpr (__fst::is_same_v<float, T>) { return ::FST_CONCAT(NAME, f)(x, y); }            \
+        else if constexpr (__fst::is_same_v<double, T>) { return ::NAME(x, y); }                     \
+        else if constexpr (__fst::is_same_v<long double, T>) { return ::FST_CONCAT(NAME, l)(x, y); } \
+        else { static_assert(__fst::always_false<T>, "Unsupported type"); }                          \
     }
 
     FST_DELARE_MATH_OP1(fabs)
@@ -170,7 +170,7 @@ FST_BEGIN_NAMESPACE
     template <class T>
     FST_NODISCARD FST_ALWAYS_INLINE T exp10(T x) noexcept
     {
-        return _FST::pow(x, (T) 10);
+        return __fst::pow(x, (T) 10);
     }
 
     namespace cxpr

@@ -40,19 +40,19 @@ FST_BEGIN_NAMESPACE
             abgr
         };
 
-        template <typename T, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         struct float_rgba
         {
             T r, g, b, a;
         };
 
-        template <typename T, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         struct float_rgb
         {
             T r, g, b;
         };
 
-        template <typename T, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         struct float_grey_alpha
         {
             T grey, alpha;
@@ -115,12 +115,12 @@ FST_BEGIN_NAMESPACE
             _rgba = (ua << color_shift_alpha) | (u << color_shift_blue) | (u << color_shift_green) | (u << color_shift_red);
         }
 
-        template <typename T, size_t Size, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, size_t Size, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         FST_ALWAYS_INLINE constexpr color(const T (&data)[Size]) noexcept
             : color(&data[0], Size)
         {}
 
-        template <typename T, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         inline constexpr color(const T* data, size_t size) noexcept
         {
             switch (size)
@@ -167,7 +167,7 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD FST_ALWAYS_INLINE constexpr float_rgba<float> f_rgba() const noexcept { return { f_red(), f_green(), f_blue(), f_alpha() }; }
 
-        template <typename T, _FST::enable_if_t<_FST::is_floating_point<T>::value, int> = 0>
+        template <typename T, __fst::enable_if_t<__fst::is_floating_point<T>::value, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr float_rgba<T> f_rgba() const noexcept
         {
             return { static_cast<T>(f_red()), static_cast<T>(f_green()), static_cast<T>(f_blue()), static_cast<T>(f_alpha()) };
@@ -205,121 +205,121 @@ FST_BEGIN_NAMESPACE
             return *this;
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::rgba, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::rgba, int> = 0>
         FST_ALWAYS_INLINE constexpr color& red(uint8_t r) noexcept
         {
             return red(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::argb, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::argb, int> = 0>
         FST_ALWAYS_INLINE constexpr color& red(uint8_t r) noexcept
         {
             return green(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::abgr, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::abgr, int> = 0>
         FST_ALWAYS_INLINE constexpr color& red(uint8_t r) noexcept
         {
             return alpha(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::rgba, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::rgba, int> = 0>
         FST_ALWAYS_INLINE constexpr color& green(uint8_t r) noexcept
         {
             return green(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::argb, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::argb, int> = 0>
         FST_ALWAYS_INLINE constexpr color& green(uint8_t r) noexcept
         {
             return blue(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::abgr, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::abgr, int> = 0>
         FST_ALWAYS_INLINE constexpr color& green(uint8_t r) noexcept
         {
             return blue(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::rgba, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::rgba, int> = 0>
         FST_ALWAYS_INLINE constexpr color& blue(uint8_t r) noexcept
         {
             return blue(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::argb, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::argb, int> = 0>
         FST_ALWAYS_INLINE constexpr color& blue(uint8_t r) noexcept
         {
             return alpha(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::abgr, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::abgr, int> = 0>
         FST_ALWAYS_INLINE constexpr color& blue(uint8_t r) noexcept
         {
             return green(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::rgba, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::rgba, int> = 0>
         FST_ALWAYS_INLINE constexpr color& alpha(uint8_t r) noexcept
         {
             return alpha(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::argb, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::argb, int> = 0>
         FST_ALWAYS_INLINE constexpr color& alpha(uint8_t r) noexcept
         {
             return red(r);
         }
 
-        template <format Format, _FST::enable_if_t<Format == format::abgr, int> = 0>
+        template <format Format, __fst::enable_if_t<Format == format::abgr, int> = 0>
         FST_ALWAYS_INLINE constexpr color& alpha(uint8_t r) noexcept
         {
             return red(r);
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && _FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && __fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T red() const noexcept
         {
             return static_cast<T>(f_red());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && !_FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && !__fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T red() const noexcept
         {
             return static_cast<T>(red());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && _FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && __fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T green() const noexcept
         {
             return static_cast<T>(f_green());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && !_FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && !__fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T green() const noexcept
         {
             return static_cast<T>(green());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && _FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && __fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T blue() const noexcept
         {
             return static_cast<T>(f_blue());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && !_FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && !__fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T blue() const noexcept
         {
             return static_cast<T>(blue());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && _FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && __fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T alpha() const noexcept
         {
             return static_cast<T>(f_alpha());
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_arithmetic_v<T> && !_FST::is_floating_point_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_arithmetic_v<T> && !__fst::is_floating_point_v<T>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE constexpr T alpha() const noexcept
         {
             return static_cast<T>(alpha());
@@ -359,13 +359,13 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD inline constexpr color darker(float amount) const noexcept
         {
-            amount = 1.0f - _FST::clamp<float>(amount, 0.0f, 1.0f);
+            amount = 1.0f - __fst::clamp<float>(amount, 0.0f, 1.0f);
             return color(uint8_t(red() * amount), uint8_t(green() * amount), uint8_t(blue() * amount), alpha());
         }
 
         FST_NODISCARD inline color brighter(float amount) const noexcept
         {
-            const float ratio = 1.0f / (1.0f + _FST::fabs(amount));
+            const float ratio = 1.0f / (1.0f + __fst::fabs(amount));
             const float mu = 255 * (1.0f - ratio);
 
             return color(static_cast<uint8_t>(mu + ratio * red()), // r
@@ -406,7 +406,7 @@ FST_BEGIN_NAMESPACE
         template <typename T>
         static inline uint32_t color_float_component_to_uint32(T f) noexcept
         {
-            return static_cast<uint32_t>(_FST::floor(f * 255));
+            return static_cast<uint32_t>(__fst::floor(f * 255));
         }
 
         enum color_shift : uint32_t {
@@ -424,6 +424,6 @@ FST_BEGIN_NAMESPACE
         };
     };
 
-    static_assert(_FST::is_trivial<_FST::color>::value, "fst::color must remain a trivial type");
+    static_assert(__fst::is_trivial<__fst::color>::value, "fst::color must remain a trivial type");
 
 FST_END_NAMESPACE

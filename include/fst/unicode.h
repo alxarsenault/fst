@@ -47,7 +47,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
     ///
     ///
     ///
-    template <typename SType, _FST::enable_if_t<_FST::is_utf_string_type<SType>::value, _FST::nullptr_t> = nullptr>
+    template <typename SType, __fst::enable_if_t<__fst::is_utf_string_type<SType>::value, __fst::nullptr_t> = nullptr>
     inline auto iterate(const SType& str) noexcept;
 
     ///
@@ -59,20 +59,20 @@ FST_BEGIN_SUB_NAMESPACE(utf)
     ///
     ///
     ///
-    template <class CharT, class SType, class IteratorType, _FST::enable_if_t<_FST::is_utf_string_type<SType>::value, _FST::nullptr_t> = nullptr>
+    template <class CharT, class SType, class IteratorType, __fst::enable_if_t<__fst::is_utf_string_type<SType>::value, __fst::nullptr_t> = nullptr>
     class basic_iterator;
 
-    /// Converts any string type to a utf8 _FST::string.
-    inline _FST::string to_utf8(_FST::utf_string_view s) noexcept;
+    /// Converts any string type to a utf8 __fst::string.
+    inline __fst::string to_utf8(__fst::utf_string_view s) noexcept;
 
-    /// Converts any string type to a utf16 _FST::u16string.
-    inline _FST::u16string to_utf16(_FST::utf_string_view s) noexcept;
+    /// Converts any string type to a utf16 __fst::u16string.
+    inline __fst::u16string to_utf16(__fst::utf_string_view s) noexcept;
 
-    /// Converts any string type to a utf32 _FST::u32string.
-    inline _FST::u32string to_utf32(_FST::utf_string_view s) noexcept;
+    /// Converts any string type to a utf32 __fst::u32string.
+    inline __fst::u32string to_utf32(__fst::utf_string_view s) noexcept;
 
-    /// Converts any string type to a _FST::wstring.
-    inline _FST::wstring to_wide(_FST::utf_string_view s) noexcept;
+    /// Converts any string type to a __fst::wstring.
+    inline __fst::wstring to_wide(__fst::utf_string_view s) noexcept;
 
     namespace detail
     {
@@ -82,7 +82,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
             template <typename T>
             static inline constexpr size_t length(T lead) noexcept
             {
-                return _FST::utf::sequence_length(static_cast<uint8_t>(lead));
+                return __fst::utf::sequence_length(static_cast<uint8_t>(lead));
             }
         };
 
@@ -92,7 +92,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
             template <typename T>
             static inline constexpr size_t length(T c) noexcept
             {
-                return _FST::utf::u16_sequence_length(static_cast<char16_t>(c));
+                return __fst::utf::u16_sequence_length(static_cast<char16_t>(c));
             }
         };
 
@@ -111,15 +111,15 @@ FST_BEGIN_SUB_NAMESPACE(utf)
         {};
 
         template <typename InputCharT, typename OutputCharT>
-        struct base_iterator<InputCharT, OutputCharT, _FST::enable_if_t<_FST::utf_encoding_of<InputCharT>::value == _FST::utf_encoding_of<OutputCharT>::value>>
+        struct base_iterator<InputCharT, OutputCharT, __fst::enable_if_t<__fst::utf_encoding_of<InputCharT>::value == __fst::utf_encoding_of<OutputCharT>::value>>
         {
             using input_char_type = InputCharT;
             using output_char_type = OutputCharT;
 
-            using input_view_type = _FST::basic_string_view<input_char_type>;
-            using output_view_type = _FST::basic_string_view<output_char_type>;
+            using input_view_type = __fst::basic_string_view<input_char_type>;
+            using output_view_type = __fst::basic_string_view<output_char_type>;
 
-            using it_seq_length = detail::iterator_sequence_length<_FST::utf_encoding_of<InputCharT>::value>;
+            using it_seq_length = detail::iterator_sequence_length<__fst::utf_encoding_of<InputCharT>::value>;
 
             template <typename Iterator>
             static inline output_view_type get(Iterator it) noexcept
@@ -130,20 +130,20 @@ FST_BEGIN_SUB_NAMESPACE(utf)
             template <typename Iterator>
             static inline void advance(Iterator& it) noexcept
             {
-                using it_diff_type = typename _FST::iterator_traits<Iterator>::difference_type;
-                _FST::advance(it, static_cast<it_diff_type>(it_seq_length::length(*it)));
+                using it_diff_type = typename __fst::iterator_traits<Iterator>::difference_type;
+                __fst::advance(it, static_cast<it_diff_type>(it_seq_length::length(*it)));
             }
         };
 
         template <typename InputCharT, typename OutputCharT>
-        struct base_iterator<InputCharT, OutputCharT, _FST::enable_if_t<_FST::utf_encoding_of<InputCharT>::value != utf_encoding_of<OutputCharT>::value>>
+        struct base_iterator<InputCharT, OutputCharT, __fst::enable_if_t<__fst::utf_encoding_of<InputCharT>::value != utf_encoding_of<OutputCharT>::value>>
         {
 
             using input_char_type = InputCharT;
             using output_char_type = OutputCharT;
 
-            using input_view_type = _FST::basic_string_view<input_char_type>;
-            using output_view_type = _FST::basic_string_view<output_char_type>;
+            using input_view_type = __fst::basic_string_view<input_char_type>;
+            using output_view_type = __fst::basic_string_view<output_char_type>;
 
             using it_seq_length = detail::iterator_sequence_length<utf_encoding_of<InputCharT>::value>;
 
@@ -151,24 +151,24 @@ FST_BEGIN_SUB_NAMESPACE(utf)
             inline output_view_type get(Iterator it) const noexcept
             {
                 return output_view_type(_data.begin(),
-                    static_cast<size_t>(_FST::distance(_data.begin(), _FST::utf_copy(input_view_type(&it[0], it_seq_length::length(*it)), _data.begin()))));
+                    static_cast<size_t>(__fst::distance(_data.begin(), __fst::utf_copy(input_view_type(&it[0], it_seq_length::length(*it)), _data.begin()))));
             }
 
             template <typename Iterator>
             inline void advance(Iterator& it) noexcept
             {
-                using it_diff_type = typename _FST::iterator_traits<Iterator>::difference_type;
-                _FST::advance(it, static_cast<it_diff_type>(it_seq_length::length(*it)));
+                using it_diff_type = typename __fst::iterator_traits<Iterator>::difference_type;
+                __fst::advance(it, static_cast<it_diff_type>(it_seq_length::length(*it)));
             }
 
-            mutable _FST::array<output_char_type, utf_encoding_to_max_char_count<_FST::utf_encoding_of<OutputCharT>::value>::value> _data;
+            mutable __fst::array<output_char_type, utf_encoding_to_max_char_count<__fst::utf_encoding_of<OutputCharT>::value>::value> _data;
         };
 
         template <class IteratorType>
-        using iterator_value_type = _FST::remove_cvref_t<decltype(_FST::declval<IteratorType>()[0])>;
+        using iterator_value_type = __fst::remove_cvref_t<decltype(__fst::declval<IteratorType>()[0])>;
 
         template <class IteratorType>
-        using iterator_base_type = basic_iterator<iterator_value_type<IteratorType>, _FST::basic_string_view<iterator_value_type<IteratorType>>, IteratorType>;
+        using iterator_base_type = basic_iterator<iterator_value_type<IteratorType>, __fst::basic_string_view<iterator_value_type<IteratorType>>, IteratorType>;
 
         template <typename IteratorT>
         class iterator_range
@@ -184,8 +184,8 @@ FST_BEGIN_SUB_NAMESPACE(utf)
             {}
 
             inline iterator_range(IteratorT begin_iterator, IteratorT end_iterator) noexcept
-                : _begin_iterator(_FST::move(begin_iterator))
-                , _end_iterator(_FST::move(end_iterator))
+                : _begin_iterator(__fst::move(begin_iterator))
+                , _end_iterator(__fst::move(end_iterator))
             {}
 
             inline IteratorT begin() const noexcept { return _begin_iterator; }
@@ -197,10 +197,10 @@ FST_BEGIN_SUB_NAMESPACE(utf)
 
     //NANO_UNICODE_CLANG_PUSH_WARNING("-Wpadded")
 
-    template <class CharT, class SType, class IteratorType, _FST::enable_if_t<is_utf_string_type<SType>::value, _FST::nullptr_t>>
-    class basic_iterator : private detail::base_iterator<_FST::string_char_type_t<SType>, CharT>
+    template <class CharT, class SType, class IteratorType, __fst::enable_if_t<is_utf_string_type<SType>::value, __fst::nullptr_t>>
+    class basic_iterator : private detail::base_iterator<__fst::string_char_type_t<SType>, CharT>
     {
-        using base_type = detail::base_iterator<_FST::string_char_type_t<SType>, CharT>;
+        using base_type = detail::base_iterator<__fst::string_char_type_t<SType>, CharT>;
         using output_view_type = typename base_type::output_view_type;
 
         template <class T>
@@ -208,7 +208,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
 
       public:
         typedef ptrdiff_t difference_type;
-        typedef _FST::forward_iterator_tag iterator_category;
+        typedef __fst::forward_iterator_tag iterator_category;
 
         inline basic_iterator() noexcept = default;
 
@@ -248,7 +248,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
         return detail::iterator_range<basic_iterator<CharT, SType, typename SType::const_iterator>>(str);
     }
 
-    template <typename SType, _FST::enable_if_t<is_utf_string_type<SType>::value, _FST::nullptr_t>>
+    template <typename SType, __fst::enable_if_t<is_utf_string_type<SType>::value, __fst::nullptr_t>>
     inline auto iterate(const SType& str) noexcept
     {
         return detail::iterator_range<basic_iterator<string_char_type_t<SType>, SType, typename SType::const_iterator>>(str);
@@ -261,7 +261,7 @@ FST_BEGIN_SUB_NAMESPACE(utf)
 
       public:
         typedef ptrdiff_t difference_type;
-        typedef _FST::forward_iterator_tag iterator_category;
+        typedef __fst::forward_iterator_tag iterator_category;
 
         inline iterator() noexcept = default;
 
@@ -301,7 +301,7 @@ FST_END_SUB_NAMESPACE
 FST_BEGIN_NAMESPACE
 
     /*!
- * @brief   Generalization of a _FST::basic_string_view that accepts any char type.
+ * @brief   Generalization of a __fst::basic_string_view that accepts any char type.
  *
  * @details The utf::string_view describes an object that can refer to a constant
  *          contiguous sequence of any char-like objects with the first element of
@@ -310,8 +310,8 @@ FST_BEGIN_NAMESPACE
  *          This class is intended to be used when you need to support multiple
  *          character types and don't want to write a function for each of them.
  *
- *          It also prevents from creating unnecessary _FST::basic_string
- *          when passing a string literals or a _FST::basic_string_view to a function.
+ *          It also prevents from creating unnecessary __fst::basic_string
+ *          when passing a string literals or a __fst::basic_string_view to a function.
  *
  * @warning Keep in mind that the size of wchar_t is 2 bytes on Windows and 4 bytes
  *          on other platforms.
@@ -341,9 +341,9 @@ FST_BEGIN_NAMESPACE
  *   }
  *
  *   #ifdef _WIN32
- *   void setTextWindows(const _FST::wstring&) { ... }
+ *   void setTextWindows(const __fst::wstring&) { ... }
  *   #else
- *   void setTextMac(const _FST::string&) { ... }
+ *   void setTextMac(const __fst::string&) { ... }
  *   #endif
  *
  *   void setText(utf::string_view text) {
@@ -358,8 +358,8 @@ FST_BEGIN_NAMESPACE
  *   #include "example.h"
  *
  *   int main() {
- *     _FST::string text = "Text";
- *     _FST::wstring wtext = L"Text";
+ *     __fst::string text = "Text";
+ *     __fst::wstring wtext = L"Text";
  *
  *     drawText(text);
  *     drawText(wtext);
@@ -385,16 +385,16 @@ FST_BEGIN_NAMESPACE
         /// Takes any possible kind of string input:
         ///
         /// Strings:
-        /// const _FST::string&
-        /// const _FST::u16string&
-        /// const _FST::u32string&
-        /// const _FST::wstring&
+        /// const __fst::string&
+        /// const __fst::u16string&
+        /// const __fst::u32string&
+        /// const __fst::wstring&
         ///
         /// Views:
-        /// _FST::string_view
-        /// _FST::u16string_view
-        /// _FST::u32string_view
-        /// _FST::wstring_view
+        /// __fst::string_view
+        /// __fst::u16string_view
+        /// __fst::u32string_view
+        /// __fst::wstring_view
         ///
         /// Pointers:
         /// const char*
@@ -407,7 +407,7 @@ FST_BEGIN_NAMESPACE
         /// const char16_t(&)[N]
         /// const char32_t(&)[N]
         /// const wchar_t(&)[N]
-        template <typename T, _FST::enable_if_t<is_utf_string_type<remove_cvref_t<T>>::value, _FST::nullptr_t> = nullptr>
+        template <typename T, __fst::enable_if_t<is_utf_string_type<remove_cvref_t<T>>::value, __fst::nullptr_t> = nullptr>
         inline utf_string_view(T&& s);
 
         utf_string_view(utf_string_view&&) noexcept = default;
@@ -449,7 +449,7 @@ FST_BEGIN_NAMESPACE
         ///          A nullptr is returned if null_terminated() == false.
         ///
         /// @see     data() or view() for non null-terminated strings.
-        template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t> = nullptr>
+        template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t> = nullptr>
         inline const CharT* c_str() const noexcept;
 
         /// Same as c_str<char>().
@@ -471,13 +471,13 @@ FST_BEGIN_NAMESPACE
         /// @warning This can only be called with a CharT matching the current char_size().
         ///          A nullptr is returned if sizeof(CharT) != char_size().
         ///
-        /// @warning Unlike _FST::basic_string::data() and string literals, data() may return a pointer
+        /// @warning Unlike __fst::basic_string::data() and string literals, data() may return a pointer
         ///          to a buffer that is not null-terminated. Therefore it is typically a mistake to
         ///          pass data() to a routine that takes just a const CharT* and expects a
         ///          null-terminated string.
         ///
         /// @see     null_terminated()
-        template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t> = nullptr>
+        template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t> = nullptr>
         inline const CharT* data() const noexcept;
 
         /// Same as data<char>().
@@ -492,56 +492,56 @@ FST_BEGIN_NAMESPACE
         /// Same as data<wchar_t>().
         inline const wchar_t* wdata() const noexcept;
 
-        /// Returns a _FST::basic_string<CharT>.
-        template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t> = nullptr>
-        inline _FST::basic_string<CharT, _FST::default_allocator<CharT>> str() const;
+        /// Returns a __fst::basic_string<CharT>.
+        template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t> = nullptr>
+        inline __fst::basic_string<CharT, __fst::default_allocator<CharT>> str() const;
 
         /// Same as str<char>()
-        inline _FST::string u8str() const noexcept;
+        inline __fst::string u8str() const noexcept;
 
         /// Same as str<char16_t>()
-        inline _FST::basic_string<char16_t> u16str() const noexcept;
+        inline __fst::basic_string<char16_t> u16str() const noexcept;
 
         /// Same as str<char32_t>()
-        inline _FST::basic_string<char32_t> u32str() const noexcept;
+        inline __fst::basic_string<char32_t> u32str() const noexcept;
 
         /// Same as str<wchar_t>()
-        inline _FST::wstring wstr() const noexcept;
+        inline __fst::wstring wstr() const noexcept;
 
-        /// Returns a _FST::basic_string_view<CharT>.
+        /// Returns a __fst::basic_string_view<CharT>.
         /// @warning This can only be called with a CharT matching the current char_size().
-        ///          An empty _FST::basic_string_view<CharT> is returned if sizeof(CharT) != char_size().
-        template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t> = nullptr>
-        inline _FST::basic_string_view<CharT> view() const;
+        ///          An empty __fst::basic_string_view<CharT> is returned if sizeof(CharT) != char_size().
+        template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t> = nullptr>
+        inline __fst::basic_string_view<CharT> view() const;
 
         /// Same as view<char>().
-        inline _FST::string_view u8view() const noexcept;
+        inline __fst::string_view u8view() const noexcept;
 
         /// Same as view<char16_t>().
-        inline _FST::basic_string_view<char16_t> u16view() const noexcept;
+        inline __fst::basic_string_view<char16_t> u16view() const noexcept;
 
         /// Same as view<char32_t>().
-        inline _FST::basic_string_view<char32_t> u32view() const noexcept;
+        inline __fst::basic_string_view<char32_t> u32view() const noexcept;
 
         /// Same as view<wchar_t>().
-        inline _FST::wstring_view wview() const noexcept;
+        inline __fst::wstring_view wview() const noexcept;
 
-        /// Converts the character array to a utf8 _FST::string.
-        inline _FST::string to_utf8() const;
+        /// Converts the character array to a utf8 __fst::string.
+        inline __fst::string to_utf8() const;
 
-        /// Converts the character array to a utf16 _FST::u16string.
-        inline _FST::u16string to_utf16() const;
+        /// Converts the character array to a utf16 __fst::u16string.
+        inline __fst::u16string to_utf16() const;
 
-        /// Converts the character array to a utf32 _FST::u32string.
-        inline _FST::u32string to_utf32() const;
+        /// Converts the character array to a utf32 __fst::u32string.
+        inline __fst::u32string to_utf32() const;
 
-        /// Converts the character array to a _FST::wstring.
-        inline _FST::wstring to_wide() const;
+        /// Converts the character array to a __fst::wstring.
+        inline __fst::wstring to_wide() const;
 
-        inline operator _FST::string() const { return to_utf8(); }
-        inline operator _FST::u16string() const { return to_utf16(); }
-        inline operator _FST::u32string() const { return to_utf32(); }
-        inline operator _FST::wstring() const { return to_wide(); }
+        inline operator __fst::string() const { return to_utf8(); }
+        inline operator __fst::u16string() const { return to_utf16(); }
+        inline operator __fst::u32string() const { return to_utf32(); }
+        inline operator __fst::wstring() const { return to_wide(); }
 
       private:
         union content
@@ -575,26 +575,26 @@ FST_BEGIN_NAMESPACE
         template <typename T>
         static inline auto make(T&& s);
 
-        inline utf_string_view(const _FST::string& str, normal_tag) noexcept;
-        inline utf_string_view(const _FST::u16string& str, normal_tag) noexcept;
-        inline utf_string_view(const _FST::u32string& str, normal_tag) noexcept;
-        inline utf_string_view(const _FST::wstring& str, normal_tag) noexcept;
-        inline utf_string_view(_FST::string_view str, normal_tag) noexcept;
-        inline utf_string_view(_FST::u16string_view str, normal_tag) noexcept;
-        inline utf_string_view(_FST::u32string_view str, normal_tag) noexcept;
-        inline utf_string_view(_FST::wstring_view str, normal_tag) noexcept;
-        inline utf_string_view(_FST::string_view str, null_terminated_tag) noexcept;
-        inline utf_string_view(_FST::u16string_view str, null_terminated_tag) noexcept;
-        inline utf_string_view(_FST::u32string_view str, null_terminated_tag) noexcept;
-        inline utf_string_view(_FST::wstring_view str, null_terminated_tag) noexcept;
+        inline utf_string_view(const __fst::string& str, normal_tag) noexcept;
+        inline utf_string_view(const __fst::u16string& str, normal_tag) noexcept;
+        inline utf_string_view(const __fst::u32string& str, normal_tag) noexcept;
+        inline utf_string_view(const __fst::wstring& str, normal_tag) noexcept;
+        inline utf_string_view(__fst::string_view str, normal_tag) noexcept;
+        inline utf_string_view(__fst::u16string_view str, normal_tag) noexcept;
+        inline utf_string_view(__fst::u32string_view str, normal_tag) noexcept;
+        inline utf_string_view(__fst::wstring_view str, normal_tag) noexcept;
+        inline utf_string_view(__fst::string_view str, null_terminated_tag) noexcept;
+        inline utf_string_view(__fst::u16string_view str, null_terminated_tag) noexcept;
+        inline utf_string_view(__fst::u32string_view str, null_terminated_tag) noexcept;
+        inline utf_string_view(__fst::wstring_view str, null_terminated_tag) noexcept;
     };
 
     //
     //
     //
-    template <typename T, _FST::enable_if_t<is_utf_string_type<remove_cvref_t<T>>::value, _FST::nullptr_t>>
+    template <typename T, __fst::enable_if_t<is_utf_string_type<remove_cvref_t<T>>::value, __fst::nullptr_t>>
     utf_string_view::utf_string_view(T && s)
-        : utf_string_view(make<T>(_FST::forward<T>(s)))
+        : utf_string_view(make<T>(__fst::forward<T>(s)))
     {
         //  (void)m_reserved;
     }
@@ -604,62 +604,62 @@ FST_BEGIN_NAMESPACE
         , m_info{ 0, sizeof(char), false }
     {}
 
-    utf_string_view::utf_string_view(const _FST::string& str, normal_tag) noexcept
+    utf_string_view::utf_string_view(const __fst::string& str, normal_tag) noexcept
         : m_data{ str.c_str() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(const _FST::u16string& str, normal_tag) noexcept
+    utf_string_view::utf_string_view(const __fst::u16string& str, normal_tag) noexcept
         : m_data{ str.c_str() }
         , m_info{ static_cast<uint32_t>(str.size()), (uint8_t) sizeof(char16_t), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(const _FST::u32string& str, normal_tag) noexcept
+    utf_string_view::utf_string_view(const __fst::u32string& str, normal_tag) noexcept
         : m_data{ str.c_str() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char32_t), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(const _FST::wstring& str, normal_tag) noexcept
+    utf_string_view::utf_string_view(const __fst::wstring& str, normal_tag) noexcept
         : m_data{ str.c_str() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(wchar_t), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(_FST::string_view str, normal_tag) noexcept
+    utf_string_view::utf_string_view(__fst::string_view str, normal_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char), (uint8_t) false }
     {}
 
-    utf_string_view::utf_string_view(_FST::u16string_view str, normal_tag) noexcept
+    utf_string_view::utf_string_view(__fst::u16string_view str, normal_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char16_t), (uint8_t) false }
     {}
 
-    utf_string_view::utf_string_view(_FST::u32string_view str, normal_tag) noexcept
+    utf_string_view::utf_string_view(__fst::u32string_view str, normal_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char32_t), (uint8_t) false }
     {}
 
-    utf_string_view::utf_string_view(_FST::wstring_view str, normal_tag) noexcept
+    utf_string_view::utf_string_view(__fst::wstring_view str, normal_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(wchar_t), (uint8_t) false }
     {}
 
-    utf_string_view::utf_string_view(_FST::string_view str, null_terminated_tag) noexcept
+    utf_string_view::utf_string_view(__fst::string_view str, null_terminated_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(_FST::u16string_view str, null_terminated_tag) noexcept
+    utf_string_view::utf_string_view(__fst::u16string_view str, null_terminated_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char16_t), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(_FST::u32string_view str, null_terminated_tag) noexcept
+    utf_string_view::utf_string_view(__fst::u32string_view str, null_terminated_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(char32_t), (uint8_t) true }
     {}
 
-    utf_string_view::utf_string_view(_FST::wstring_view str, null_terminated_tag) noexcept
+    utf_string_view::utf_string_view(__fst::wstring_view str, null_terminated_tag) noexcept
         : m_data{ str.data() }
         , m_info{ static_cast<uint64_t>(str.size()), (uint8_t) sizeof(wchar_t), (uint8_t) true }
     {}
@@ -706,19 +706,19 @@ FST_BEGIN_NAMESPACE
         }
     }
 
-    template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t>>
+    template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t>>
     const CharT* utf_string_view::c_str() const noexcept
     {
 // #define ERROR_RESULT (fst_error("wrong encoding or not null terminated"), nullptr)
 #define ERROR_RESULT nullptr
 
-        if constexpr (_FST::is_same_v<CharT, char>) { return (char_size() == sizeof(char) && null_terminated()) ? m_data.c8 : ERROR_RESULT; }
+        if constexpr (__fst::is_same_v<CharT, char>) { return (char_size() == sizeof(char) && null_terminated()) ? m_data.c8 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t) && null_terminated()) ? m_data.c16 : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t) && null_terminated()) ? m_data.c16 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t) && null_terminated()) ? m_data.c32 : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t) && null_terminated()) ? m_data.c32 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t) && null_terminated()) ? m_data.cw() : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t) && null_terminated()) ? m_data.cw() : ERROR_RESULT; }
 
         else
         {
@@ -729,19 +729,19 @@ FST_BEGIN_NAMESPACE
 #undef ERROR_RESULT
     }
 
-    template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t>>
+    template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t>>
     const CharT* utf_string_view::data() const noexcept
     {
 //#define ERROR_RESULT (fst_error("wrong encoding"), nullptr)
 #define ERROR_RESULT nullptr
 
-        if constexpr (_FST::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? m_data.c8 : ERROR_RESULT; }
+        if constexpr (__fst::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? m_data.c8 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? m_data.c16 : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? m_data.c16 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? m_data.c32 : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? m_data.c32 : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? m_data.cw() : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? m_data.cw() : ERROR_RESULT; }
 
         else
         {
@@ -753,18 +753,18 @@ FST_BEGIN_NAMESPACE
 #undef ERROR_RESULT
     }
 
-    template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t>>
-    _FST::basic_string<CharT, _FST::default_allocator<CharT>> utf_string_view::str() const
+    template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t>>
+    __fst::basic_string<CharT, __fst::default_allocator<CharT>> utf_string_view::str() const
     {
-        using stype = _FST::basic_string<CharT, _FST::default_allocator<CharT>>;
+        using stype = __fst::basic_string<CharT, __fst::default_allocator<CharT>>;
 
-        if constexpr (_FST::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? stype(m_data.c8, size()) : to_utf8(); }
+        if constexpr (__fst::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? stype(m_data.c8, size()) : to_utf8(); }
 
-        else if constexpr (_FST::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? stype(m_data.c16, size()) : to_utf16(); }
+        else if constexpr (__fst::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? stype(m_data.c16, size()) : to_utf16(); }
 
-        else if constexpr (_FST::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? stype(m_data.c32, size()) : to_utf32(); }
+        else if constexpr (__fst::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? stype(m_data.c32, size()) : to_utf32(); }
 
-        else if constexpr (_FST::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? stype(m_data.cw(), size()) : to_wide(); }
+        else if constexpr (__fst::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? stype(m_data.cw(), size()) : to_wide(); }
 
         else
         {
@@ -774,21 +774,21 @@ FST_BEGIN_NAMESPACE
         }
     }
 
-    template <typename CharT, _FST::enable_if_t<is_utf_char_type<CharT>::value, _FST::nullptr_t>>
-    _FST::basic_string_view<CharT> utf_string_view::view() const
+    template <typename CharT, __fst::enable_if_t<is_utf_char_type<CharT>::value, __fst::nullptr_t>>
+    __fst::basic_string_view<CharT> utf_string_view::view() const
     {
-        using svtype = _FST::basic_string_view<CharT>;
+        using svtype = __fst::basic_string_view<CharT>;
 
 // #define ERROR_RESULT (fst_error("wrong encoding"), svtype())
 #define ERROR_RESULT svtype()
 
-        if constexpr (_FST::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? svtype(m_data.c8, size()) : ERROR_RESULT; }
+        if constexpr (__fst::is_same_v<CharT, char>) { return (char_size() == sizeof(char)) ? svtype(m_data.c8, size()) : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? svtype(m_data.c16, size()) : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char16_t>) { return (char_size() == sizeof(char16_t)) ? svtype(m_data.c16, size()) : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? svtype(m_data.c32, size()) : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, char32_t>) { return (char_size() == sizeof(char32_t)) ? svtype(m_data.c32, size()) : ERROR_RESULT; }
 
-        else if constexpr (_FST::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? svtype(m_data.cw(), size()) : ERROR_RESULT; }
+        else if constexpr (__fst::is_same_v<CharT, wchar_t>) { return (char_size() == sizeof(wchar_t)) ? svtype(m_data.cw(), size()) : ERROR_RESULT; }
 
         else
         {
@@ -803,28 +803,28 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     auto utf_string_view::make(T && s)
     {
-        using type = _FST::remove_cv_t<_FST::remove_reference_t<T>>;
+        using type = __fst::remove_cv_t<__fst::remove_reference_t<T>>;
 
-        constexpr bool is_any_string_or_string_view = _FST::is_same_v<type, _FST::string> //
-                                                      || _FST::is_same_v<type, _FST::u16string> //
-                                                      || _FST::is_same_v<type, _FST::u32string> //
-                                                      || _FST::is_same_v<type, _FST::wstring> //
-                                                      || _FST::is_same_v<type, _FST::string_view> //
-                                                      || _FST::is_same_v<type, _FST::u16string_view> //
-                                                      || _FST::is_same_v<type, _FST::u32string_view> //
-                                                      || _FST::is_same_v<type, _FST::wstring_view>;
+        constexpr bool is_any_string_or_string_view = __fst::is_same_v<type, __fst::string> //
+                                                      || __fst::is_same_v<type, __fst::u16string> //
+                                                      || __fst::is_same_v<type, __fst::u32string> //
+                                                      || __fst::is_same_v<type, __fst::wstring> //
+                                                      || __fst::is_same_v<type, __fst::string_view> //
+                                                      || __fst::is_same_v<type, __fst::u16string_view> //
+                                                      || __fst::is_same_v<type, __fst::u32string_view> //
+                                                      || __fst::is_same_v<type, __fst::wstring_view>;
 
         static_assert(is_any_string_or_string_view || is_utf_string_type<T>::value, "");
 
-        if constexpr (is_any_string_or_string_view) { return utf_string_view(_FST::forward<T>(s), normal_tag{}); }
+        if constexpr (is_any_string_or_string_view) { return utf_string_view(__fst::forward<T>(s), normal_tag{}); }
 
-        else if constexpr (_FST::is_constructible_v<_FST::string_view, T>) { return utf_string_view(_FST::string_view(s), null_terminated_tag{}); }
+        else if constexpr (__fst::is_constructible_v<__fst::string_view, T>) { return utf_string_view(__fst::string_view(s), null_terminated_tag{}); }
 
-        else if constexpr (_FST::is_constructible_v<_FST::u16string_view, T>) { return utf_string_view(_FST::u16string_view(s), null_terminated_tag{}); }
+        else if constexpr (__fst::is_constructible_v<__fst::u16string_view, T>) { return utf_string_view(__fst::u16string_view(s), null_terminated_tag{}); }
 
-        else if constexpr (_FST::is_constructible_v<_FST::u32string_view, T>) { return utf_string_view(_FST::u32string_view(s), null_terminated_tag{}); }
+        else if constexpr (__fst::is_constructible_v<__fst::u32string_view, T>) { return utf_string_view(__fst::u32string_view(s), null_terminated_tag{}); }
 
-        else if constexpr (_FST::is_constructible_v<_FST::wstring_view, T>) { return utf_string_view(_FST::wstring_view(s), null_terminated_tag{}); }
+        else if constexpr (__fst::is_constructible_v<__fst::wstring_view, T>) { return utf_string_view(__fst::wstring_view(s), null_terminated_tag{}); }
 
         else
         {
@@ -833,65 +833,65 @@ FST_BEGIN_NAMESPACE
         }
     }
 
-    _FST::string utf_string_view::to_utf8() const
+    __fst::string utf_string_view::to_utf8() const
     {
         if (empty()) { return {}; }
 
         switch (encoding())
         {
-        case char_encoding::utf8: return _FST::string(data<char>(), size());
+        case char_encoding::utf8: return __fst::string(data<char>(), size());
 
-        case char_encoding::utf16: return utf_cvt_as<_FST::string>(view<char16_t>());
+        case char_encoding::utf16: return utf_cvt_as<__fst::string>(view<char16_t>());
 
-        case char_encoding::utf32: return utf_cvt_as<_FST::string>(view<char32_t>());
+        case char_encoding::utf32: return utf_cvt_as<__fst::string>(view<char32_t>());
         }
 
         return {};
     }
 
-    _FST::u16string utf_string_view::to_utf16() const
+    __fst::u16string utf_string_view::to_utf16() const
     {
         if (empty()) { return {}; }
 
         switch (encoding())
         {
-        case char_encoding::utf8: return utf_cvt_as<_FST::u16string>(view<char>());
+        case char_encoding::utf8: return utf_cvt_as<__fst::u16string>(view<char>());
 
-        case char_encoding::utf16: return _FST::u16string(data<char16_t>(), size());
+        case char_encoding::utf16: return __fst::u16string(data<char16_t>(), size());
 
-        case char_encoding::utf32: return utf_cvt_as<_FST::u16string>(view<char32_t>());
+        case char_encoding::utf32: return utf_cvt_as<__fst::u16string>(view<char32_t>());
         }
 
         return {};
     }
 
-    _FST::u32string utf_string_view::to_utf32() const
+    __fst::u32string utf_string_view::to_utf32() const
     {
         if (empty()) { return {}; }
 
         switch (encoding())
         {
-        case char_encoding::utf8: return utf_cvt_as<_FST::u32string>(view<char>());
+        case char_encoding::utf8: return utf_cvt_as<__fst::u32string>(view<char>());
 
         case char_encoding::utf16: return utf_cvt_as<u32string>(view<char16_t>());
 
-        case char_encoding::utf32: return _FST::u32string(data<char32_t>(), size());
+        case char_encoding::utf32: return __fst::u32string(data<char32_t>(), size());
         }
 
         return {};
     }
 
-    _FST::wstring utf_string_view::to_wide() const
+    __fst::wstring utf_string_view::to_wide() const
     {
         if (empty()) { return {}; }
 
         switch (encoding())
         {
-        case char_encoding::utf8: return utf_cvt_as<_FST::wstring>(view<char>());
+        case char_encoding::utf8: return utf_cvt_as<__fst::wstring>(view<char>());
 
-        case char_encoding::utf16: return utf_cvt_as<_FST::wstring>(view<char16_t>());
+        case char_encoding::utf16: return utf_cvt_as<__fst::wstring>(view<char16_t>());
 
-        case char_encoding::utf32: return utf_cvt_as<_FST::wstring>(view<char32_t>());
+        case char_encoding::utf32: return utf_cvt_as<__fst::wstring>(view<char32_t>());
         }
 
         return {};
@@ -901,9 +901,9 @@ FST_BEGIN_NAMESPACE
     {
         switch (encoding())
         {
-        case char_encoding::utf8: return _FST::utf_length(view<char>());
+        case char_encoding::utf8: return __fst::utf_length(view<char>());
 
-        case char_encoding::utf16: return _FST::utf_length(view<char16_t>());
+        case char_encoding::utf16: return __fst::utf_length(view<char16_t>());
 
         case char_encoding::utf32: return size();
         }
@@ -958,61 +958,61 @@ FST_BEGIN_NAMESPACE
     }
 
     /// Same as str<char>()
-    inline _FST::string utf_string_view::u8str() const noexcept
+    inline __fst::string utf_string_view::u8str() const noexcept
     {
         return str<char>();
     }
 
     /// Same as str<char16_t>()
-    inline _FST::basic_string<char16_t> utf_string_view::u16str() const noexcept
+    inline __fst::basic_string<char16_t> utf_string_view::u16str() const noexcept
     {
         return str<char16_t>();
     }
 
     /// Same as str<char32_t>()
-    inline _FST::basic_string<char32_t> utf_string_view::u32str() const noexcept
+    inline __fst::basic_string<char32_t> utf_string_view::u32str() const noexcept
     {
         return str<char32_t>();
     }
 
     /// Same as str<wchar_t>()
-    inline _FST::wstring utf_string_view::wstr() const noexcept
+    inline __fst::wstring utf_string_view::wstr() const noexcept
     {
         return str<wchar_t>();
     }
 
     /// Same as view<char>().
-    inline _FST::string_view utf_string_view::u8view() const noexcept
+    inline __fst::string_view utf_string_view::u8view() const noexcept
     {
         return view<char>();
     }
 
     /// Same as view<char16_t>().
-    inline _FST::basic_string_view<char16_t> utf_string_view::u16view() const noexcept
+    inline __fst::basic_string_view<char16_t> utf_string_view::u16view() const noexcept
     {
         return view<char16_t>();
     }
 
     /// Same as view<char32_t>().
-    inline _FST::basic_string_view<char32_t> utf_string_view::u32view() const noexcept
+    inline __fst::basic_string_view<char32_t> utf_string_view::u32view() const noexcept
     {
         return view<char32_t>();
     }
 
     /// Same as view<wchar_t>().
-    inline _FST::wstring_view utf_string_view::wview() const noexcept
+    inline __fst::wstring_view utf_string_view::wview() const noexcept
     {
         return view<wchar_t>();
     }
 
-    inline _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, const utf_string_view& s)
+    inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const utf_string_view& s)
     {
         auto ss = s.str<char>();
         stream.write(ss.data(), ss.size());
         return stream;
     }
 
-    inline _FST::output_stream<wchar_t>& operator<<(_FST::output_stream<wchar_t>& stream, const utf_string_view& s)
+    inline __fst::output_stream<wchar_t>& operator<<(__fst::output_stream<wchar_t>& stream, const utf_string_view& s)
     {
         auto ss = s.str<wchar_t>();
         stream.write(ss.data(), ss.size());
@@ -1021,19 +1021,19 @@ FST_BEGIN_NAMESPACE
 
     namespace utf
     {
-        _FST::string to_utf8(_FST::utf_string_view s) noexcept
+        __fst::string to_utf8(__fst::utf_string_view s) noexcept
         {
             return s.to_utf8();
         }
-        _FST::u16string to_utf16(_FST::utf_string_view s) noexcept
+        __fst::u16string to_utf16(__fst::utf_string_view s) noexcept
         {
             return s.to_utf16();
         }
-        _FST::u32string to_utf32(_FST::utf_string_view s) noexcept
+        __fst::u32string to_utf32(__fst::utf_string_view s) noexcept
         {
             return s.to_utf32();
         }
-        _FST::wstring to_wide(_FST::utf_string_view s) noexcept
+        __fst::wstring to_wide(__fst::utf_string_view s) noexcept
         {
             return s.to_wide();
         }

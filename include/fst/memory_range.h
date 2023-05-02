@@ -39,34 +39,34 @@ FST_BEGIN_NAMESPACE
     class memory_range;
 
     template <class T>
-    struct is_memory_range : _FST::false_t
+    struct is_memory_range : __fst::false_t
     {};
 
     template <class T, size_t _Size>
-    struct is_memory_range<_FST::memory_range<T, _Size>> : _FST::true_t
+    struct is_memory_range<__fst::memory_range<T, _Size>> : __fst::true_t
     {};
-    //_FST::is_template_of<_FST::memory_range, T>;
+    //__fst::is_template_of<__fst::memory_range, T>;
 
     namespace detail
     {
         template <class _Tp, class _ElementType, class = void>
-        struct is_memory_range_compatible_container : _FST::false_t
+        struct is_memory_range_compatible_container : __fst::false_t
         {};
 
         template <class _Tp, class _ElementType>
         struct is_memory_range_compatible_container<_Tp, _ElementType,
-            _FST::void_t<
+            __fst::void_t<
                 // is not a specialization of memory_range
-                _FST::enable_if_t<!_FST::is_memory_range<_Tp>::value, _FST::nullptr_t>,
+                __fst::enable_if_t<!__fst::is_memory_range<_Tp>::value, __fst::nullptr_t>,
                 // is not a specialization of array
-                _FST::enable_if_t<!_FST::is_array<_Tp>::value, _FST::nullptr_t>,
+                __fst::enable_if_t<!__fst::is_array<_Tp>::value, __fst::nullptr_t>,
                 // is_array_v<Container> is false,
-                _FST::enable_if_t<!_FST::is_c_array_v<_Tp>, _FST::nullptr_t>,
+                __fst::enable_if_t<!__fst::is_c_array_v<_Tp>, __fst::nullptr_t>,
                 // data(cont) and size(cont) are well formed
-                decltype(_FST::container_data(_FST::declval<_Tp>())), decltype(_FST::container_size(_FST::declval<_Tp>())),
+                decltype(__fst::container_data(__fst::declval<_Tp>())), decltype(__fst::container_size(__fst::declval<_Tp>())),
                 // remove_pointer_t<decltype(data(cont))>(*)[] is convertible to
                 // ElementType(*)[]
-                _FST::enable_if_t<_FST::is_convertible_v<_FST::container_data_type_t<_Tp> (*)[], _ElementType (*)[]>, _FST::nullptr_t>>> : _FST::true_t
+                __fst::enable_if_t<__fst::is_convertible_v<__fst::container_data_type_t<_Tp> (*)[], _ElementType (*)[]>, __fst::nullptr_t>>> : __fst::true_t
         {};
 
         template <class _Tp, class _ElementType>
@@ -75,13 +75,13 @@ FST_BEGIN_NAMESPACE
 
     ///
     template <class _Tp>
-    using memory_view = memory_range<_FST::add_const_t<_FST::remove_cv_t<_Tp>>>;
+    using memory_view = memory_range<__fst::add_const_t<__fst::remove_cv_t<_Tp>>>;
 
     ///
-    using byte_range = memory_range<_FST::byte>;
+    using byte_range = memory_range<__fst::byte>;
 
     ///
-    using byte_view = memory_view<_FST::byte>;
+    using byte_view = memory_view<__fst::byte>;
 
     /// @class memory_range
     template <class _Tp>
@@ -91,7 +91,7 @@ FST_BEGIN_NAMESPACE
         using __self = memory_range;
         using element_type = _Tp;
 
-        using value_type = _FST::remove_cv_t<_Tp>;
+        using value_type = __fst::remove_cv_t<_Tp>;
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
@@ -100,31 +100,31 @@ FST_BEGIN_NAMESPACE
         using reference = element_type&;
         using const_reference = const value_type&;
 
-        using iterator = _FST::iterator<pointer>;
-        using const_iterator = _FST::iterator<const_pointer>;
+        using iterator = __fst::iterator<pointer>;
+        using const_iterator = __fst::iterator<const_pointer>;
 
-        static constexpr bool is_const = _FST::is_const_v<element_type>;
-        using const_range = _FST::conditional_t<is_const, memory_range, memory_range<const element_type>>;
+        static constexpr bool is_const = __fst::is_const_v<element_type>;
+        using const_range = __fst::conditional_t<is_const, memory_range, memory_range<const element_type>>;
 
       private:
         template <class OtherElementType>
-        using to_other_pointer = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>*, OtherElementType*>;
+        using to_other_pointer = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>*, OtherElementType*>;
 
         template <class OtherElementType>
-        using to_other_reference = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>&, OtherElementType&>;
+        using to_other_reference = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>&, OtherElementType&>;
 
         template <class OtherElementType>
-        using to_other_type = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>, OtherElementType>;
+        using to_other_type = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>, OtherElementType>;
 
         template <class OtherElementType>
-        using enable_if_convertible_t = _FST::enable_if_t<_FST::is_buffer_convertible<OtherElementType, element_type>::value, _FST::nullptr_t>;
+        using enable_if_convertible_t = __fst::enable_if_t<__fst::is_buffer_convertible<OtherElementType, element_type>::value, __fst::nullptr_t>;
 
         // template <class OtherElementType>
         // using enable_if_convertible_t =
-        // _FST::enable_if_buffer_convertible_t<OtherElementType, element_type>;
+        // __fst::enable_if_buffer_convertible_t<OtherElementType, element_type>;
 
         template <class Container>
-        using enable_if_compatible_t = _FST::enable_if_t<detail::is_memory_range_compatible_container<Container, _Tp>::value, _FST::nullptr_t>;
+        using enable_if_compatible_t = __fst::enable_if_t<detail::is_memory_range_compatible_container<Container, _Tp>::value, __fst::nullptr_t>;
 
       public:
         inline constexpr memory_range() noexcept FST_UNIT_TESTED
@@ -142,7 +142,7 @@ FST_BEGIN_NAMESPACE
 
         inline constexpr memory_range(pointer first, pointer last) FST_UNIT_TESTED
             : __data{ first }
-            , __size{ (size_type) _FST::distance(first, last) }
+            , __size{ (size_type) __fst::distance(first, last) }
         {}
 
         template <size_t Size>
@@ -152,27 +152,27 @@ FST_BEGIN_NAMESPACE
         {}
 
         template <class U, size_t Size, enable_if_convertible_t<U> = nullptr>
-        inline constexpr memory_range(_FST::array<U, Size>& arr) noexcept FST_UNIT_TESTED
+        inline constexpr memory_range(__fst::array<U, Size>& arr) noexcept FST_UNIT_TESTED
             : __data{ arr.data() }
             , __size{ (size_type) Size }
         {}
 
         template <class U, size_t Size, enable_if_convertible_t<const U> = nullptr>
-        inline constexpr memory_range(const _FST::array<U, Size>& arr) noexcept FST_UNIT_TESTED
+        inline constexpr memory_range(const __fst::array<U, Size>& arr) noexcept FST_UNIT_TESTED
             : __data{ arr.data() }
             , __size{ (size_type) Size }
         {}
 
         template <class Container>
         inline constexpr memory_range(Container& c, enable_if_compatible_t<Container> = nullptr) FST_UNIT_TESTED
-            : __data{ _FST::container_data(c) }
-            , __size{ (size_type) _FST::container_size(c) }
+            : __data{ __fst::container_data(c) }
+            , __size{ (size_type) __fst::container_size(c) }
         {}
 
         template <class Container>
         inline constexpr memory_range(const Container& c, enable_if_compatible_t<const Container> = nullptr) FST_UNIT_TESTED
-            : __data{ _FST::container_data(c) }
-            , __size{ (size_type) _FST::container_size(c) }
+            : __data{ __fst::container_data(c) }
+            , __size{ (size_type) __fst::container_size(c) }
         {}
 
         template <class U, size_t _OtherSize>
@@ -276,20 +276,20 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline constexpr const_iterator cend() const noexcept FST_UNIT_TESTED { return end(); }
 
         ///
-        FST_NODISCARD inline constexpr memory_range subrange(size_type __offset, size_type __count = (_FST::numeric_limits<size_type>::max)()) noexcept FST_UNIT_TESTED
+        FST_NODISCARD inline constexpr memory_range subrange(size_type __offset, size_type __count = (__fst::numeric_limits<size_type>::max)()) noexcept FST_UNIT_TESTED
         {
             fst_assert(__offset <= size(), "Offset out of range in fst::memory_range::subrange(offset, "
                                            "count)");
-            __count = _FST::minimum(size() - __offset, __count);
+            __count = __fst::minimum(size() - __offset, __count);
             return { data() + __offset, __count };
         }
 
         FST_NODISCARD inline constexpr const_range subrange(
-            size_type __offset, size_type __count = (_FST::numeric_limits<size_type>::max)()) const noexcept FST_UNIT_TESTED
+            size_type __offset, size_type __count = (__fst::numeric_limits<size_type>::max)()) const noexcept FST_UNIT_TESTED
         {
             fst_assert(__offset <= size(), "Offset out of range in fst::memory_range::subrange(offset, "
                                            "count)");
-            __count = _FST::minimum(size() - __offset, __count);
+            __count = __fst::minimum(size() - __offset, __count);
             return { data() + __offset, __count };
         }
 
@@ -321,14 +321,14 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD inline memory_view<element_type> view() const noexcept { return *this; }
 
-        FST_NODISCARD inline memory_range<const _FST::byte> byte_view() const noexcept { return { reinterpret_cast<const _FST::byte*>(data()), size_bytes() }; }
+        FST_NODISCARD inline memory_range<const __fst::byte> byte_view() const noexcept { return { reinterpret_cast<const __fst::byte*>(data()), size_bytes() }; }
 
-        FST_NODISCARD inline memory_range<to_other_type<_FST::byte>> byte_range() noexcept
+        FST_NODISCARD inline memory_range<to_other_type<__fst::byte>> byte_range() noexcept
         {
-            return { reinterpret_cast<to_other_pointer<_FST::byte>>(data()), size_bytes() };
+            return { reinterpret_cast<to_other_pointer<__fst::byte>>(data()), size_bytes() };
         }
 
-        FST_NODISCARD inline memory_range<const _FST::byte> byte_range() const noexcept { return { reinterpret_cast<const _FST::byte*>(data()), size_bytes() }; }
+        FST_NODISCARD inline memory_range<const __fst::byte> byte_range() const noexcept { return { reinterpret_cast<const __fst::byte*>(data()), size_bytes() }; }
 
         template <class T>
         FST_NODISCARD inline memory_range<to_other_type<T>> cast_range() noexcept
@@ -376,12 +376,12 @@ FST_BEGIN_NAMESPACE
             return *reinterpret_cast<const T*>(data() + offset);
         }
 
-        template <class EndianTag, class T, _FST::enable_if_t<_FST::is_endian_tag_v<EndianTag>, int> = 0>
+        template <class EndianTag, class T, __fst::enable_if_t<__fst::is_endian_tag_v<EndianTag>, int> = 0>
         FST_NODISCARD inline constexpr T as(size_type offset = 0) const noexcept
         {
             fst_assert((sizeof(value_type) * offset + sizeof(T)) <= size_bytes(), "offset out of bounds");
-            if constexpr (_FST::is_same_v<_FST::little_endian_tag, EndianTag>) { return *reinterpret_cast<const T*>(data() + offset); }
-            else { return _FST::byte_swap(*reinterpret_cast<const T*>(data() + offset)); }
+            if constexpr (__fst::is_same_v<__fst::little_endian_tag, EndianTag>) { return *reinterpret_cast<const T*>(data() + offset); }
+            else { return __fst::byte_swap(*reinterpret_cast<const T*>(data() + offset)); }
         }
 
       private:
@@ -399,7 +399,7 @@ FST_BEGIN_NAMESPACE
         using __self = memory_range;
         using element_type = _Tp;
 
-        using value_type = _FST::remove_cv_t<_Tp>;
+        using value_type = __fst::remove_cv_t<_Tp>;
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
@@ -408,27 +408,27 @@ FST_BEGIN_NAMESPACE
         using reference = element_type&;
         using const_reference = const value_type&;
 
-        using iterator = _FST::iterator<pointer>;
-        using const_iterator = _FST::iterator<const_pointer>;
+        using iterator = __fst::iterator<pointer>;
+        using const_iterator = __fst::iterator<const_pointer>;
 
-        static constexpr bool is_const = _FST::is_const_v<element_type>;
-        using const_range = _FST::conditional_t<is_const, memory_range, memory_range<const element_type>>;
+        static constexpr bool is_const = __fst::is_const_v<element_type>;
+        using const_range = __fst::conditional_t<is_const, memory_range, memory_range<const element_type>>;
 
       private:
         template <class OtherElementType>
-        using to_other_pointer = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>*, OtherElementType*>;
+        using to_other_pointer = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>*, OtherElementType*>;
 
         template <class OtherElementType>
-        using to_other_reference = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>&, OtherElementType&>;
+        using to_other_reference = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>&, OtherElementType&>;
 
         template <class OtherElementType>
-        using to_other_type = _FST::conditional_t<is_const, _FST::add_const_t<_FST::remove_cv_t<OtherElementType>>, OtherElementType>;
+        using to_other_type = __fst::conditional_t<is_const, __fst::add_const_t<__fst::remove_cv_t<OtherElementType>>, OtherElementType>;
 
         template <class OtherElementType>
-        using enable_if_convertible_t = _FST::enable_if_t<_FST::is_buffer_convertible<OtherElementType, element_type>::value, _FST::nullptr_t>;
+        using enable_if_convertible_t = __fst::enable_if_t<__fst::is_buffer_convertible<OtherElementType, element_type>::value, __fst::nullptr_t>;
 
         template <class Container>
-        using enable_if_compatible_t = _FST::enable_if_t<detail::is_memory_range_compatible_container<Container, _Tp>::value, _FST::nullptr_t>;
+        using enable_if_compatible_t = __fst::enable_if_t<detail::is_memory_range_compatible_container<Container, _Tp>::value, __fst::nullptr_t>;
 
       public:
         inline constexpr memory_range() noexcept FST_UNIT_TESTED : __data{ nullptr } {}
@@ -443,19 +443,19 @@ FST_BEGIN_NAMESPACE
         {}
 
         template <class U, size_t Size, enable_if_convertible_t<U> = nullptr>
-        inline constexpr memory_range(_FST::array<U, Size>& arr) noexcept FST_UNIT_TESTED : __data{ arr.data() }
+        inline constexpr memory_range(__fst::array<U, Size>& arr) noexcept FST_UNIT_TESTED : __data{ arr.data() }
         {}
 
         template <class U, size_t Size, enable_if_convertible_t<const U> = nullptr>
-        inline constexpr memory_range(const _FST::array<U, Size>& arr) noexcept FST_UNIT_TESTED : __data{ arr.data() }
+        inline constexpr memory_range(const __fst::array<U, Size>& arr) noexcept FST_UNIT_TESTED : __data{ arr.data() }
         {}
 
         template <class Container>
-        inline constexpr memory_range(Container& c, enable_if_compatible_t<Container> = nullptr) FST_UNIT_TESTED : __data{ _FST::container_data(c) }
+        inline constexpr memory_range(Container& c, enable_if_compatible_t<Container> = nullptr) FST_UNIT_TESTED : __data{ __fst::container_data(c) }
         {}
 
         template <class Container>
-        inline constexpr memory_range(const Container& c, enable_if_compatible_t<const Container> = nullptr) FST_UNIT_TESTED : __data{ _FST::container_data(c) }
+        inline constexpr memory_range(const Container& c, enable_if_compatible_t<const Container> = nullptr) FST_UNIT_TESTED : __data{ __fst::container_data(c) }
         {}
 
         template <class U, size_t _OtherSize>
@@ -557,20 +557,20 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline constexpr const_iterator cend() const noexcept FST_UNIT_TESTED { return end(); }
 
         ///
-        FST_NODISCARD inline constexpr memory_range subrange(size_type __offset, size_type __count = (_FST::numeric_limits<size_type>::max)()) noexcept FST_UNIT_TESTED
+        FST_NODISCARD inline constexpr memory_range subrange(size_type __offset, size_type __count = (__fst::numeric_limits<size_type>::max)()) noexcept FST_UNIT_TESTED
         {
             fst_assert(__offset <= size(), "Offset out of range in fst::memory_range::subrange(offset, "
                                            "count)");
-            __count = _FST::minimum(size() - __offset, __count);
+            __count = __fst::minimum(size() - __offset, __count);
             return { data() + __offset, __count };
         }
 
         FST_NODISCARD inline constexpr const_range subrange(
-            size_type __offset, size_type __count = (_FST::numeric_limits<size_type>::max)()) const noexcept FST_UNIT_TESTED
+            size_type __offset, size_type __count = (__fst::numeric_limits<size_type>::max)()) const noexcept FST_UNIT_TESTED
         {
             fst_assert(__offset <= size(), "Offset out of range in fst::memory_range::subrange(offset, "
                                            "count)");
-            __count = _FST::minimum(size() - __offset, __count);
+            __count = __fst::minimum(size() - __offset, __count);
             return { data() + __offset, __count };
         }
 
@@ -602,14 +602,14 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD inline memory_view<element_type> view() const noexcept { return *this; }
 
-        FST_NODISCARD inline memory_range<const _FST::byte> byte_view() const noexcept { return { reinterpret_cast<const _FST::byte*>(data()), size_bytes() }; }
+        FST_NODISCARD inline memory_range<const __fst::byte> byte_view() const noexcept { return { reinterpret_cast<const __fst::byte*>(data()), size_bytes() }; }
 
-        FST_NODISCARD inline memory_range<to_other_type<_FST::byte>> byte_range() noexcept
+        FST_NODISCARD inline memory_range<to_other_type<__fst::byte>> byte_range() noexcept
         {
-            return { reinterpret_cast<to_other_pointer<_FST::byte>>(data()), size_bytes() };
+            return { reinterpret_cast<to_other_pointer<__fst::byte>>(data()), size_bytes() };
         }
 
-        FST_NODISCARD inline memory_range<const _FST::byte> byte_range() const noexcept { return { reinterpret_cast<const _FST::byte*>(data()), size_bytes() }; }
+        FST_NODISCARD inline memory_range<const __fst::byte> byte_range() const noexcept { return { reinterpret_cast<const __fst::byte*>(data()), size_bytes() }; }
 
         template <class T>
         FST_NODISCARD inline memory_range<to_other_type<T>> cast_range() noexcept
@@ -657,12 +657,12 @@ FST_BEGIN_NAMESPACE
             return *reinterpret_cast<const T*>(data() + offset);
         }
 
-        template <class EndianTag, class T, _FST::enable_if_t<_FST::is_endian_tag_v<EndianTag>, int> = 0>
+        template <class EndianTag, class T, __fst::enable_if_t<__fst::is_endian_tag_v<EndianTag>, int> = 0>
         FST_NODISCARD inline constexpr T as(size_type offset = 0) const noexcept
         {
             fst_assert((sizeof(value_type) * offset + sizeof(T)) <= size_bytes(), "offset out of bounds");
-            if constexpr (_FST::is_same_v<_FST::little_endian_tag, EndianTag>) { return *reinterpret_cast<const T*>(data() + offset); }
-            else { return _FST::byte_swap(*reinterpret_cast<const T*>(data() + offset)); }
+            if constexpr (__fst::is_same_v<__fst::little_endian_tag, EndianTag>) { return *reinterpret_cast<const T*>(data() + offset); }
+            else { return __fst::byte_swap(*reinterpret_cast<const T*>(data() + offset)); }
         }
 
       private:
@@ -677,13 +677,13 @@ FST_BEGIN_NAMESPACE
     //class aligned_memory_range_base
     //{
     //  public:
-    //    static_assert(_FST::is_power_of_two(_Size), "_Size must be a power of two");
-    //    static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+    //    static_assert(__fst::is_power_of_two(_Size), "_Size must be a power of two");
+    //    static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
     //
     //    FST_ALWAYS_INLINE constexpr aligned_memory_range_base(_T* p = nullptr) noexcept
     //        : _data(p)
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //    }
     //
     //    constexpr aligned_memory_range_base(const aligned_memory_range_base&) noexcept = default;
@@ -695,7 +695,7 @@ FST_BEGIN_NAMESPACE
     //
     //    FST_ALWAYS_INLINE constexpr void reset(_T* p) noexcept
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //        _data = p;
     //    }
     //
@@ -703,10 +703,10 @@ FST_BEGIN_NAMESPACE
     //};
     //
     //template <class _T, size_t _Alignment>
-    //class aligned_memory_range_base<_T, (_FST::numeric_limits<size_t>::max) (), _Alignment>
+    //class aligned_memory_range_base<_T, (__fst::numeric_limits<size_t>::max) (), _Alignment>
     //{
     //  public:
-    //    static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+    //    static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
     //
     //    constexpr aligned_memory_range_base() noexcept = default;
     //
@@ -715,15 +715,15 @@ FST_BEGIN_NAMESPACE
     //        , _size(__size)
     //    {
     //        fst_assert(p || (!p && __size == 0), "nullptr with size");
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //    }
     //
-    //    FST_ALWAYS_INLINE constexpr aligned_memory_range_base(_FST::nullptr_t, size_t) noexcept
+    //    FST_ALWAYS_INLINE constexpr aligned_memory_range_base(__fst::nullptr_t, size_t) noexcept
     //        : _data(nullptr)
     //        , _size(0)
     //    {}
     //
-    //    template <class _TT, size_t _TSize, size_t _TAlignment, _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*>, int> = 0>
+    //    template <class _TT, size_t _TSize, size_t _TAlignment, __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr aligned_memory_range_base(const aligned_memory_range_base<_TT, _TSize, _TAlignment>& r) noexcept
     //        : _data(r._data)
     //        , _size(r.size())
@@ -743,7 +743,7 @@ FST_BEGIN_NAMESPACE
     //
     //    FST_ALWAYS_INLINE constexpr void reset(_T* p, size_t __size) noexcept
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //        _data = p;
     //        _size = __size;
     //    }
@@ -771,11 +771,11 @@ FST_BEGIN_NAMESPACE
     //};
     //
     //template <class T>
-    //struct is_aligned_memory_range : _FST::false_t
+    //struct is_aligned_memory_range : __fst::false_t
     //{};
     //
     //template <class _T, size_t _Size, size_t _Alignment>
-    //struct is_aligned_memory_range<aligned_memory_range<_T, _Size, _Alignment>> : _FST::true_t
+    //struct is_aligned_memory_range<aligned_memory_range<_T, _Size, _Alignment>> : __fst::true_t
     //{};
 
 FST_END_NAMESPACE

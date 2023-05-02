@@ -37,11 +37,11 @@ FST_BEGIN_NAMESPACE
     class stack_vector
     {
       public:
-        static_assert(_Size != _FST::dynamic_size, "should be dynamic");
-        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        static_assert(_Size != __fst::dynamic_size, "should be dynamic");
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
         FST_DECLARE_CONTAINER_TYPES(_T);
-        using memory_zone_type = _FST::void_memory_zone;
+        using memory_zone_type = __fst::void_memory_zone;
         FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type get_memory_zone() const noexcept { return memory_zone_type{}; }
 
         stack_vector() noexcept = default;
@@ -51,7 +51,7 @@ FST_BEGIN_NAMESPACE
 
             if (vec.size() <= capacity())
             {
-                _FST::copy_construct_range(data(), vec.data(), vec.size());
+                __fst::copy_construct_range(data(), vec.data(), vec.size());
                 _size = vec.size();
                 return;
             }
@@ -60,7 +60,7 @@ FST_BEGIN_NAMESPACE
 
         stack_vector(stack_vector&& vec) noexcept
         {
-            _FST::copy_construct_range(data(), vec.data(), vec.size());
+            __fst::copy_construct_range(data(), vec.data(), vec.size());
             _size = vec.size();
         }
 
@@ -68,7 +68,7 @@ FST_BEGIN_NAMESPACE
         {
             if (size())
             {
-                _FST::destruct_range(data(), size());
+                __fst::destruct_range(data(), size());
 
                 _size = 0;
             }
@@ -80,7 +80,7 @@ FST_BEGIN_NAMESPACE
 
             if (vec.size() <= capacity())
             {
-                _FST::copy_construct_range(data(), vec.data(), vec.size());
+                __fst::copy_construct_range(data(), vec.data(), vec.size());
                 _size = vec.size();
             }
             else { fst_error("CALADLKLADKA"); }
@@ -90,7 +90,7 @@ FST_BEGIN_NAMESPACE
         {
             reset();
 
-            _FST::copy_construct_range(data(), vec.data(), vec.size());
+            __fst::copy_construct_range(data(), vec.data(), vec.size());
             _size = vec.size();
         }
 
@@ -105,7 +105,7 @@ FST_BEGIN_NAMESPACE
 
         inline void reset()
         {
-            if (size()) { _FST::destruct_range(data(), size()); }
+            if (size()) { __fst::destruct_range(data(), size()); }
 
             _size = 0;
         }
@@ -113,7 +113,7 @@ FST_BEGIN_NAMESPACE
         FST_ALWAYS_INLINE constexpr void clear() noexcept
         {
 
-            if (size()) { _FST::destruct_range(data(), size()); }
+            if (size()) { __fst::destruct_range(data(), size()); }
 
             _size = 0;
         }
@@ -122,7 +122,7 @@ FST_BEGIN_NAMESPACE
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::copy_element((*this)[_size++], value); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
                 else { fst_placement_new(this->data() + _size++) value_type(value); }
 
                 return;
@@ -131,13 +131,13 @@ FST_BEGIN_NAMESPACE
             fst_error("DLKDJSKLJDLS");
         }
 
-        template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U> && _FST::is_same_v<U, value_type>, int> = 0>
+        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U> && __fst::is_same_v<U, value_type>, int> = 0>
         FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
 
                 return;
             }
@@ -145,13 +145,13 @@ FST_BEGIN_NAMESPACE
             fst_error("DLKDJSKLJDLS");
         }
 
-        template <class U, _FST::enable_if_t<_FST::is_same_v<U, value_type>, int> = 0>
+        template <class U, __fst::enable_if_t<__fst::is_same_v<U, value_type>, int> = 0>
         FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
 
                 return;
             }
@@ -162,11 +162,11 @@ FST_BEGIN_NAMESPACE
         template <typename... _Args>
         FST_ALWAYS_INLINE constexpr reference emplace_back(_Args&&... args) noexcept
         {
-            // push_back(value_type(_FST::forward<_Args>(args)...));
+            // push_back(value_type(__fst::forward<_Args>(args)...));
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<_Args>(args)...); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<_Args>(args)...); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
 
                 return this->back();
             }
@@ -186,23 +186,23 @@ FST_BEGIN_NAMESPACE
 
             if (size() < capacity())
             {
-                const size_type index = _FST::distance(cbegin(), pos);
+                const size_type index = __fst::distance(cbegin(), pos);
 
-                if constexpr (_FST::is_trivially_copyable_v<_T>)
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
                 {
-                    _FST::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    _FST::copy_element((*this)[index], value);
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
                 }
                 else
                 {
-                    fst_placement_new(end()) value_type(_FST::move(back()));
+                    fst_placement_new(end()) value_type(__fst::move(back()));
 
                     for (size_type i = size() - 1; i > index; i--)
                     {
-                        _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
                     }
 
-                    _FST::copy_element((*this)[index], value);
+                    __fst::copy_element((*this)[index], value);
                 }
 
                 _size++;
@@ -213,34 +213,34 @@ FST_BEGIN_NAMESPACE
             return end();
         }
 
-        template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U>, int> = 0>
+        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
         inline constexpr iterator insert(const_iterator pos, U&& value) noexcept
         {
             if (!_size || pos == cend())
             {
-                push_back(_FST::move(value));
+                push_back(__fst::move(value));
                 return end() - 1;
             }
 
             if (size() < capacity())
             {
-                const size_type index = _FST::distance(cbegin(), pos);
+                const size_type index = __fst::distance(cbegin(), pos);
 
-                if constexpr (_FST::is_trivially_copyable_v<_T>)
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
                 {
-                    _FST::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    _FST::copy_element((*this)[index], value);
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
                 }
                 else
                 {
-                    fst_placement_new(end()) value_type(_FST::move(back()));
+                    fst_placement_new(end()) value_type(__fst::move(back()));
 
                     for (size_type i = size() - 1; i > index; i--)
                     {
-                        _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
                     }
 
-                    _FST::move_element((*this)[index], _FST::move(value));
+                    __fst::move_element((*this)[index], __fst::move(value));
                 }
 
                 _size++;
@@ -254,7 +254,7 @@ FST_BEGIN_NAMESPACE
         FST_ALWAYS_INLINE constexpr void pop_back() noexcept
         {
             fst_assert(_size > 0, "Can't pop_back an empty fixed_vector.");
-            if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             --_size;
         }
 
@@ -268,15 +268,15 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            if constexpr (_FST::is_trivially_copyable_v<value_type>) { _FST::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
+            if constexpr (__fst::is_trivially_copyable_v<value_type>) { __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
             else
             {
                 for (size_type i = index; i < size() - 1; i++)
                 {
-                    (*this)[i] = _FST::move((*this)[i + 1]);
+                    (*this)[i] = __fst::move((*this)[i + 1]);
                 }
 
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             }
 
             _size--;
@@ -292,9 +292,9 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            _FST::move_element((*this)[index], _FST::move(this->back()));
+            __fst::move_element((*this)[index], __fst::move(this->back()));
 
-            if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             _size--;
         }
 
@@ -303,7 +303,7 @@ FST_BEGIN_NAMESPACE
             if (count <= size())
             {
 
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
                 {
                     for (size_type i = count; i < size(); i++)
                     {
@@ -316,7 +316,7 @@ FST_BEGIN_NAMESPACE
 
             if (count <= capacity())
             {
-                if constexpr (!_FST::is_trivially_default_constructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
                 {
                     for (size_type i = size(); i < count; i++)
                     {
@@ -335,7 +335,7 @@ FST_BEGIN_NAMESPACE
         {
             if (count <= size())
             {
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
                 {
                     for (size_type i = count; i < size(); i++)
                     {
@@ -348,11 +348,11 @@ FST_BEGIN_NAMESPACE
 
             if (count <= capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<value_type>)
+                if constexpr (__fst::is_trivially_copyable_v<value_type>)
                 {
                     for (size_type i = size(); i < count; i++)
                     {
-                        _FST::copy_element((*this)[i], value);
+                        __fst::copy_element((*this)[i], value);
                     }
                 }
                 else
@@ -371,16 +371,16 @@ FST_BEGIN_NAMESPACE
             fst_error("DLSKDJSKLJDS");
         }
 
-        alignas(_Alignment) _FST::aligned_type_storage<_T> _data[_Size];
+        alignas(_Alignment) __fst::aligned_type_storage<_T> _data[_Size];
         size_t _size = 0;
     };
 
     // is_small_vector
     template <class _T>
-    struct is_stack_vector : _FST::false_t
+    struct is_stack_vector : __fst::false_t
     {};
     template <class _T, size_t _Size, size_t _Alignment>
-    struct is_stack_vector<_FST::stack_vector<_T, _Size, _Alignment>> : _FST::true_t
+    struct is_stack_vector<__fst::stack_vector<_T, _Size, _Alignment>> : __fst::true_t
     {};
 
 FST_END_NAMESPACE

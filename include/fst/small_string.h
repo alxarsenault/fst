@@ -38,9 +38,9 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using __self = basic_small_string;
-        using view_type = _FST::basic_string_view<_CharT>;
-        using string_type = _FST::basic_string<_CharT>;
-        using traits_type = _FST::char_traits<_CharT>;
+        using view_type = __fst::basic_string_view<_CharT>;
+        using string_type = __fst::basic_string<_CharT>;
+        using traits_type = __fst::char_traits<_CharT>;
         using value_type = _CharT;
         using size_type = size_t;
         using difference_type = ::ptrdiff_t;
@@ -52,11 +52,11 @@ FST_BEGIN_NAMESPACE
         using const_iterator = const_pointer;
 
         static constexpr size_type maximum_size = _Size;
-        static constexpr size_type npos = (_FST::numeric_limits<size_type>::max)();
+        static constexpr size_type npos = (__fst::numeric_limits<size_type>::max)();
 
-        static_assert(!_FST::is_c_array_v<value_type>::value, "Character type of basic_small_string must not be an array.");
-        static_assert(_FST::is_trivial<value_type>::value, "Character type of basic_small_string must be trivial.");
-        static_assert(_FST::is_same<value_type, typename traits_type::char_type>::value, "traits_type::char_type must be the same type as value_type.");
+        static_assert(!__fst::is_c_array_v<value_type>::value, "Character type of basic_small_string must not be an array.");
+        static_assert(__fst::is_trivial<value_type>::value, "Character type of basic_small_string must be trivial.");
+        static_assert(__fst::is_same<value_type, typename traits_type::char_type>::value, "traits_type::char_type must be the same type as value_type.");
 
         constexpr basic_small_string() noexcept = default;
 
@@ -64,7 +64,7 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(count <= maximum_size, "basic_small_string count must be smaller or equal to "
                                               "maximum_size.");
-            _FST::memfill(_data.data(), ch, count);
+            __fst::memfill(_data.data(), ch, count);
 
             _size = count;
             _data[_size] = 0;
@@ -76,7 +76,7 @@ FST_BEGIN_NAMESPACE
         {}
 
         inline constexpr basic_small_string(basic_small_string&& other) noexcept
-            : _data(_FST::move(other._data))
+            : _data(__fst::move(other._data))
             , _size(other._size)
         {
 
@@ -87,9 +87,9 @@ FST_BEGIN_NAMESPACE
         inline constexpr basic_small_string(const basic_small_string& other, size_type pos, size_type count = npos) noexcept
         {
             fst_assert(pos <= other._size, "basic_small_string pos must be smaller or equal to size.");
-            _size = _FST::minimum(count, other._size - pos);
+            _size = __fst::minimum(count, other._size - pos);
 
-            _FST::memcpy(_data.data(), other.data() + pos, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), other.data() + pos, _size * sizeof(value_type));
 
             _data[_size] = 0;
         }
@@ -101,7 +101,7 @@ FST_BEGIN_NAMESPACE
                                                      "maximum_size.");
 
             _size = other.size();
-            _FST::memcpy(_data.data(), other.data(), _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), other.data(), _size * sizeof(value_type));
             _data[_size] = 0;
         }
 
@@ -111,9 +111,9 @@ FST_BEGIN_NAMESPACE
             fst_assert(other.size() <= maximum_size, "basic_small_string size must be smaller or equal to "
                                                      "maximum_size.");
             fst_assert(pos <= other.size(), "basic_small_string pos must be smaller or equal to size.");
-            _size = _FST::minimum(count, other.size() - pos);
+            _size = __fst::minimum(count, other.size() - pos);
 
-            _FST::memcpy(_data.data(), other.data() + pos, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), other.data() + pos, _size * sizeof(value_type));
 
             _data[_size] = 0;
         }
@@ -123,7 +123,7 @@ FST_BEGIN_NAMESPACE
             _size = c_strlen(s);
             fst_assert(_size <= maximum_size, "basic_small_string c string must be smaller or equal to "
                                               "maximum_size.");
-            _FST::memcpy(_data.data(), s, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), s, _size * sizeof(value_type));
             _data[_size] = 0;
         }
 
@@ -134,7 +134,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(count <= c_strlen(s), "basic_small_string count must be smaller or equal to c string "
                                              "size.");
             _size = count;
-            _FST::memcpy(_data.data(), s, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), s, _size * sizeof(value_type));
 
             _data[_size] = 0;
         }
@@ -146,7 +146,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_size <= maximum_size, "basic_small_string iteration distance must be smaller or "
                                               "equal to maximum_size.");
 
-            _FST::memcpy(_data.data(), first, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), first, _size * sizeof(value_type));
             _data[_size] = 0;
         }
 
@@ -155,7 +155,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(v.size() <= maximum_size, "basic_small_string view size must be smaller or equal to "
                                                  "maximum_size.");
             _size = v.size();
-            _FST::memcpy(_data.data(), v.data(), _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), v.data(), _size * sizeof(value_type));
 
             _data[_size] = 0;
         }
@@ -164,11 +164,11 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(pos <= v.size(), "basic_small_string pos must be smaller or equal to view "
                                         "size.");
-            _size = _FST::minimum(count, v.size() - pos);
+            _size = __fst::minimum(count, v.size() - pos);
             fst_assert(_size <= maximum_size, "basic_small_string size must be smaller or equal to "
                                               "maximum_size.");
 
-            _FST::memcpy(_data.data(), v.data() + pos, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), v.data() + pos, _size * sizeof(value_type));
 
             _data[_size] = 0;
         }
@@ -190,7 +190,7 @@ FST_BEGIN_NAMESPACE
 
         inline constexpr basic_small_string& operator=(basic_small_string&& other) noexcept
         {
-            _data = _FST::move(other._data);
+            _data = __fst::move(other._data);
             _size = other._size;
             other._size = 0;
             return *this;
@@ -201,7 +201,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(v.size() <= maximum_size, "basic_small_string view size must be smaller or equal to "
                                                  "maximum_size.");
             _size = v.size();
-            _FST::memcpy(_data.data(), v.data(), _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), v.data(), _size * sizeof(value_type));
 
             _data[_size] = 0;
             return *this;
@@ -215,7 +215,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_size <= maximum_size, "basic_small_string c string must be smaller or equal to "
                                               "maximum_size.");
 
-            _FST::memcpy(_data.data(), s, _size * sizeof(value_type));
+            __fst::memcpy(_data.data(), s, _size * sizeof(value_type));
 
             _data[_size] = 0;
             return *this;
@@ -313,7 +313,7 @@ FST_BEGIN_NAMESPACE
 
         inline constexpr bool is_appendable(const basic_small_string& other, size_type pos, size_type count = npos) const noexcept
         {
-            return (pos <= other.size()) && (_size + _FST::minimum(count, other.size() - pos) <= maximum_size);
+            return (pos <= other.size()) && (_size + __fst::minimum(count, other.size() - pos) <= maximum_size);
         }
 
         inline constexpr bool is_appendable(size_type count) const noexcept { return _size + count <= maximum_size; }
@@ -322,7 +322,7 @@ FST_BEGIN_NAMESPACE
 
         inline constexpr bool is_appendable(view_type v, size_type pos, size_type count = npos) const noexcept
         {
-            return (pos <= v.size()) && (_size + _FST::minimum(count, v.size() - pos) <= maximum_size);
+            return (pos <= v.size()) && (_size + __fst::minimum(count, v.size() - pos) <= maximum_size);
         }
 
         inline constexpr basic_small_string& append(value_type c) noexcept
@@ -339,7 +339,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_size + count <= maximum_size, "basic_small_string::append size would end up greather than "
                                                       "maximum_size.");
 
-            _FST::memfill(_data.data() + _size, c, count);
+            __fst::memfill(_data.data() + _size, c, count);
             _size += count;
             _data[_size] = 0;
             return *this;
@@ -350,7 +350,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_size + other.size() <= maximum_size, "basic_small_string::append size would end up greather than "
                                                              "maximum_size.");
 
-            _FST::memcpy(_data.data() + _size, other.data(), other.size() * sizeof(value_type));
+            __fst::memcpy(_data.data() + _size, other.data(), other.size() * sizeof(value_type));
 
             _size += other.size();
             _data[_size] = 0;
@@ -361,11 +361,11 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(pos <= other.size(), "basic_small_string pos must be smaller or equal to string "
                                             "size.");
-            size_type o_size = _FST::minimum(count, other.size() - pos);
+            size_type o_size = __fst::minimum(count, other.size() - pos);
             fst_assert(_size + o_size <= maximum_size, "basic_small_string::append size would end up greather than "
                                                        "maximum_size.");
 
-            _FST::memcpy(_data.data() + _size, other.data() + pos, o_size * sizeof(value_type));
+            __fst::memcpy(_data.data() + _size, other.data() + pos, o_size * sizeof(value_type));
 
             _size += o_size;
             _data[_size] = 0;
@@ -377,7 +377,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_size + v.size() <= maximum_size, "basic_small_string::append size would end up greather than "
                                                          "maximum_size.");
 
-            _FST::memcpy(_data.data() + _size, v.data(), v.size() * sizeof(value_type));
+            __fst::memcpy(_data.data() + _size, v.data(), v.size() * sizeof(value_type));
 
             _size += v.size();
             _data[_size] = 0;
@@ -388,11 +388,11 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(pos <= v.size(), "basic_small_string pos must be smaller or equal to view "
                                         "size.");
-            size_type o_size = _FST::minimum(count, v.size() - pos);
+            size_type o_size = __fst::minimum(count, v.size() - pos);
             fst_assert(_size + o_size <= maximum_size, "basic_small_string::append size would end up greather than "
                                                        "maximum_size.");
 
-            _FST::memcpy(_data.data() + _size, v.data() + pos, o_size * sizeof(value_type));
+            __fst::memcpy(_data.data() + _size, v.data() + pos, o_size * sizeof(value_type));
 
             _size += o_size;
             _data[_size] = 0;
@@ -428,9 +428,9 @@ FST_BEGIN_NAMESPACE
             fst_assert(count + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                       "maximum_size.");
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + count), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + count), (const void*) (_data.data() + index), delta * sizeof(value_type));
             // std::fill_n(_data.data() + index, count, c);
-            _FST::memfill(_data.data() + index, c, count);
+            __fst::memfill(_data.data() + index, c, count);
             _size += count;
             _data[_size] = 0;
             return *this;
@@ -442,9 +442,9 @@ FST_BEGIN_NAMESPACE
             fst_assert(v.size() + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                          "maximum_size.");
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + v.size()), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + v.size()), (const void*) (_data.data() + index), delta * sizeof(value_type));
 
-            _FST::memcpy(_data.data() + index, v.data(), v.size() * sizeof(value_type));
+            __fst::memcpy(_data.data() + index, v.data(), v.size() * sizeof(value_type));
 
             _size += v.size();
             _data[_size] = 0;
@@ -458,9 +458,9 @@ FST_BEGIN_NAMESPACE
             fst_assert(count + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                       "maximum_size.");
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + count), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + count), (const void*) (_data.data() + index), delta * sizeof(value_type));
 
-            _FST::memcpy(_data.data() + index, v.data(), count * sizeof(value_type));
+            __fst::memcpy(_data.data() + index, v.data(), count * sizeof(value_type));
 
             _size += count;
             _data[_size] = 0;
@@ -471,14 +471,14 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(index <= _size, "basic_small_string::insert index out of bounds.");
             fst_assert(index_str <= v.size(), "basic_small_string::insert index_str out of bounds.");
-            size_type s_size = _FST::minimum(count, v.size() - index_str);
+            size_type s_size = __fst::minimum(count, v.size() - index_str);
             fst_assert(s_size + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                        "maximum_size.");
 
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + s_size), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + s_size), (const void*) (_data.data() + index), delta * sizeof(value_type));
 
-            _FST::memcpy(_data.data() + index, v.data() + index_str, s_size * sizeof(value_type));
+            __fst::memcpy(_data.data() + index, v.data() + index_str, s_size * sizeof(value_type));
 
             _size += s_size;
             _data[_size] = 0;
@@ -495,9 +495,9 @@ FST_BEGIN_NAMESPACE
             fst_assert(str.size() + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                            "maximum_size.");
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + str.size()), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + str.size()), (const void*) (_data.data() + index), delta * sizeof(value_type));
 
-            _FST::memcpy(_data.data() + index, str.data(), str.size() * sizeof(value_type));
+            __fst::memcpy(_data.data() + index, str.data(), str.size() * sizeof(value_type));
 
             _size += str.size();
             _data[_size] = 0;
@@ -508,14 +508,14 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(index <= _size, "basic_small_string::insert index out of bounds.");
             fst_assert(index_str <= str.size(), "basic_small_string::insert index_str out of bounds.");
-            size_type s_size = _FST::minimum(count, str.size() - index_str);
+            size_type s_size = __fst::minimum(count, str.size() - index_str);
             fst_assert(s_size + _size <= maximum_size, "basic_small_string::insert size would end up greather than "
                                                        "maximum_size.");
 
             size_type delta = _size - index;
-            _FST::memmove((void*) (_data.data() + index + s_size), (const void*) (_data.data() + index), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index + s_size), (const void*) (_data.data() + index), delta * sizeof(value_type));
 
-            _FST::memcpy(_data.data() + index, str.data() + index_str, s_size * sizeof(value_type));
+            __fst::memcpy(_data.data() + index, str.data() + index_str, s_size * sizeof(value_type));
 
             _size += s_size;
             _data[_size] = 0;
@@ -528,9 +528,9 @@ FST_BEGIN_NAMESPACE
         inline constexpr basic_small_string& erase(size_type index = 0, size_type count = npos)
         {
             fst_assert(index <= _size, "basic_small_string::insert index out of bounds.");
-            size_type s_size = _FST::minimum(count, _size - index);
+            size_type s_size = __fst::minimum(count, _size - index);
             size_type delta = _size - s_size;
-            _FST::memmove((void*) (_data.data() + index), (const void*) (_data.data() + index + s_size), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data.data() + index), (const void*) (_data.data() + index + s_size), delta * sizeof(value_type));
             _size -= s_size;
             _data[_size] = 0;
             return *this;
@@ -550,7 +550,7 @@ FST_BEGIN_NAMESPACE
             }
             else if (count > _size)
             {
-                _FST::memfill(_data.data() + _size, c, (count - _size));
+                __fst::memfill(_data.data() + _size, c, (count - _size));
                 _size = count;
                 _data[_size] = 0;
             }
@@ -604,7 +604,7 @@ FST_BEGIN_NAMESPACE
 
       private:
         static constexpr size_type maximum_size_with_escape_char = maximum_size + 1;
-        _FST::array<value_type, maximum_size_with_escape_char> _data;
+        __fst::array<value_type, maximum_size_with_escape_char> _data;
         size_t _size = 0;
 
         inline constexpr size_type c_strlen(const value_type* str) noexcept { return *str ? 1 + c_strlen(str + 1) : 0; }
@@ -794,45 +794,45 @@ FST_BEGIN_NAMESPACE
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(basic_small_string<_CharT, _Size>&& __lhs, const basic_small_string<_CharT, _Size>& __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(const basic_small_string<_CharT, _Size>& __lhs, basic_small_string<_CharT, _Size>&& __rhs) noexcept
     {
-        return _FST::move(__rhs.insert(0, __lhs));
+        return __fst::move(__rhs.insert(0, __lhs));
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(basic_small_string<_CharT, _Size>&& __lhs, basic_small_string<_CharT, _Size>&& __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(basic_small_string<_CharT, _Size>&& __lhs, const _CharT* __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(const _CharT* __lhs, basic_small_string<_CharT, _Size>&& __rhs) noexcept
     {
-        return _FST::move(__rhs.insert(0, __lhs));
+        return __fst::move(__rhs.insert(0, __lhs));
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(_CharT __lhs, basic_small_string<_CharT, _Size>&& __rhs) noexcept
     {
         __rhs.insert(__rhs.begin(), __lhs);
-        return _FST::move(__rhs);
+        return __fst::move(__rhs);
     }
 
     template <class _CharT, size_t _Size>
     inline basic_small_string<_CharT, _Size> operator+(basic_small_string<_CharT, _Size>&& __lhs, _CharT __rhs) noexcept
     {
         __lhs.push_back(__rhs);
-        return _FST::move(__lhs);
+        return __fst::move(__lhs);
     }
 
     template <size_t N>

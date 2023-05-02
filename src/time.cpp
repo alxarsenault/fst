@@ -23,11 +23,11 @@ FST_BEGIN_NAMESPACE
         //return time_point(::time(0));
     }
 
-    _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, time_point now)
+    __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, time_point now)
     {
         // https://stackoverflow.com/a/35157784
-        constexpr size_t time_size = _FST::char_traits<char>::length("HH:MM:SS");
-        constexpr size_t ms_size = _FST::char_traits<char>::length(":MMM");
+        constexpr size_t time_size = __fst::char_traits<char>::length("HH:MM:SS");
+        constexpr size_t ms_size = __fst::char_traits<char>::length(":MMM");
         constexpr size_t total_size = time_size + ms_size;
         char str[total_size + 1];
 
@@ -37,7 +37,7 @@ FST_BEGIN_NAMESPACE
 #if __FST_WINDOWS__
         if (FST_ATTRIBUTE_UNUSED errno_t err = ::localtime_s(&tms, &t))
         {
-            _FST::unused(err);
+            __fst::unused(err);
             fst_error("time convertion error");
             return stream;
         }

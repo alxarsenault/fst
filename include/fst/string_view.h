@@ -41,121 +41,121 @@ FST_BEGIN_NAMESPACE
 #endif // FST_HAS_CHAR8_T
 
     template <typename _CharT>
-    inline constexpr void swap(_FST::basic_string_view<_CharT> & lhs, _FST::basic_string_view<_CharT> & rhs) noexcept
+    inline constexpr void swap(__fst::basic_string_view<_CharT> & lhs, __fst::basic_string_view<_CharT> & rhs) noexcept
     {
         lhs.swap(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator==(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator==(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) == 0;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator==(_FST::basic_string_view<_CharT> lhs, const _CharT* rhs) noexcept
+    inline constexpr bool operator==(__fst::basic_string_view<_CharT> lhs, const _CharT* rhs) noexcept
     {
-        return lhs == _FST::basic_string_view<_CharT>(rhs);
+        return lhs == __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator==(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator==(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) == rhs;
+        return __fst::basic_string_view<_CharT>(lhs) == rhs;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator!=(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator!=(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) != 0;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator!=(const _FST::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
+    inline constexpr bool operator!=(const __fst::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
     {
-        return lhs != _FST::basic_string_view<_CharT>(rhs);
+        return lhs != __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator!=(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator!=(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) != rhs;
+        return __fst::basic_string_view<_CharT>(lhs) != rhs;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator<(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator<(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) < 0;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator<(const _FST::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
+    inline constexpr bool operator<(const __fst::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
     {
-        return lhs < _FST::basic_string_view<_CharT>(rhs);
+        return lhs < __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator<(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator<(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) < rhs;
+        return __fst::basic_string_view<_CharT>(lhs) < rhs;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator>(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) > 0;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>(const _FST::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
+    inline constexpr bool operator>(const __fst::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
     {
-        return lhs > _FST::basic_string_view<_CharT>(rhs);
+        return lhs > __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator>(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) > rhs;
+        return __fst::basic_string_view<_CharT>(lhs) > rhs;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator<=(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator<=(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) <= 0;
     }
 
     template <typename _CharT>
-    inline bool operator<=(const _FST::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
+    inline bool operator<=(const __fst::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
     {
-        return lhs <= _FST::basic_string_view<_CharT>(rhs);
+        return lhs <= __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator<=(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator<=(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) <= rhs;
+        return __fst::basic_string_view<_CharT>(lhs) <= rhs;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>=(const _FST::basic_string_view<_CharT>& lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator>=(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) >= 0;
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>=(const _FST::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
+    inline constexpr bool operator>=(const __fst::basic_string_view<_CharT>& lhs, const _CharT* rhs) noexcept
     {
-        return lhs >= _FST::basic_string_view<_CharT>(rhs);
+        return lhs >= __fst::basic_string_view<_CharT>(rhs);
     }
 
     template <typename _CharT>
-    inline constexpr bool operator>=(const _CharT* lhs, const _FST::basic_string_view<_CharT>& rhs) noexcept
+    inline constexpr bool operator>=(const _CharT* lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) >= rhs;
+        return __fst::basic_string_view<_CharT>(lhs) >= rhs;
     }
 
     template <class _CharT>
-    inline _FST::output_stream<_CharT>& operator<<(_FST::output_stream<_CharT>& stream, _FST::basic_string_view<_CharT> str) noexcept
+    inline __fst::output_stream<_CharT>& operator<<(__fst::output_stream<_CharT>& stream, __fst::basic_string_view<_CharT> str) noexcept
     {
         stream.write(str.data(), str.size());
         return stream;
@@ -165,7 +165,7 @@ FST_END_NAMESPACE
 #if FST_USE_STL
 #include <ostream>
 template <class _CharT, class _Traits>
-inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, _FST::basic_string_view<_CharT> str)
+inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, __fst::basic_string_view<_CharT> str)
 {
     return stream.write(str.data(), str.size());
 }

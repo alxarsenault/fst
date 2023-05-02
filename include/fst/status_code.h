@@ -247,13 +247,13 @@ FST_BEGIN_NAMESPACE
     };
 
     template <class charT>
-    inline _FST::output_stream<charT>& operator<<(_FST::output_stream<charT>& stream, _FST::status_code sc)
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::status_code sc)
     {
-        return stream << _FST::status(sc).message();
+        return stream << __fst::status(sc).message();
     }
 
     template <class charT>
-    inline _FST::output_stream<charT>& operator<<(_FST::output_stream<charT>& stream, _FST::status st)
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::status st)
     {
         return stream << st.message();
     }
@@ -264,13 +264,13 @@ FST_END_NAMESPACE
 #include <ostream>
 
 template <class _CharT, class _Traits>
-inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, _FST::status_code sc)
+inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, __fst::status_code sc)
 {
-    return stream << _FST::status(sc).message();
+    return stream << __fst::status(sc).message();
 }
 
 template <class _CharT, class _Traits>
-inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, _FST::status st)
+inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, __fst::status st)
 {
     return stream << st.message();
 }

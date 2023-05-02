@@ -49,15 +49,15 @@ FST_BEGIN_NAMESPACE
 #endif // FST_HAS_CHAR8_T
 
     template <class _T>
-    struct numeric_limits<const _T> : _FST::numeric_limits<_T>
+    struct numeric_limits<const _T> : __fst::numeric_limits<_T>
     {};
 
     template <class _T>
-    struct numeric_limits<volatile _T> : _FST::numeric_limits<_T>
+    struct numeric_limits<volatile _T> : __fst::numeric_limits<_T>
     {};
 
     template <class _T>
-    struct numeric_limits<const volatile _T> : _FST::numeric_limits<_T>
+    struct numeric_limits<const volatile _T> : __fst::numeric_limits<_T>
     {};
 
 FST_END_NAMESPACE

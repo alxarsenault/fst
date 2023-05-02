@@ -23,7 +23,7 @@ FST_BEGIN_SUB_NAMESPACE(async)
         , _thread_data{ nullptr, nullptr, nullptr }
     {
 
-        //native* ptr = (native*) _FST::default_memory_zone::aligned_allocate(sizeof(native), alignof(native), _FST::async_memory_category::id());
+        //native* ptr = (native*) __fst::default_memory_zone::aligned_allocate(sizeof(native), alignof(native), __fst::async_memory_category::id());
         //fst_assert(ptr, "allocation failed");
 
         //ptr = fst_placement_new(ptr) native();

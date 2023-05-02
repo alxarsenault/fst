@@ -33,11 +33,11 @@ FST_BEGIN_NAMESPACE
     template <size_t _Size, size_t _Alignment>
     struct aligned_storage
     {
-        using value_type = _FST::byte;
-        using pointer = _FST::byte*;
-        using const_pointer = const _FST::byte*;
-        using reference = _FST::byte&;
-        using const_reference = _FST::byte;
+        using value_type = __fst::byte;
+        using pointer = __fst::byte*;
+        using const_pointer = const __fst::byte*;
+        using reference = __fst::byte&;
+        using const_reference = __fst::byte;
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
@@ -45,16 +45,16 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD static inline constexpr size_type alignment() noexcept { return _Alignment; }
         FST_NODISCARD static inline constexpr size_type aligned_size() noexcept { return sizeof(aligned_storage); }
 
-        FST_NODISCARD inline constexpr _FST::byte* data() noexcept { return &_data[0]; }
-        FST_NODISCARD inline constexpr const _FST::byte* data() const noexcept { return &_data[0]; }
+        FST_NODISCARD inline constexpr __fst::byte* data() noexcept { return &_data[0]; }
+        FST_NODISCARD inline constexpr const __fst::byte* data() const noexcept { return &_data[0]; }
 
-        FST_NODISCARD inline constexpr _FST::byte* data(size_type index) noexcept
+        FST_NODISCARD inline constexpr __fst::byte* data(size_type index) noexcept
         {
             fst_assert(index < aligned_size(), "index out of bounds");
             return &_data[index];
         }
 
-        FST_NODISCARD inline constexpr const _FST::byte* data(size_type index) const noexcept
+        FST_NODISCARD inline constexpr const __fst::byte* data(size_type index) const noexcept
         {
             fst_assert(index < aligned_size(), "index out of bounds");
             return &_data[index];
@@ -100,13 +100,13 @@ FST_BEGIN_NAMESPACE
             return *reinterpret_cast<const T*>(data() + offset);
         }
 
-        FST_NODISCARD inline constexpr _FST::byte& operator[](size_type index) noexcept
+        FST_NODISCARD inline constexpr __fst::byte& operator[](size_type index) noexcept
         {
             fst_assert(index < aligned_size(), "index out of bounds");
             return _data[index];
         }
 
-        FST_NODISCARD inline constexpr _FST::byte operator[](size_type index) const noexcept
+        FST_NODISCARD inline constexpr __fst::byte operator[](size_type index) const noexcept
         {
             fst_assert(index < aligned_size(), "index out of bounds");
             return _data[index];
@@ -115,16 +115,16 @@ FST_BEGIN_NAMESPACE
         template <size_t _OtherAlignment>
         FST_NODISCARD inline bool operator==(const aligned_storage<_Size, _OtherAlignment>& s) const noexcept
         {
-            return !_FST::memcmp(data(), s.data(), size());
+            return !__fst::memcmp(data(), s.data(), size());
         }
 
         template <size_t _OtherAlignment>
         FST_NODISCARD inline bool operator!=(const aligned_storage<_Size, _OtherAlignment>& s) const noexcept
         {
-            return _FST::memcmp(data(), s.data(), size());
+            return __fst::memcmp(data(), s.data(), size());
         }
 
-        alignas(_Alignment) _FST::byte _data[_Size];
+        alignas(_Alignment) __fst::byte _data[_Size];
     };
 
     ///
@@ -153,17 +153,17 @@ FST_BEGIN_NAMESPACE
         template <class... Args>
         inline T* construct(Args&&... args) noexcept
         {
-            if constexpr (_FST::is_trivial_v<T>)
+            if constexpr (__fst::is_trivial_v<T>)
             {
-                get() = T(_FST::forward<Args>(args)...);
+                get() = T(__fst::forward<Args>(args)...);
                 return data();
             }
-            else { return fst_placement_new(_data) T(_FST::forward<Args>(args)...); }
+            else { return fst_placement_new(_data) T(__fst::forward<Args>(args)...); }
         }
 
         inline void destroy() noexcept
         {
-            if constexpr (!_FST::is_trivial_v<T>) { get().~T(); }
+            if constexpr (!__fst::is_trivial_v<T>) { get().~T(); }
         }
 
         FST_NODISCARD inline T& get() noexcept { return *data(); }
@@ -173,7 +173,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline operator const T&() const noexcept { return get(); }
 
       private:
-        alignas(alignof(T)) _FST::byte _data[sizeof(T)];
+        alignas(alignof(T)) __fst::byte _data[sizeof(T)];
     };
 
 FST_END_NAMESPACE

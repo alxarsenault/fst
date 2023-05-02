@@ -57,7 +57,7 @@ FST_BEGIN_NAMESPACE
             template <class _CharT, class _UIntT>
             inline _CharT* uint_to_buff(_CharT* ptr, _UIntT value)
             {
-                static_assert(_FST::is_unsigned_v<_UIntT>, "_UIntT must be unsigned");
+                static_assert(__fst::is_unsigned_v<_UIntT>, "_UIntT must be unsigned");
 
 #if __FST_64_BIT__
                 auto value_trunc = value;
@@ -93,7 +93,7 @@ FST_BEGIN_NAMESPACE
             template <class _CharT, class _UIntT>
             inline _CharT* uint_to_buff_hex(_CharT* ptr, _UIntT value)
             {
-                static_assert(_FST::is_unsigned_v<_UIntT>, "_UIntT must be unsigned");
+                static_assert(__fst::is_unsigned_v<_UIntT>, "_UIntT must be unsigned");
 
                 uint64_t value_trunc = value;
                 do
@@ -200,37 +200,37 @@ FST_BEGIN_NAMESPACE
     };
 
     template <class _T>
-    struct is_stream_modifier : _FST::false_t
+    struct is_stream_modifier : __fst::false_t
     {};
     template <>
-    struct is_stream_modifier<_FST::term_color> : _FST::true_t
+    struct is_stream_modifier<__fst::term_color> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::stream_endl_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::stream_endl_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::stream_space_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::stream_space_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::tab_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::tab_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::comma_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::comma_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::equal_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::equal_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::sep_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::sep_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::sep_endl_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::sep_endl_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::empty_t> : _FST::true_t
+    struct is_stream_modifier<__fst::empty_t> : __fst::true_t
     {};
     template <>
-    struct is_stream_modifier<_FST::stream_detail::dash_t> : _FST::true_t
+    struct is_stream_modifier<__fst::stream_detail::dash_t> : __fst::true_t
     {};
 
     template <class _CharT>
@@ -257,7 +257,7 @@ FST_BEGIN_NAMESPACE
             return *this;
         }
 
-        template <class T, _FST::enable_if_t<_FST::is_function_v<T> || _FST::is_pointer_v<T>, int> = 0>
+        template <class T, __fst::enable_if_t<__fst::is_function_v<T> || __fst::is_pointer_v<T>, int> = 0>
         inline output_stream& operator<<(const T& v) noexcept
         {
             _CharT buffer[21];
@@ -334,38 +334,38 @@ FST_BEGIN_NAMESPACE
         inline output_stream& operator<<(const _CharT* str) noexcept
         {
             fst_assert(str);
-            write(str, _FST::char_traits<_CharT>::length(str), stream_modifier::normal);
+            write(str, __fst::char_traits<_CharT>::length(str), stream_modifier::normal);
             return *this;
         }
 
         inline output_stream& operator<<(_CharT* str) noexcept
         {
             fst_assert(str);
-            write(str, _FST::char_traits<_CharT>::length(str), stream_modifier::normal);
+            write(str, __fst::char_traits<_CharT>::length(str), stream_modifier::normal);
             return *this;
         }
 
-        output_stream& operator<<(_FST::nullptr_t) noexcept
+        output_stream& operator<<(__fst::nullptr_t) noexcept
         {
             const _CharT s[] = { 'n', 'u', 'l', 'l' };
             write(s, sizeof(s), stream_modifier::normal);
             return *this;
         }
 
-        template <class C = char, _FST::enable_if_t<!_FST::is_same_v<C, _CharT> && _FST::is_same_v<_CharT, wchar_t>, int> = 0>
+        template <class C = char, __fst::enable_if_t<!__fst::is_same_v<C, _CharT> && __fst::is_same_v<_CharT, wchar_t>, int> = 0>
         inline output_stream& operator<<(const char* str) noexcept
         {
             fst_assert(str);
-            const size_t size = _FST::strlen(str);
+            const size_t size = __fst::strlen(str);
             write(str, size);
             return *this;
         }
 
-        template <class C = char, _FST::enable_if_t<!_FST::is_same_v<C, _CharT> && _FST::is_same_v<_CharT, wchar_t>, int> = 0>
+        template <class C = char, __fst::enable_if_t<!__fst::is_same_v<C, _CharT> && __fst::is_same_v<_CharT, wchar_t>, int> = 0>
         inline output_stream& operator<<(char* str) noexcept
         {
             fst_assert(str);
-            const size_t size = _FST::strlen(str);
+            const size_t size = __fst::strlen(str);
             write(str, size);
             return *this;
         }
@@ -377,19 +377,19 @@ FST_BEGIN_NAMESPACE
             return *this;
         }
 
-        template <class C = _CharT, _FST::enable_if_t<!_FST::is_same_v<C, char>, int> = 0>
+        template <class C = _CharT, __fst::enable_if_t<!__fst::is_same_v<C, char>, int> = 0>
         inline output_stream& operator<<(_CharT c) noexcept
         {
             write(&c, 1, stream_modifier::normal);
             return *this;
         }
 
-        template <class _T, _FST::enable_if_t<_FST::is_integral_v<_T>, int> = 0>
+        template <class _T, __fst::enable_if_t<__fst::is_integral_v<_T>, int> = 0>
         output_stream& operator<<(_T value) noexcept
         {
             _CharT buffer[21];
 
-            if constexpr (_FST::is_unsigned_v<_T>)
+            if constexpr (__fst::is_unsigned_v<_T>)
             {
                 const _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, value);
                 write(begin, size_t(&buffer[0] + 21 - begin), stream_modifier::normal);
@@ -398,13 +398,13 @@ FST_BEGIN_NAMESPACE
             {
                 if (value < 0)
                 {
-                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, 0 - static_cast<_FST::make_unsigned_t<_T>>(value));
+                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, 0 - static_cast<__fst::make_unsigned_t<_T>>(value));
                     *--begin = (_CharT) '-';
                     write(begin, size_t(&buffer[0] + 21 - begin), stream_modifier::normal);
                 }
                 else
                 {
-                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<_FST::make_unsigned_t<_T>>(value));
+                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(value));
                     write(begin, size_t(&buffer[0] + 21 - begin), stream_modifier::normal);
                 }
             }
@@ -413,7 +413,7 @@ FST_BEGIN_NAMESPACE
         }
 
         template <size_t I = 0, typename... _Ts>
-        inline void print_tuple(const _FST::tuple<_Ts...>& t)
+        inline void print_tuple(const __fst::tuple<_Ts...>& t)
         {
 
             *this << t.template get<I>();
@@ -421,24 +421,24 @@ FST_BEGIN_NAMESPACE
             if constexpr (I < sizeof...(_Ts) - 1) { print_tuple<I + 1, _Ts...>(*this << ", ", t); }
         }
 
-        template <class _T, _FST::enable_if_t<_FST::is_floating_point_v<_T>, int> = 0>
+        template <class _T, __fst::enable_if_t<__fst::is_floating_point_v<_T>, int> = 0>
         output_stream& operator<<(_T value) noexcept
         {
             _CharT buffer[33];
-            int len = _FST::snprintf(&buffer[0], 32, "%g", (double) value);
+            int len = __fst::snprintf(&buffer[0], 32, "%g", (double) value);
             write(&buffer[0], (size_t) len, stream_modifier::normal);
             return *this;
         }
 
-        template <class _T, _FST::enable_if_t<is_c_array_v<_T>, int> = 0>
+        template <class _T, __fst::enable_if_t<is_c_array_v<_T>, int> = 0>
         output_stream& operator<<(const _T& value) noexcept
         {
-            const size_t size = _FST::strlen(value);
+            const size_t size = __fst::strlen(value);
             write(value, size);
             return *this;
         }
 
-        template <class _T, _FST::enable_if_t<is_iterable<_T>::value && !_FST::is_c_array_v<_T> && !_FST::is_string_view_convertible<_T>::value, int> = 0>
+        template <class _T, __fst::enable_if_t<is_iterable<_T>::value && !__fst::is_c_array_v<_T> && !__fst::is_string_view_convertible<_T>::value, int> = 0>
         output_stream& operator<<(const _T& value) noexcept
         {
             *this << "{";
@@ -472,15 +472,15 @@ FST_BEGIN_NAMESPACE
             if (mod < stream_modifier::endl)
             {
                 has_color = mod != stream_modifier::reset;
-                _FST::write_stdout(str, size);
+                __fst::write_stdout(str, size);
             }
             else if (mod == stream_modifier::endl && has_color)
             {
                 has_color = false;
                 const _CharT s[] = { '\033', '[', '0', 'm', '\n' };
-                _FST::write_stdout(s, sizeof(s));
+                __fst::write_stdout(s, sizeof(s));
             }
-            else { _FST::write_stdout(str, size); }
+            else { __fst::write_stdout(str, size); }
         }
     };
 
@@ -496,19 +496,19 @@ FST_BEGIN_NAMESPACE
                 size = 5;
             }
 
-            _FST::write_stdout(str, size);
+            __fst::write_stdout(str, size);
         } };
 
     FST_INLINE_VAR output_stream<wchar_t> wcout = { nullptr, [](void*, const wchar_t* str, size_t size, stream_modifier)
         {
-            _FST::write_wstdout(str, size);
+            __fst::write_wstdout(str, size);
         } };
 
     template <typename T, typename _Stream>
     inline void print_element(_Stream & stream, const T& t);
 
     template <size_t I = 0, typename... _Ts, typename _Stream>
-    inline void print_tuple(_Stream & stream, const _FST::tuple<_Ts...>& t)
+    inline void print_tuple(_Stream & stream, const __fst::tuple<_Ts...>& t)
     {
         print_element(stream, t.template get<I>());
 
@@ -539,26 +539,26 @@ FST_BEGIN_NAMESPACE
             print_element(stream, t.second());
             stream << "}";
         }
-        else if constexpr (_FST::is_tuple<T>::value)
+        else if constexpr (__fst::is_tuple<T>::value)
         {
             print_tuple(stream << "{", t);
             stream << "}";
         }
         else
         {
-            if constexpr (_FST::is_class_v<T>) { stream << "unknown class"; }
-            else if constexpr (_FST::is_object_v<T>) { stream << "unknown object"; }
+            if constexpr (__fst::is_class_v<T>) { stream << "unknown class"; }
+            else if constexpr (__fst::is_object_v<T>) { stream << "unknown object"; }
             else { stream << "unknown"; }
         }
     }
 
-    template <class _Stream, typename D = stream_detail::comma_t, class E = _FST::stream_detail::stream_endl_t, typename T, typename... Ts>
+    template <class _Stream, typename D = stream_detail::comma_t, class E = __fst::stream_detail::stream_endl_t, typename T, typename... Ts>
     inline void basic_print(_Stream & stream, const T& t, const Ts&... ts)
     {
         if constexpr (sizeof...(ts) > 0)
         {
             print_element(stream, t);
-            if constexpr (_FST::is_stream_modifier<T>::value) { basic_print<_Stream, D, E>(stream, ts...); }
+            if constexpr (__fst::is_stream_modifier<T>::value) { basic_print<_Stream, D, E>(stream, ts...); }
             else { basic_print<_Stream, D, E>(stream << D{}, ts...); }
         }
         else
@@ -568,16 +568,16 @@ FST_BEGIN_NAMESPACE
         }
     }
 
-    template <typename D = _FST::stream_detail::comma_t, class E = _FST::stream_detail::stream_endl_t, typename T, typename... Ts>
+    template <typename D = __fst::stream_detail::comma_t, class E = __fst::stream_detail::stream_endl_t, typename T, typename... Ts>
     inline void print(const T& t, const Ts&... ts)
     {
-        _FST::output_stream<char>& stream = _FST::cout;
+        __fst::output_stream<char>& stream = __fst::cout;
         if constexpr (sizeof...(ts) > 0)
         {
             print_element(stream, t);
 
-            if constexpr (_FST::is_stream_modifier<T>::value) { basic_print<_FST::output_stream<char>, D, E>(stream, ts...); }
-            else { basic_print<_FST::output_stream<char>, D, E>(stream << D{}, ts...); }
+            if constexpr (__fst::is_stream_modifier<T>::value) { basic_print<__fst::output_stream<char>, D, E>(stream, ts...); }
+            else { basic_print<__fst::output_stream<char>, D, E>(stream << D{}, ts...); }
         }
         else
         {
@@ -594,7 +594,7 @@ FST_BEGIN_NAMESPACE
             , _value(value)
         {}
 
-        friend inline _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, const space_padding& t)
+        friend inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const space_padding& t)
         {
             struct content
             {
@@ -603,11 +603,11 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            _FST::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
                 {
                     content* c = (content*) data;
                     c->size = size;
-                    _FST::memcpy(c->buffer, str, size);
+                    __fst::memcpy(c->buffer, str, size);
                 } };
 
             s << t._value;
@@ -642,7 +642,7 @@ FST_BEGIN_NAMESPACE
             : _value(value)
         {}
 
-        friend inline _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, const fspace_padding& t)
+        friend inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const fspace_padding& t)
         {
             struct content
             {
@@ -652,11 +652,11 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            _FST::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
                 {
                     content* c = (content*) data;
                     c->size = size;
-                    _FST::memcpy(c->buffer, str, size);
+                    __fst::memcpy(c->buffer, str, size);
                 } };
 
             s << t._value;
@@ -687,7 +687,7 @@ FST_BEGIN_NAMESPACE
             : _value(value)
         {}
 
-        friend inline _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, const fspace_padding_right& t)
+        friend inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const fspace_padding_right& t)
         {
             struct content
             {
@@ -697,11 +697,11 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            _FST::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
                 {
                     content* c = (content*) data;
                     c->size = size;
-                    _FST::memcpy(c->buffer, str, size);
+                    __fst::memcpy(c->buffer, str, size);
                 } };
 
             s << t._value;
@@ -723,13 +723,13 @@ FST_BEGIN_NAMESPACE
     template <size_t _Size, class T>
     inline fspace_padding<_Size, T> padded(T && arg) noexcept
     {
-        return fspace_padding<_Size, T>(_FST::forward<T>(arg));
+        return fspace_padding<_Size, T>(__fst::forward<T>(arg));
     }
 
     template <size_t _Size, class T>
     inline fspace_padding_right<_Size, T> padded_right(T && arg) noexcept
     {
-        return fspace_padding_right<_Size, T>(_FST::forward<T>(arg));
+        return fspace_padding_right<_Size, T>(__fst::forward<T>(arg));
     }
 
 FST_END_NAMESPACE

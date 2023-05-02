@@ -43,11 +43,11 @@ FST_BEGIN_NAMESPACE
     struct rect;
 
     template <class T>
-    struct is_rect : _FST::false_t
+    struct is_rect : __fst::false_t
     {};
 
     template <class T>
-    struct is_rect<_FST::rect<T>> : _FST::true_t
+    struct is_rect<__fst::rect<T>> : __fst::true_t
     {};
 
     namespace meta
@@ -213,14 +213,14 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline constexpr bool operator>=(const range& r) const noexcept;
     };
 
-    static_assert(_FST::is_trivial<range<int>>::value, "_FST::range must remain a trivial type");
-    static_assert(_FST::is_trivial<range<float>>::value, "_FST::range must remain a trivial type");
+    static_assert(__fst::is_trivial<range<int>>::value, "__fst::range must remain a trivial type");
+    static_assert(__fst::is_trivial<range<float>>::value, "__fst::range must remain a trivial type");
 
     template <typename T>
     range(T, T) -> range<T>;
 
     template <typename T1, typename T2>
-    range(T1, T2) -> range<_FST::common_type_t<T1, T2>>;
+    range(T1, T2) -> range<__fst::common_type_t<T1, T2>>;
 
     ///
     template <typename T>
@@ -251,9 +251,9 @@ FST_BEGIN_NAMESPACE
         template <typename U>
         inline constexpr padding& operator=(const padding<U>& p) noexcept;
 
-        FST_NODISCARD inline _FST::rect<value_type> inside_rect(const _FST::rect<value_type>& rect) const noexcept;
+        FST_NODISCARD inline __fst::rect<value_type> inside_rect(const __fst::rect<value_type>& rect) const noexcept;
 
-        FST_NODISCARD inline _FST::rect<value_type> outside_rect(const _FST::rect<value_type>& rect) const noexcept;
+        FST_NODISCARD inline __fst::rect<value_type> outside_rect(const __fst::rect<value_type>& rect) const noexcept;
 
         FST_NODISCARD inline constexpr bool empty() const noexcept;
 
@@ -262,14 +262,14 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline constexpr bool operator!=(const padding& p) const noexcept;
     };
 
-    template <typename T, _FST::enable_if_t<_FST::is_arithmetic<T>::value, _FST::nullptr_t> = nullptr>
+    template <typename T, __fst::enable_if_t<__fst::is_arithmetic<T>::value, __fst::nullptr_t> = nullptr>
     padding(T) -> padding<T>;
 
     template <typename T>
     padding(T, T, T, T) -> padding<T>;
 
     template <typename T1, typename T2, typename T3, typename T4>
-    padding(T1, T2, T3, T4) -> padding<_FST::common_type_t<T1, T2, T3, T4>>;
+    padding(T1, T2, T3, T4) -> padding<__fst::common_type_t<T1, T2, T3, T4>>;
 
     namespace detail
     {
@@ -339,7 +339,7 @@ FST_BEGIN_NAMESPACE
         };
 
         template <class T>
-        struct is_rect_ltrb_impl<_FST::rect<T>, true> : _FST::false_t
+        struct is_rect_ltrb_impl<__fst::rect<T>, true> : __fst::false_t
         {};
 
         template <class RectType>
@@ -355,20 +355,20 @@ FST_BEGIN_NAMESPACE
             has_members<RectType, meta::X, meta::Y, meta::Width, meta::Height>::value>;
 
         template <class RectType>
-        using is_rect_ltrb = is_rect_ltrb_impl<_FST::remove_cvref_t<RectType>, //
+        using is_rect_ltrb = is_rect_ltrb_impl<__fst::remove_cvref_t<RectType>, //
             has_members<RectType, meta::left, meta::top, meta::right, meta::bottom>::value>;
 
         template <class RectType>
-        using enable_if_rect_os = _FST::enable_if_t<!_FST::is_rect<RectType>::value && is_rect_os<RectType>::value, _FST::nullptr_t>;
+        using enable_if_rect_os = __fst::enable_if_t<!__fst::is_rect<RectType>::value && is_rect_os<RectType>::value, __fst::nullptr_t>;
 
         template <class RectType>
-        using enable_if_rect_xywh = _FST::enable_if_t<!_FST::is_rect<RectType>::value && is_rect_xywh<RectType>::value, _FST::nullptr_t>;
+        using enable_if_rect_xywh = __fst::enable_if_t<!__fst::is_rect<RectType>::value && is_rect_xywh<RectType>::value, __fst::nullptr_t>;
 
         template <class RectType>
-        using enable_if_rect_XYWH = _FST::enable_if_t<!_FST::is_rect<RectType>::value && is_rect_XYWH<RectType>::value, _FST::nullptr_t>;
+        using enable_if_rect_XYWH = __fst::enable_if_t<!__fst::is_rect<RectType>::value && is_rect_XYWH<RectType>::value, __fst::nullptr_t>;
 
         template <class RectType>
-        using enable_if_rect_ltrb = _FST::enable_if_t<!_FST::is_rect<RectType>::value && is_rect_ltrb<RectType>::value, _FST::nullptr_t>;
+        using enable_if_rect_ltrb = __fst::enable_if_t<!__fst::is_rect<RectType>::value && is_rect_ltrb<RectType>::value, __fst::nullptr_t>;
 
         template <class PointType, bool hasMember>
         struct is_point_xy_impl
@@ -399,15 +399,15 @@ FST_BEGIN_NAMESPACE
         };
 
         template <class PointType>
-        using enable_if_point_xy = _FST::enable_if_t< //
+        using enable_if_point_xy = __fst::enable_if_t< //
             is_point_xy_impl<PointType, has_members<PointType, meta::x, meta::y>::value //
                                             && !is_rect_os<PointType>::value //
                                             && !is_rect_xywh<PointType>::value>::value,
-            _FST::nullptr_t>;
+            __fst::nullptr_t>;
 
         template <class PointType>
-        using enable_if_point_XY = _FST::enable_if_t< //
-            is_point_XY_impl<PointType, has_members<PointType, meta::X, meta::Y>::value && !is_rect_XYWH<PointType>::value>::value, _FST::nullptr_t>;
+        using enable_if_point_XY = __fst::enable_if_t< //
+            is_point_XY_impl<PointType, has_members<PointType, meta::X, meta::Y>::value && !is_rect_XYWH<PointType>::value>::value, __fst::nullptr_t>;
 
         template <class SizeType, bool hasMember>
         struct is_size_wh_impl
@@ -438,24 +438,24 @@ FST_BEGIN_NAMESPACE
         };
 
         template <class SizeType>
-        using enable_if_size_wh = _FST::enable_if_t< //
+        using enable_if_size_wh = __fst::enable_if_t< //
             is_size_wh_impl<SizeType, has_members<SizeType, meta::width, meta::height>::value //
                                           && !is_rect_os<SizeType>::value //
                                           && !is_rect_xywh<SizeType>::value>::value,
-            _FST::nullptr_t>;
+            __fst::nullptr_t>;
 
         template <class SizeType>
-        using enable_if_size_WH = _FST::enable_if_t< //
+        using enable_if_size_WH = __fst::enable_if_t< //
             is_size_WH_impl<SizeType, has_members<SizeType, meta::Width, meta::Height>::value //
                                           && !is_rect_XYWH<SizeType>::value>::value,
-            _FST::nullptr_t>;
+            __fst::nullptr_t>;
     } // namespace detail.
 
     ///
     template <typename T>
     struct point
     {
-        static_assert(_FST::is_arithmetic<T>::value, "point value_type must be arithmetic");
+        static_assert(__fst::is_arithmetic<T>::value, "point value_type must be arithmetic");
 
         using value_type = T;
         value_type x, y;
@@ -541,17 +541,17 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline explicit operator PointType() const;
 
         // template <typename U>
-        // inline friend _FST::ostream& operator<<(_FST::ostream& s, const _FST::point<U>& point);
+        // inline friend __fst::ostream& operator<<(__fst::ostream& s, const __fst::point<U>& point);
     };
 
-    static_assert(_FST::is_trivial<point<int>>::value, "_FST::point must remain a trivial type");
-    static_assert(_FST::is_trivial<point<float>>::value, "_FST::point must remain a trivial type");
+    static_assert(__fst::is_trivial<point<int>>::value, "__fst::point must remain a trivial type");
+    static_assert(__fst::is_trivial<point<float>>::value, "__fst::point must remain a trivial type");
 
     template <typename T>
     point(T, T) -> point<T>;
 
     template <typename T1, typename T2>
-    point(T1, T2) -> point<_FST::common_type_t<T1, T2>>;
+    point(T1, T2) -> point<__fst::common_type_t<T1, T2>>;
 
     template <typename PointType, detail::enable_if_point_xy<PointType> = nullptr>
     point(const PointType&) -> point<decltype(PointType{}.x)>;
@@ -563,7 +563,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     struct size
     {
-        static_assert(_FST::is_arithmetic<T>::value, "size value_type must be arithmetic");
+        static_assert(__fst::is_arithmetic<T>::value, "size value_type must be arithmetic");
 
         using value_type = T;
         value_type width, height;
@@ -646,17 +646,17 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline explicit operator SizeType() const;
 
         // template <typename U>
-        // inline friend _FST::ostream& operator<<(_FST::ostream& s, const _FST::size<U>& size);
+        // inline friend __fst::ostream& operator<<(__fst::ostream& s, const __fst::size<U>& size);
     };
 
-    static_assert(_FST::is_trivial<size<int>>::value, "_FST::size must remain a trivial type");
-    static_assert(_FST::is_trivial<size<float>>::value, "_FST::size must remain a trivial type");
+    static_assert(__fst::is_trivial<size<int>>::value, "__fst::size must remain a trivial type");
+    static_assert(__fst::is_trivial<size<float>>::value, "__fst::size must remain a trivial type");
 
     template <typename T>
     size(T, T) -> size<T>;
 
     template <typename T1, typename T2>
-    size(T1, T2) -> size<_FST::common_type_t<T1, T2>>;
+    size(T1, T2) -> size<__fst::common_type_t<T1, T2>>;
 
     template <typename SizeType, detail::enable_if_size_wh<SizeType> = nullptr>
     size(const SizeType&) -> size<decltype(SizeType{}.width)>;
@@ -668,11 +668,11 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     struct rect
     {
-        static_assert(_FST::is_arithmetic<T>::value, "rect value_type must be arithmetic");
+        static_assert(__fst::is_arithmetic<T>::value, "rect value_type must be arithmetic");
 
         using value_type = T;
-        using point_type = _FST::point<value_type>;
-        using size_type = _FST::size<value_type>;
+        using point_type = __fst::point<value_type>;
+        using size_type = __fst::size<value_type>;
 
         FST_PRAGMA_PUSH()
         FST_PRAGMA_DISABLE_WARNING_MSVC(4201)
@@ -713,7 +713,7 @@ FST_BEGIN_NAMESPACE
         inline constexpr rect(value_type x, value_type y, const size_type& s) noexcept;
 
         template <class U>
-        inline constexpr rect(const _FST::rect<U>& rect) noexcept
+        inline constexpr rect(const __fst::rect<U>& rect) noexcept
             : origin{ rect.origin.template convert<value_type>() }
             , size{ rect.size.template convert<value_type>() }
         {}
@@ -874,17 +874,17 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline explicit operator RectType() const;
 
         // template <typename U>
-        // inline friend _FST::ostream& operator<<(_FST::ostream& s, const _FST::rect<U>& rect);
+        // inline friend __fst::ostream& operator<<(__fst::ostream& s, const __fst::rect<U>& rect);
     };
 
-    static_assert(_FST::is_trivial<rect<int>>::value, "_FST::rect must remain a trivial type");
-    static_assert(_FST::is_trivial<rect<float>>::value, "_FST::rect must remain a trivial type");
+    static_assert(__fst::is_trivial<rect<int>>::value, "__fst::rect must remain a trivial type");
+    static_assert(__fst::is_trivial<rect<float>>::value, "__fst::rect must remain a trivial type");
 
     template <typename T>
     rect(T, T, T, T) -> rect<T>;
 
     template <typename T1, typename T2, typename T3, typename T4>
-    rect(T1, T2, T3, T4) -> rect<_FST::common_type_t<T1, T2, T3, T4>>;
+    rect(T1, T2, T3, T4) -> rect<__fst::common_type_t<T1, T2, T3, T4>>;
 
     template <typename RectType, detail::enable_if_rect_os<RectType> = nullptr>
     rect(const RectType&) -> rect<decltype(RectType{}.origin.x)>;
@@ -903,9 +903,9 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using value_type = _Tp;
-        static_assert(_FST::is_arithmetic_v<value_type>, "value_type is not arithmetic");
+        static_assert(__fst::is_arithmetic_v<value_type>, "value_type is not arithmetic");
 
-        using point_type = _FST::point<value_type>;
+        using point_type = __fst::point<value_type>;
 
         point_type top_left;
         point_type top_right;
@@ -918,7 +918,7 @@ FST_BEGIN_NAMESPACE
 
         inline constexpr quad(const point_type& tl, const point_type& tr, const point_type& br, const point_type& bl) noexcept;
 
-        inline constexpr quad(const _FST::rect<value_type>& r) noexcept;
+        inline constexpr quad(const __fst::rect<value_type>& r) noexcept;
 
         ~quad() noexcept = default;
 
@@ -932,7 +932,7 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD inline constexpr bool operator!=(const quad& q) const noexcept;
 
-        // friend _FST::ostream& operator<<(_FST::ostream& stream, const quad& p) {
+        // friend __fst::ostream& operator<<(__fst::ostream& stream, const quad& p) {
         //   stream << "[{" << p.top_left << "}, {" << p.top_right << "}, {" << p.bottom_right << "}, {" << p.bottom_left
         //          << "}]";
         //   return stream;
@@ -950,7 +950,7 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using value_type = T;
-        static_assert(_FST::is_floating_point<T>::value, "_FST::transform value_type must be floating point");
+        static_assert(__fst::is_floating_point<T>::value, "__fst::transform value_type must be floating point");
 
         transform() noexcept = default;
         transform(const transform&) noexcept = default;
@@ -960,41 +960,41 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD static inline constexpr transform identity() noexcept;
 
-        FST_NODISCARD static inline constexpr transform translation(const _FST::point<value_type>& p) noexcept;
+        FST_NODISCARD static inline constexpr transform translation(const __fst::point<value_type>& p) noexcept;
 
-        FST_NODISCARD static inline constexpr transform scale(const _FST::size<value_type>& s) noexcept;
+        FST_NODISCARD static inline constexpr transform scale(const __fst::size<value_type>& s) noexcept;
 
         /// return a transform which rotates by `angle' radians.
         FST_NODISCARD static inline transform rotation(value_type angle) noexcept;
 
-        FST_NODISCARD static inline transform rotation(value_type angle, const _FST::point<value_type>& p) noexcept;
+        FST_NODISCARD static inline transform rotation(value_type angle, const __fst::point<value_type>& p) noexcept;
 
         ~transform() noexcept = default;
 
         transform& operator=(const transform&) noexcept = default;
         transform& operator=(transform&&) noexcept = default;
 
-        inline constexpr transform& translated(const _FST::point<value_type>& p) noexcept;
-        inline constexpr transform& scaled(const _FST::size<value_type>& s) noexcept;
+        inline constexpr transform& translated(const __fst::point<value_type>& p) noexcept;
+        inline constexpr transform& scaled(const __fst::size<value_type>& s) noexcept;
         inline transform& rotated(value_type angle) noexcept;
 
-        FST_NODISCARD inline constexpr transform with_translation(const _FST::point<value_type>& p) const noexcept;
-        FST_NODISCARD inline constexpr transform with_scale(const _FST::size<value_type>& s) const noexcept;
+        FST_NODISCARD inline constexpr transform with_translation(const __fst::point<value_type>& p) const noexcept;
+        FST_NODISCARD inline constexpr transform with_scale(const __fst::size<value_type>& s) const noexcept;
         FST_NODISCARD inline transform with_rotation(value_type angle) const noexcept;
 
         FST_NODISCARD inline constexpr transform operator*(const transform& t) const noexcept;
-        FST_NODISCARD inline constexpr transform operator+(const _FST::point<value_type>& p) const noexcept;
-        FST_NODISCARD inline constexpr transform operator-(const _FST::point<value_type>& p) const noexcept;
-        FST_NODISCARD inline constexpr transform operator*(const _FST::size<value_type>& s) const noexcept;
+        FST_NODISCARD inline constexpr transform operator+(const __fst::point<value_type>& p) const noexcept;
+        FST_NODISCARD inline constexpr transform operator-(const __fst::point<value_type>& p) const noexcept;
+        FST_NODISCARD inline constexpr transform operator*(const __fst::size<value_type>& s) const noexcept;
 
         inline constexpr transform& operator*=(const transform& t) noexcept;
-        inline constexpr transform& operator*=(const _FST::size<value_type>& s) noexcept;
-        inline constexpr transform& operator+=(const _FST::point<value_type>& p) noexcept;
-        inline constexpr transform& operator-=(const _FST::point<value_type>& p) noexcept;
+        inline constexpr transform& operator*=(const __fst::size<value_type>& s) noexcept;
+        inline constexpr transform& operator+=(const __fst::point<value_type>& p) noexcept;
+        inline constexpr transform& operator-=(const __fst::point<value_type>& p) noexcept;
 
-        FST_NODISCARD inline constexpr _FST::point<value_type> apply(const _FST::point<value_type>& p) const noexcept;
-        FST_NODISCARD inline constexpr _FST::quad<value_type> apply(const _FST::rect<value_type>& r) const noexcept;
-        FST_NODISCARD inline constexpr _FST::quad<value_type> apply(const _FST::quad<value_type>& q) const noexcept;
+        FST_NODISCARD inline constexpr __fst::point<value_type> apply(const __fst::point<value_type>& p) const noexcept;
+        FST_NODISCARD inline constexpr __fst::quad<value_type> apply(const __fst::rect<value_type>& r) const noexcept;
+        FST_NODISCARD inline constexpr __fst::quad<value_type> apply(const __fst::quad<value_type>& q) const noexcept;
 
         template <typename transform_type>
         FST_NODISCARD inline operator transform_type() const;
@@ -1002,17 +1002,17 @@ FST_BEGIN_NAMESPACE
         value_type a, b, c, d, tx, ty;
     };
 
-    static_assert(_FST::is_trivial<transform<float>>::value, "_FST::transform must remain a trivial type");
-    static_assert(_FST::is_trivial<transform<double>>::value, "_FST::transform must remain a trivial type");
+    static_assert(__fst::is_trivial<transform<float>>::value, "__fst::transform must remain a trivial type");
+    static_assert(__fst::is_trivial<transform<double>>::value, "__fst::transform must remain a trivial type");
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::point<T> operator*(const _FST::point<T>& p, const transform<T>& t) noexcept;
+    FST_NODISCARD inline constexpr __fst::point<T> operator*(const __fst::point<T>& p, const transform<T>& t) noexcept;
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> operator*(const _FST::rect<T>& p, const transform<T>& t) noexcept;
+    FST_NODISCARD inline constexpr __fst::quad<T> operator*(const __fst::rect<T>& p, const transform<T>& t) noexcept;
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> operator*(const _FST::quad<T>& q, const transform<T>& t) noexcept;
+    FST_NODISCARD inline constexpr __fst::quad<T> operator*(const __fst::quad<T>& q, const transform<T>& t) noexcept;
 
     //-------------------------------------------------------------------------------------------------
     //-------------------------------------------------------------------------------------------------
@@ -1149,7 +1149,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     inline constexpr bool point<T>::operator==(const point& pt) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(x, pt.x) && _FST::fcompare(y, pt.y); }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(x, pt.x) && __fst::fcompare(y, pt.y); }
         else { return x == pt.x && y == pt.y; }
     }
 
@@ -1269,7 +1269,7 @@ FST_BEGIN_NAMESPACE
     }
 
     // template <typename T>
-    // inline _FST::ostream& operator<<(_FST::ostream& s, const _FST::point<T>& point) {
+    // inline __fst::ostream& operator<<(__fst::ostream& s, const __fst::point<T>& point) {
     // return s << '{' << point.x << ',' << point.y << '}';
     // }
 
@@ -1300,7 +1300,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     inline constexpr size<T> size<T>::full_scale()
     {
-        return { _FST::numeric_limits<value_type>::max(), _FST::numeric_limits<value_type>::max() };
+        return { __fst::numeric_limits<value_type>::max(), __fst::numeric_limits<value_type>::max() };
     }
 
     template <typename T>
@@ -1393,7 +1393,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     inline constexpr bool size<T>::operator==(const size& s) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(width, s.width) && _FST::fcompare(height, s.height); }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(width, s.width) && __fst::fcompare(height, s.height); }
         else { return (width == s.width && height == s.height); }
     }
 
@@ -1520,7 +1520,7 @@ FST_BEGIN_NAMESPACE
     }
 
     //template <typename T>
-    // inline _FST::ostream& operator<<(_FST::ostream& s, const _FST::size<T>& size) {
+    // inline __fst::ostream& operator<<(__fst::ostream& s, const __fst::size<T>& size) {
     // return s << '{' << size.width << ',' << size.height << '}';
     // }
 
@@ -1990,9 +1990,9 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     inline constexpr bool rect<T>::operator==(const rect& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>)
+        if constexpr (__fst::is_floating_point_v<T>)
         {
-            return _FST::fcompare(x, r.x) && _FST::fcompare(y, r.y) && _FST::fcompare(width, r.width) && _FST::fcompare(height, r.height);
+            return __fst::fcompare(x, r.x) && __fst::fcompare(y, r.y) && __fst::fcompare(width, r.width) && __fst::fcompare(height, r.height);
         }
         else { return x == r.x && y == r.y && width == r.width && height == r.height; }
 
@@ -2046,14 +2046,14 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     inline constexpr bool rect<T>::intersects(const rect& r) const noexcept
     {
-        return ((_FST::minimum(right(), r.right()) - _FST::maximum(x, r.x)) > 0) && ((_FST::minimum(bottom(), r.bottom()) - _FST::maximum(y, r.y)) > 0);
+        return ((__fst::minimum(right(), r.right()) - __fst::maximum(x, r.x)) > 0) && ((__fst::minimum(bottom(), r.bottom()) - __fst::maximum(y, r.y)) > 0);
     }
 
     template <typename T>
     inline constexpr bool rect<T>::intersects(const point_type& p) const noexcept
     {
-        return ((_FST::minimum(right(), p.x + _FST::numeric_limits<value_type>::epsilon()) - _FST::maximum(x, p.x)) >= 0)
-               && ((_FST::minimum(bottom(), p.y + _FST::numeric_limits<value_type>::epsilon()) - _FST::maximum(y, p.y)) >= 0);
+        return ((__fst::minimum(right(), p.x + __fst::numeric_limits<value_type>::epsilon()) - __fst::maximum(x, p.x)) >= 0)
+               && ((__fst::minimum(bottom(), p.y + __fst::numeric_limits<value_type>::epsilon()) - __fst::maximum(y, p.y)) >= 0);
     }
 
     template <typename T>
@@ -2065,38 +2065,38 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     FST_NODISCARD inline constexpr rect<T> rect<T>::get_union(const rect& rhs) const noexcept
     {
-        value_type nx = _FST::minimum(x, rhs.x);
-        value_type ny = _FST::minimum(y, rhs.y);
-        return { nx, ny, _FST::maximum(right(), rhs.right()) - nx, _FST::maximum(bottom(), rhs.bottom()) - ny };
+        value_type nx = __fst::minimum(x, rhs.x);
+        value_type ny = __fst::minimum(y, rhs.y);
+        return { nx, ny, __fst::maximum(right(), rhs.right()) - nx, __fst::maximum(bottom(), rhs.bottom()) - ny };
     }
 
     template <typename T>
     inline constexpr rect<T>& rect<T>::merge(const rect& rhs) noexcept
     {
-        value_type nx = _FST::minimum(x, rhs.x);
-        value_type ny = _FST::minimum(y, rhs.y);
-        *this = { nx, ny, _FST::maximum(right(), rhs.right()) - nx, _FST::maximum(bottom(), rhs.bottom()) - ny };
+        value_type nx = __fst::minimum(x, rhs.x);
+        value_type ny = __fst::minimum(y, rhs.y);
+        *this = { nx, ny, __fst::maximum(right(), rhs.right()) - nx, __fst::maximum(bottom(), rhs.bottom()) - ny };
         return *this;
     }
 
     template <typename T>
     FST_NODISCARD inline constexpr rect<T> rect<T>::merged(const rect& rhs) const noexcept
     {
-        value_type nx = _FST::minimum(x, rhs.x);
-        value_type ny = _FST::minimum(y, rhs.y);
-        return { nx, ny, _FST::maximum(right(), rhs.right()) - nx, _FST::maximum(bottom(), rhs.bottom()) - ny };
+        value_type nx = __fst::minimum(x, rhs.x);
+        value_type ny = __fst::minimum(y, rhs.y);
+        return { nx, ny, __fst::maximum(right(), rhs.right()) - nx, __fst::maximum(bottom(), rhs.bottom()) - ny };
     }
 
     template <typename T>
     FST_NODISCARD inline constexpr rect<T> rect<T>::intersection(const rect& rhs) const noexcept
     {
-        value_type nx = _FST::maximum(x, rhs.x);
-        value_type nw = _FST::minimum(right(), rhs.right()) - nx;
+        value_type nx = __fst::maximum(x, rhs.x);
+        value_type nw = __fst::minimum(right(), rhs.right()) - nx;
 
         if (nw < 0) { return { 0, 0, 0, 0 }; }
 
-        value_type ny = _FST::maximum(y, rhs.y);
-        value_type nh = _FST::minimum(bottom(), rhs.bottom()) - ny;
+        value_type ny = __fst::maximum(y, rhs.y);
+        value_type nh = __fst::minimum(bottom(), rhs.bottom()) - ny;
 
         if (nh < 0) { return { 0, 0, 0, 0 }; }
 
@@ -2200,7 +2200,7 @@ FST_BEGIN_NAMESPACE
     }
 
     // template <typename T>
-    // inline _FST::ostream& operator<<(_FST::ostream& s, const _FST::rect<T>& rect) {
+    // inline __fst::ostream& operator<<(__fst::ostream& s, const __fst::rect<T>& rect) {
     // return s << '{' << rect.x << ',' << rect.y << ',' << rect.width << ',' << rect.height << '}';
     // }
 
@@ -2351,7 +2351,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     constexpr bool range<T>::is_symmetric() const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return start == -end; }
+        if constexpr (__fst::is_floating_point_v<T>) { return start == -end; }
         else { return start == -end; }
     }
 
@@ -2401,7 +2401,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     constexpr range<T>& range<T>::sort() noexcept
     {
-        if (!is_sorted()) { _FST::memswap(start, end); }
+        if (!is_sorted()) { __fst::memswap(start, end); }
 
         return *this;
     }
@@ -2409,7 +2409,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     constexpr bool range<T>::operator==(const range<T>& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return start == r.start && end == r.end; }
+        if constexpr (__fst::is_floating_point_v<T>) { return start == r.start && end == r.end; }
         else { return start == r.start && end == r.end; }
     }
 
@@ -2422,33 +2422,33 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     constexpr bool range<T>::operator<(const range<T>& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(start, r.start) ? length() < r.length() : start < r.start; }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(start, r.start) ? length() < r.length() : start < r.start; }
         else { return start == r.start ? length() < r.length() : start < r.start; }
     }
 
     template <typename T>
     constexpr bool range<T>::operator<=(const range<T>& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(start, r.start) ? length() <= r.length() : start <= r.start; }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(start, r.start) ? length() <= r.length() : start <= r.start; }
         else { return start == r.start ? length() <= r.length() : start <= r.start; }
     }
 
     template <typename T>
     constexpr bool range<T>::operator>(const range<T>& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(start, r.start) ? length() > r.length() : start > r.start; }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(start, r.start) ? length() > r.length() : start > r.start; }
         else { return start == r.start ? length() > r.length() : start > r.start; }
     }
 
     template <typename T>
     constexpr bool range<T>::operator>=(const range<T>& r) const noexcept
     {
-        if constexpr (_FST::is_floating_point_v<T>) { return _FST::fcompare(start, r.start) ? length() >= r.length() : start >= r.start; }
+        if constexpr (__fst::is_floating_point_v<T>) { return __fst::fcompare(start, r.start) ? length() >= r.length() : start >= r.start; }
         else { return start == r.start ? length() >= r.length() : start >= r.start; }
     }
 
     // template <class T>
-    // inline _FST::ostream& oper/ator<<(_FST::ostream& s, const range<T>& r) {
+    // inline __fst::ostream& oper/ator<<(__fst::ostream& s, const range<T>& r) {
     // return s << '{' << r.start << ',' << r.end << '}';
     // }
 
@@ -2493,15 +2493,15 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    _FST::rect<T> padding<T>::inside_rect(const _FST::rect<T>& rect) const noexcept
+    __fst::rect<T> padding<T>::inside_rect(const __fst::rect<T>& rect) const noexcept
     {
-        return _FST::rect<T>(rect.origin.x + left, rect.origin.y + top, rect.size.width - (left + right), rect.size.height - (top + bottom));
+        return __fst::rect<T>(rect.origin.x + left, rect.origin.y + top, rect.size.width - (left + right), rect.size.height - (top + bottom));
     }
 
     template <typename T>
-    _FST::rect<T> padding<T>::outside_rect(const _FST::rect<T>& rect) const noexcept
+    __fst::rect<T> padding<T>::outside_rect(const __fst::rect<T>& rect) const noexcept
     {
-        return _FST::rect<T>(rect.origin.x - left, rect.origin.y - top, rect.size.width + left + right, rect.size.height + top + bottom);
+        return __fst::rect<T>(rect.origin.x - left, rect.origin.y - top, rect.size.width + left + right, rect.size.height + top + bottom);
     }
 
     template <typename T>
@@ -2523,7 +2523,7 @@ FST_BEGIN_NAMESPACE
     }
 
     // template <typename T>
-    // _FST::ostream& operator<<(_FST::ostream& s, const padding<T>& p) {
+    // __fst::ostream& operator<<(__fst::ostream& s, const padding<T>& p) {
     //   return s << '{' << p.top << ',' << p.left << ',' << p.bottom << ',' << p.right << '}';
     // }
 
@@ -2537,7 +2537,7 @@ FST_BEGIN_NAMESPACE
     {}
 
     template <typename T>
-    inline constexpr quad<T>::quad(const _FST::rect<value_type>& r) noexcept
+    inline constexpr quad<T>::quad(const __fst::rect<value_type>& r) noexcept
         : top_left(r.top_left())
         , top_right(r.top_right())
         , bottom_right(r.bottom_right())
@@ -2593,7 +2593,7 @@ FST_BEGIN_NAMESPACE
     /// [ c  d  ty ]
     /// [ 0  0  1  ]
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::translation(const _FST::point<value_type>& p) noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::translation(const __fst::point<value_type>& p) noexcept
     {
         return {
             static_cast<T>(1), //
@@ -2605,7 +2605,7 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::scale(const _FST::size<value_type>& s) noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::scale(const __fst::size<value_type>& s) noexcept
     {
         return {
             s.width, //
@@ -2620,8 +2620,8 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     FST_NODISCARD inline transform<T> transform<T>::rotation(value_type angle) noexcept
     {
-        const T ca = _FST::cos(angle);
-        const T sa = _FST::sin(angle);
+        const T ca = __fst::cos(angle);
+        const T sa = __fst::sin(angle);
 
         return {
             ca, //
@@ -2634,19 +2634,19 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline transform<T> transform<T>::rotation(value_type angle, const _FST::point<value_type>& p) noexcept
+    FST_NODISCARD inline transform<T> transform<T>::rotation(value_type angle, const __fst::point<value_type>& p) noexcept
     {
         return translation(p) * rotation(angle) * translation(-p);
     }
 
     template <typename T>
-    inline constexpr transform<T>& transform<T>::translated(const _FST::point<value_type>& p) noexcept
+    inline constexpr transform<T>& transform<T>::translated(const __fst::point<value_type>& p) noexcept
     {
         return *this += p;
     }
 
     template <typename T>
-    inline constexpr transform<T>& transform<T>::scaled(const _FST::size<value_type>& s) noexcept
+    inline constexpr transform<T>& transform<T>::scaled(const __fst::size<value_type>& s) noexcept
     {
         return *this *= s;
     }
@@ -2658,13 +2658,13 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::with_translation(const _FST::point<value_type>& p) const noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::with_translation(const __fst::point<value_type>& p) const noexcept
     {
         return *this + p;
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::with_scale(const _FST::size<value_type>& s) const noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::with_scale(const __fst::size<value_type>& s) const noexcept
     {
         return *this * s;
     }
@@ -2689,7 +2689,7 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::operator+(const _FST::point<value_type>& p) const noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::operator+(const __fst::point<value_type>& p) const noexcept
     {
         return {
             a, //
@@ -2702,13 +2702,13 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::operator-(const _FST::point<value_type>& p) const noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::operator-(const __fst::point<value_type>& p) const noexcept
     {
         return *this + -p;
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr transform<T> transform<T>::operator*(const _FST::size<value_type>& s) const noexcept
+    FST_NODISCARD inline constexpr transform<T> transform<T>::operator*(const __fst::size<value_type>& s) const noexcept
     {
         return {
             a * s.width, //
@@ -2727,39 +2727,39 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    inline constexpr transform<T>& transform<T>::operator+=(const _FST::point<value_type>& p) noexcept
+    inline constexpr transform<T>& transform<T>::operator+=(const __fst::point<value_type>& p) noexcept
     {
         return *this = (*this + p);
     }
 
     template <typename T>
-    inline constexpr transform<T>& transform<T>::operator-=(const _FST::point<value_type>& p) noexcept
+    inline constexpr transform<T>& transform<T>::operator-=(const __fst::point<value_type>& p) noexcept
     {
         return *this = (*this - p);
     }
 
     template <typename T>
-    inline constexpr transform<T>& transform<T>::operator*=(const _FST::size<value_type>& s) noexcept
+    inline constexpr transform<T>& transform<T>::operator*=(const __fst::size<value_type>& s) noexcept
     {
         return *this = (*this * s);
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::point<T> transform<T>::apply(const _FST::point<value_type>& p) const noexcept
+    FST_NODISCARD inline constexpr __fst::point<T> transform<T>::apply(const __fst::point<value_type>& p) const noexcept
     {
         return { a * p.x + c * p.y + tx, b * p.x + d * p.y + ty };
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> transform<T>::apply(const _FST::rect<value_type>& r) const noexcept
+    FST_NODISCARD inline constexpr __fst::quad<T> transform<T>::apply(const __fst::rect<value_type>& r) const noexcept
     {
-        return _FST::quad<T>(apply(r.position), apply(r.top_right()), apply(r.bottom_right()), apply(r.bottom_left()));
+        return __fst::quad<T>(apply(r.position), apply(r.top_right()), apply(r.bottom_right()), apply(r.bottom_left()));
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> transform<T>::apply(const _FST::quad<value_type>& q) const noexcept
+    FST_NODISCARD inline constexpr __fst::quad<T> transform<T>::apply(const __fst::quad<value_type>& q) const noexcept
     {
-        return _FST::quad<T>(apply(q.top_left), apply(q.top_right), apply(q.bottom_right), apply(q.bottom_left));
+        return __fst::quad<T>(apply(q.top_left), apply(q.top_right), apply(q.bottom_right), apply(q.bottom_left));
     }
 
     template <typename T>
@@ -2770,19 +2770,19 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::point<T> operator*(const _FST::point<T>& p, const transform<T>& t) noexcept
+    FST_NODISCARD inline constexpr __fst::point<T> operator*(const __fst::point<T>& p, const transform<T>& t) noexcept
     {
         return t.apply(p);
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> operator*(const _FST::rect<T>& r, const transform<T>& t) noexcept
+    FST_NODISCARD inline constexpr __fst::quad<T> operator*(const __fst::rect<T>& r, const transform<T>& t) noexcept
     {
         return t.apply(r);
     }
 
     template <typename T>
-    FST_NODISCARD inline constexpr _FST::quad<T> operator*(const _FST::quad<T>& q, const transform<T>& t) noexcept
+    FST_NODISCARD inline constexpr __fst::quad<T> operator*(const __fst::quad<T>& q, const transform<T>& t) noexcept
     {
         return t.apply(q);
     }

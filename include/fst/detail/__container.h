@@ -3,7 +3,7 @@
 FST_BEGIN_NAMESPACE
 
     //
-    FST_INLINE_VAR constexpr size_t dynamic_size = (_FST::numeric_limits<size_t>::max)();
+    FST_INLINE_VAR constexpr size_t dynamic_size = (__fst::numeric_limits<size_t>::max)();
 
 FST_END_NAMESPACE
 
@@ -14,7 +14,7 @@ FST_END_NAMESPACE
     using pointer = T_NAME*;                      \
     using const_pointer = const T_NAME*;          \
     using reference = T_NAME&;                    \
-    using const_reference = _FST::cref_t<T_NAME>; \
+    using const_reference = __fst::cref_t<T_NAME>; \
     using iterator = pointer;                     \
     using const_iterator = const_pointer
 

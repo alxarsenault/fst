@@ -50,7 +50,7 @@ FST_BEGIN_NAMESPACE
         {
 
 #if __FST_FILE_VIEW_USE_WINDOWS_MEMORY_MAP
-            static _FST::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
+            static __fst::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
             {
                 HANDLE hFile = CreateFileA(file_path, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -58,10 +58,10 @@ FST_BEGIN_NAMESPACE
                 {
                     switch (GetLastError())
                     {
-                    case ERROR_FILE_NOT_FOUND: return _FST::status_code::no_such_file_or_directory;
-                    case ERROR_PATH_NOT_FOUND: return _FST::status_code::no_such_file_or_directory;
-                    case ERROR_ACCESS_DENIED: return _FST::status_code::permission_denied;
-                    default: return _FST::status_code::bad_file_descriptor;
+                    case ERROR_FILE_NOT_FOUND: return __fst::status_code::no_such_file_or_directory;
+                    case ERROR_PATH_NOT_FOUND: return __fst::status_code::no_such_file_or_directory;
+                    case ERROR_ACCESS_DENIED: return __fst::status_code::permission_denied;
+                    default: return __fst::status_code::bad_file_descriptor;
                     }
                 }
 
@@ -69,14 +69,14 @@ FST_BEGIN_NAMESPACE
                 if (file_size == INVALID_FILE_SIZE || file_size == 0)
                 {
                     CloseHandle(hFile);
-                    return _FST::status_code::unknown;
+                    return __fst::status_code::unknown;
                 }
 
                 HANDLE hMap = CreateFileMappingA(hFile, nullptr, PAGE_READONLY, 0, file_size, nullptr);
                 if (!hMap)
                 {
                     CloseHandle(hFile);
-                    return _FST::status_code::unknown;
+                    return __fst::status_code::unknown;
                 }
 
                 uint8_t* ptr = (uint8_t*) MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, file_size);
@@ -87,12 +87,12 @@ FST_BEGIN_NAMESPACE
                 _data = ptr;
                 _size = (size_t) file_size;
 
-                return _FST::status_code::success;
+                return __fst::status_code::success;
             }
 
             static inline void close(uint8_t*& _data, size_t& _size) noexcept
             {
-                _FST::unused(_size);
+                __fst::unused(_size);
                 UnmapViewOfFile(_data);
             }
 
@@ -100,16 +100,16 @@ FST_BEGIN_NAMESPACE
 // mmap
 //
 #elif __FST_FILE_VIEW_USE_POSIX_MEMORY_MAP
-            static _FST::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
+            static __fst::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
             {
                 int fd = ::open(file_path, O_RDONLY);
-                if (fd < 0) { return static_cast<_FST::status_code>(errno); }
+                if (fd < 0) { return static_cast<__fst::status_code>(errno); }
 
                 // Get file size.
                 off_t size = lseek(fd, 0, SEEK_END);
                 if (size <= 0)
                 {
-                    _FST::status_code ec = static_cast<_FST::status_code>(errno);
+                    __fst::status_code ec = static_cast<__fst::status_code>(errno);
                     ::close(fd);
                     return ec;
                 }
@@ -119,7 +119,7 @@ FST_BEGIN_NAMESPACE
 
                 if (data == MAP_FAILED)
                 {
-                    _FST::status_code ec = static_cast<_FST::status_code>(errno);
+                    __fst::status_code ec = static_cast<__fst::status_code>(errno);
                     ::close(fd);
                     return ec;
                 }
@@ -127,7 +127,7 @@ FST_BEGIN_NAMESPACE
                 ::close(fd);
                 _data = data;
                 _size = (size_t) size;
-                return _FST::status_code::success;
+                return __fst::status_code::success;
                 ;
             }
 
@@ -137,18 +137,18 @@ FST_BEGIN_NAMESPACE
 // Using c FILE*
 //
 #else
-            static _FST::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
+            static __fst::status open(const char* file_path, uint8_t*& _data, size_t& _size) noexcept
             {
                 FILE* fd = nullptr;
 
 #ifdef _WIN32
                 {
                     errno_t err;
-                    if ((err = fopen_s(&fd, file_path, "rb")) != 0) { return static_cast<_FST::status_code>(err); }
+                    if ((err = fopen_s(&fd, file_path, "rb")) != 0) { return static_cast<__fst::status_code>(err); }
                 }
 #else
                 fd = ::fopen(file_path, "rb");
-                if (!fd) { return static_cast<_FST::status_code>(errno); }
+                if (!fd) { return static_cast<__fst::status_code>(errno); }
 #endif // _WIN32
 
                 // Get file size.
@@ -156,17 +156,17 @@ FST_BEGIN_NAMESPACE
                 ptrdiff_t __size = ::ftell(fd);
                 if (__size <= 0)
                 {
-                    _FST::status_code ec = static_cast<_FST::status_code>(errno);
+                    __fst::status_code ec = static_cast<__fst::status_code>(errno);
                     ::fclose(fd);
                     return ec;
                 }
 
                 ::rewind(fd);
-                uint8_t* __data = (uint8_t*) _FST::allocate(__size);
+                uint8_t* __data = (uint8_t*) __fst::allocate(__size);
 
                 if (!__data)
                 {
-                    _FST::status_code ec = static_cast<_FST::status_code>(errno);
+                    __fst::status_code ec = static_cast<__fst::status_code>(errno);
                     ::fclose(fd);
                     return ec;
                 }
@@ -175,8 +175,8 @@ FST_BEGIN_NAMESPACE
                 // std::fread returns the number of objects read successfully.
                 if (::fread(__data, __size, 1, fd) != 1)
                 {
-                    _FST::status_code ec = static_cast<_FST::status_code>(errno);
-                    _FST::deallocate(__data);
+                    __fst::status_code ec = static_cast<__fst::status_code>(errno);
+                    __fst::deallocate(__data);
 
                     ::fclose(fd);
                     return ec;
@@ -184,15 +184,15 @@ FST_BEGIN_NAMESPACE
 
                 _data = __data;
                 _size = (size_t) __size;
-                return _FST::status_code::success;
+                return __fst::status_code::success;
             }
 
-            static inline void close(uint8_t*& _data, size_t&) noexcept { _FST::deallocate(_data); }
+            static inline void close(uint8_t*& _data, size_t&) noexcept { __fst::deallocate(_data); }
 #endif
         };
     } // namespace
 
-    FST_NODISCARD _FST::status file_view::open(const char* file_path) noexcept
+    FST_NODISCARD __fst::status file_view::open(const char* file_path) noexcept
     {
         close();
         return file_view_impl::open(file_path, _data, _size);

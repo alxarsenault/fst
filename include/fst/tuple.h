@@ -34,7 +34,7 @@ FST_BEGIN_NAMESPACE
     struct type_tuple;
     template <class... _Args>
     struct tuple;
-    template <class T1, class T2, bool BothEmpty = _FST::is_empty_v<T1>&& _FST::is_empty_v<T2>>
+    template <class T1, class T2, bool BothEmpty = __fst::is_empty_v<T1>&& __fst::is_empty_v<T2>>
     struct pair;
 
     // tuple_element
@@ -103,7 +103,7 @@ FST_BEGIN_NAMESPACE
     };
 
     template <class T, size_t _Index>
-    struct indexed_value<T, _Index, _FST::enable_if_t<_FST::is_empty_v<T>>> : T
+    struct indexed_value<T, _Index, __fst::enable_if_t<__fst::is_empty_v<T>>> : T
     {
         constexpr indexed_value() noexcept = default;
         inline constexpr indexed_value(const T&) noexcept {}
@@ -112,7 +112,7 @@ FST_BEGIN_NAMESPACE
     };
 
     template <class T, size_t _Index>
-    struct indexed_value<T, _Index, _FST::enable_if_t<!_FST::is_empty_v<T>>>
+    struct indexed_value<T, _Index, __fst::enable_if_t<!__fst::is_empty_v<T>>>
     {
         constexpr indexed_value() noexcept = default;
         inline constexpr indexed_value(const T& v) noexcept
@@ -136,7 +136,7 @@ FST_BEGIN_NAMESPACE
             static constexpr size_t index = 0;
             constexpr tuple_imp() noexcept = default;
             inline constexpr tuple_imp(T&& t) noexcept
-                : indexed_value<T, 0>(_FST::forward<T>(t))
+                : indexed_value<T, 0>(__fst::forward<T>(t))
             {}
             template <size_t _Index>
             static inline constexpr size_t offset_of() noexcept
@@ -157,8 +157,8 @@ FST_BEGIN_NAMESPACE
             constexpr tuple_imp() noexcept = default;
 
             inline constexpr tuple_imp(T&& t, _Args&&... args) noexcept
-                : indexed_value_type(_FST::forward<T>(t))
-                , tuple_imp<_Args...>(_FST::forward<_Args>(args)...)
+                : indexed_value_type(__fst::forward<T>(t))
+                , tuple_imp<_Args...>(__fst::forward<_Args>(args)...)
             {}
 
             /*template<size_t _Index>
@@ -170,7 +170,7 @@ FST_BEGIN_NAMESPACE
             }
             else
             {
-                    return (_FST::maximum)(alignof(tuple_imp),
+                    return (__fst::maximum)(alignof(tuple_imp),
     sizeof(indexed_value_type)) + tuple_imp<_Args...>::template
     offset_of<_Index>();
             }
@@ -198,10 +198,10 @@ FST_BEGIN_NAMESPACE
 
     // tuple_size
     template <class... Types>
-    struct tuple_size<tuple<Types...>> : _FST::integral_constant<size_t, sizeof...(Types)>
+    struct tuple_size<tuple<Types...>> : __fst::integral_constant<size_t, sizeof...(Types)>
     {};
     template <class... Types>
-    struct tuple_size<type_tuple<Types...>> : _FST::integral_constant<size_t, sizeof...(Types)>
+    struct tuple_size<type_tuple<Types...>> : __fst::integral_constant<size_t, sizeof...(Types)>
     {};
 
     //
@@ -213,7 +213,7 @@ FST_BEGIN_NAMESPACE
 
         constexpr tuple() noexcept = default;
         inline constexpr tuple(_Args&&... args) noexcept
-            : detail::tuple_imp<_Args...>(_FST::forward<_Args>(args)...)
+            : detail::tuple_imp<_Args...>(__fst::forward<_Args>(args)...)
         {}
 
         template <size_t _Index>
@@ -244,7 +244,7 @@ FST_BEGIN_NAMESPACE
     namespace detail
     {
         ///
-        template <class T, bool _Empty = _FST::is_empty_v<T>>
+        template <class T, bool _Empty = __fst::is_empty_v<T>>
         struct pair_first_value : T
         {
             constexpr pair_first_value() noexcept = default;
@@ -268,7 +268,7 @@ FST_BEGIN_NAMESPACE
         };
 
         ///
-        template <class T, bool _Empty = _FST::is_empty_v<T>>
+        template <class T, bool _Empty = __fst::is_empty_v<T>>
         struct pair_second_value : T
         {
             constexpr pair_second_value() noexcept = default;
@@ -285,7 +285,7 @@ FST_BEGIN_NAMESPACE
                 : _second(s)
             {}
             inline constexpr pair_second_value(T&& s) noexcept
-                : _second(_FST::move(s))
+                : _second(__fst::move(s))
             {}
             inline constexpr T& second() noexcept { return _second; }
             inline constexpr const T& second() const noexcept { return _second; }
@@ -376,18 +376,18 @@ FST_BEGIN_NAMESPACE
 
     // is_pair
     template <class>
-    struct is_pair : _FST::false_t
+    struct is_pair : __fst::false_t
     {};
     template <class T1, class T2>
-    struct is_pair<_FST::pair<T1, T2>> : _FST::true_t
+    struct is_pair<__fst::pair<T1, T2>> : __fst::true_t
     {};
 
     // is_tuple
     template <typename>
-    struct is_tuple : _FST::false_t
+    struct is_tuple : __fst::false_t
     {};
     template <typename... Ts>
-    struct is_tuple<_FST::tuple<Ts...>> : _FST::true_t
+    struct is_tuple<__fst::tuple<Ts...>> : __fst::true_t
     {};
 
 FST_END_NAMESPACE

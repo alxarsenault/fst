@@ -76,7 +76,7 @@ FST_BEGIN_NAMESPACE
 
         FST_ALWAYS_INLINE constexpr time_point operator--(int) noexcept { return time_point{ _time-- }; }
 
-        friend _FST::output_stream<char>& operator<<(_FST::output_stream<char>& stream, time_point now);
+        friend __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, time_point now);
 
       private:
         value_type _time = 0;

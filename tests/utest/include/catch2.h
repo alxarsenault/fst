@@ -6281,7 +6281,7 @@ struct AutoReg : Detail::NonCopyable {
         CATCH_INTERNAL_START_WARNINGS_SUPPRESSION \
         CATCH_INTERNAL_SUPPRESS_GLOBALS_WARNINGS \
         CATCH_INTERNAL_SUPPRESS_UNUSED_VARIABLE_WARNINGS \
-        namespace{ const Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegistrar )( Catch::makeTestInvoker( [](){FST_TRACE("unit_test", _FST::padded<32>(Catch::NameAndTags{ __VA_ARGS__ }.name.data()), Catch::NameAndTags{ __VA_ARGS__ }.tags.data()); TestName();} ), CATCH_INTERNAL_LINEINFO, Catch::StringRef(), Catch::NameAndTags{ __VA_ARGS__ } ); } /* NOLINT */ \
+        namespace{ const Catch::AutoReg INTERNAL_CATCH_UNIQUE_NAME( autoRegistrar )( Catch::makeTestInvoker( [](){FST_TRACE("unit_test", __fst::padded<32>(Catch::NameAndTags{ __VA_ARGS__ }.name.data()), Catch::NameAndTags{ __VA_ARGS__ }.tags.data()); TestName();} ), CATCH_INTERNAL_LINEINFO, Catch::StringRef(), Catch::NameAndTags{ __VA_ARGS__ } ); } /* NOLINT */ \
         CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION \
         static void TestName()
     #define INTERNAL_CATCH_TESTCASE( ... ) \
@@ -6712,14 +6712,14 @@ struct AutoReg : Detail::NonCopyable {
     void reg_test(TypeList<Type>, Catch::NameAndTags nameAndTags)\
     {\
         std::string name = nameAndTags.name.data();\
-        Catch::AutoReg( Catch::make_test_invoker([=](){  FST_TRACE("unit_test", _FST::padded<31>(name.c_str())); TestFunc<Type>();}), CATCH_INTERNAL_LINEINFO, Catch::StringRef(), nameAndTags);\
+        Catch::AutoReg( Catch::make_test_invoker([=](){  FST_TRACE("unit_test", __fst::padded<31>(name.c_str())); TestFunc<Type>();}), CATCH_INTERNAL_LINEINFO, Catch::StringRef(), nameAndTags);\
     }
 
 #define INTERNAL_CATCH_NTTP_REGISTER(TestFunc, signature, ...)\
     template<INTERNAL_CATCH_REMOVE_PARENS(signature)>\
     void reg_test(Nttp<__VA_ARGS__>, Catch::NameAndTags nameAndTags)\
     {\
-        FST_TRACE("unit_test", _FST::padded<31>(nameAndTags.name.data()));\
+        FST_TRACE("unit_test", __fst::padded<31>(nameAndTags.name.data()));\
         Catch::AutoReg( Catch::makeTestInvoker(&TestFunc<__VA_ARGS__>), CATCH_INTERNAL_LINEINFO, Catch::StringRef(), nameAndTags);\
     }
 
@@ -6727,7 +6727,7 @@ struct AutoReg : Detail::NonCopyable {
     template<typename Type>\
     void reg_test(TypeList<Type>, Catch::StringRef className, Catch::NameAndTags nameAndTags)\
     {\
-        FST_TRACE("unit_test", _FST::padded<31>(nameAndTags.name.data()));\
+        FST_TRACE("unit_test", __fst::padded<31>(nameAndTags.name.data()));\
         Catch::AutoReg( Catch::makeTestInvoker(&TestName<Type>::test), CATCH_INTERNAL_LINEINFO, className, nameAndTags);\
     }
 
@@ -6735,7 +6735,7 @@ struct AutoReg : Detail::NonCopyable {
     template<INTERNAL_CATCH_REMOVE_PARENS(signature)>\
     void reg_test(Nttp<__VA_ARGS__>, Catch::StringRef className, Catch::NameAndTags nameAndTags)\
     {\
-        FST_TRACE("unit_test", _FST::padded<31>(nameAndTags.name.data()));\
+        FST_TRACE("unit_test", __fst::padded<31>(nameAndTags.name.data()));\
         Catch::AutoReg( Catch::makeTestInvoker(&TestName<__VA_ARGS__>::test), CATCH_INTERNAL_LINEINFO, className, nameAndTags);\
     }
 

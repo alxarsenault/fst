@@ -71,7 +71,7 @@
     }
 
 ///
-#define _FST FST_NAMESPACE::__FST_ABI_NAMESPACE__
+#define __fst FST_NAMESPACE::__FST_ABI_NAMESPACE__
 
 #if FST_PLATFORM_HAS_IMMINTRIN_H
 
@@ -166,13 +166,13 @@ FST_END_NAMESPACE
 // numeric_limits
 #include "fst/detail/__numeric_limits.h"
 
-FST_NODISCARD inline void* operator new(size_t, void* memory, _FST::placement_new_tag) noexcept
+FST_NODISCARD inline void* operator new(size_t, void* memory, __fst::placement_new_tag) noexcept
 {
     //fst::printf("klklkklk %d\n", int(jj));
 
     return memory;
 }
-inline void operator delete(void*, void*, _FST::placement_new_tag) noexcept {}
+inline void operator delete(void*, void*, __fst::placement_new_tag) noexcept {}
 
 // FST_DECLARE_ENUM_CLASS_OPERATORS
 #include "fst/detail/__flags.h"

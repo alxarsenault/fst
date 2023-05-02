@@ -17,7 +17,7 @@
 //    class buffer_base : private _MemoryZone
 //    {
 //      public:
-//        static_assert(_FST::is_power_of_two(_Size), "_Size must be a power of two");
+//        static_assert(__fst::is_power_of_two(_Size), "_Size must be a power of two");
 //
 //        buffer_base() noexcept { _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), alignment(), _MemoryCategory::id()); }
 //
@@ -25,7 +25,7 @@
 //            : _MemoryZone((const _MemoryZone&) buf)
 //        {
 //            _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), alignment(), _MemoryCategory::id());
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //        }
 //
 //        template <size_t _OtherSize, class _OtherMemoryZone, class _OtherMemoryCategory>
@@ -35,7 +35,7 @@
 //
 //            _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), alignment(), _MemoryCategory::id());
 //
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //        }
 //
 //        inline buffer_base(_MemoryZone _zone) noexcept
@@ -61,7 +61,7 @@
 //                return;
 //            }
 //
-//            if constexpr (_FST::is_same_v<_MemoryZone, _OtherMemoryZone> && !_FST::is_same_v<_MemoryCategory, _OtherMemoryCategory>)
+//            if constexpr (__fst::is_same_v<_MemoryZone, _OtherMemoryZone> && !__fst::is_same_v<_MemoryCategory, _OtherMemoryCategory>)
 //            {
 //                _MemoryZone::template move_allocation<_OtherMemoryCategory, _MemoryCategory>(buf._data);
 //                _data = buf._data;
@@ -70,7 +70,7 @@
 //            else
 //            {
 //                _data = (_T*) _MemoryZone::template aligned_allocate<_MemoryCategory>(buf.size() * sizeof(_T), alignment());
-//                if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//                if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //
 //                buf.reset();
 //            }
@@ -86,7 +86,7 @@
 //
 //            _data = (_T*) _MemoryZone::aligned_allocate(buf.size() * sizeof(_T), alignment(), _MemoryCategory::id());
 //
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //
 //            return *this;
 //        }
@@ -117,7 +117,7 @@
 //
 //    ///
 //    template <typename _T, class _MemoryZone, class _MemoryCategory>
-//    class buffer_base<_T, _FST::dynamic_size, _MemoryZone, _MemoryCategory> : public _MemoryZone
+//    class buffer_base<_T, __fst::dynamic_size, _MemoryZone, _MemoryCategory> : public _MemoryZone
 //    {
 //      public:
 //        buffer_base() noexcept = default;
@@ -133,7 +133,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //        }
 //
@@ -147,7 +147,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //        }
 //
@@ -179,7 +179,7 @@
 //        {
 //            if (!buf._data) { return; }
 //
-//            if constexpr (_FST::is_same_v<_MemoryZone, _OtherMemoryZone>)
+//            if constexpr (__fst::is_same_v<_MemoryZone, _OtherMemoryZone>)
 //            {
 //                _MemoryZone::template move_allocation<_OtherMemoryCategory, _MemoryCategory>(buf._data);
 //                _data = buf._data;
@@ -193,7 +193,7 @@
 //                if (_data)
 //                {
 //                    _size = buf.size();
-//                    _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                    __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //                }
 //
 //                buf.reset();
@@ -213,7 +213,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //
 //            return *this;
@@ -269,8 +269,8 @@
 //    class aligned_buffer_base : public _MemoryZone
 //    {
 //      public:
-//        static_assert(_FST::is_power_of_two(_Size), "_Size must be a power of two");
-//        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+//        static_assert(__fst::is_power_of_two(_Size), "_Size must be a power of two");
+//        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 //
 //        aligned_buffer_base() noexcept { _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), _Alignment, _MemoryCategory::id()); }
 //
@@ -278,7 +278,7 @@
 //            : _MemoryZone((const _MemoryZone&) buf)
 //        {
 //            _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), _Alignment, _MemoryCategory::id());
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //        }
 //
 //        template <size_t _OtherSize, class _OtherMemoryZone, class _OtherMemoryCategory, size_t _OtherAlignment>
@@ -288,7 +288,7 @@
 //
 //            _data = (_T*) _MemoryZone::aligned_allocate(size() * sizeof(_T), _Alignment, _MemoryCategory::id());
 //
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //        }
 //
 //        inline aligned_buffer_base(_MemoryZone _zone) noexcept
@@ -314,7 +314,7 @@
 //                return;
 //            }
 //
-//            if constexpr (_FST::is_same_v<_MemoryZone, _OtherMemoryZone> && !_FST::is_same_v<_MemoryCategory, _OtherMemoryCategory>)
+//            if constexpr (__fst::is_same_v<_MemoryZone, _OtherMemoryZone> && !__fst::is_same_v<_MemoryCategory, _OtherMemoryCategory>)
 //            {
 //                _MemoryZone::template move_allocation<_OtherMemoryCategory, _MemoryCategory>(buf._data);
 //                _data = buf._data;
@@ -323,7 +323,7 @@
 //            else
 //            {
 //                _data = (_T*) _MemoryZone::template aligned_allocate<_MemoryCategory>(buf.size() * sizeof(_T), _Alignment);
-//                if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//                if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //
 //                buf.reset();
 //            }
@@ -339,7 +339,7 @@
 //
 //            _data = (_T*) _MemoryZone::aligned_allocate(buf.size() * sizeof(_T), _Alignment, _MemoryCategory::id());
 //
-//            if (_data) { _FST::memcpy(_data, buf._data, size() * sizeof(_T)); }
+//            if (_data) { __fst::memcpy(_data, buf._data, size() * sizeof(_T)); }
 //
 //            return *this;
 //        }
@@ -370,10 +370,10 @@
 //
 //    ///
 //    template <typename _T, size_t _Alignment, class _MemoryZone, class _MemoryCategory>
-//    class aligned_buffer_base<_T, _FST::dynamic_size, _Alignment, _MemoryZone, _MemoryCategory> : private _MemoryZone
+//    class aligned_buffer_base<_T, __fst::dynamic_size, _Alignment, _MemoryZone, _MemoryCategory> : private _MemoryZone
 //    {
 //      public:
-//        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+//        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 //
 //        aligned_buffer_base() noexcept = default;
 //
@@ -388,7 +388,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //        }
 //
@@ -402,7 +402,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //        }
 //
@@ -434,7 +434,7 @@
 //        {
 //            if (!buf._data) { return; }
 //
-//            if constexpr (_FST::is_same_v<_MemoryZone, _OtherMemoryZone>)
+//            if constexpr (__fst::is_same_v<_MemoryZone, _OtherMemoryZone>)
 //            {
 //                _MemoryZone::template move_allocation<_OtherMemoryCategory, _MemoryCategory>(buf._data);
 //                _data = buf._data;
@@ -448,7 +448,7 @@
 //                if (_data)
 //                {
 //                    _size = buf.size();
-//                    _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                    __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //                }
 //
 //                buf.reset();
@@ -468,7 +468,7 @@
 //            if (_data)
 //            {
 //                _size = buf.size();
-//                _FST::memcpy(_data, buf._data, _size * sizeof(_T));
+//                __fst::memcpy(_data, buf._data, _size * sizeof(_T));
 //            }
 //
 //            return *this;
@@ -520,7 +520,7 @@
 //    };
 //
 //    ///
-//    template <typename _T, size_t _Size, class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category>
+//    template <typename _T, size_t _Size, class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
 //    class buffer : public contiguous_container_base<_T, buffer_base<_T, _Size, _MemoryZone, _MemoryCategory>>
 //    {
 //      public:
@@ -545,7 +545,7 @@
 //    };
 //
 //    ///
-//    template <typename _T, size_t _Size, size_t _Alignment, class _MemoryZone = _FST::simd_memory_zone, class _MemoryCategory = _FST::dsp_memory_category>
+//    template <typename _T, size_t _Size, size_t _Alignment, class _MemoryZone = __fst::simd_memory_zone, class _MemoryCategory = __fst::dsp_memory_category>
 //    class aligned_buffer : public contiguous_container_base<_T, aligned_buffer_base<_T, _Size, _Alignment, _MemoryZone, _MemoryCategory>>
 //    {
 //      public:

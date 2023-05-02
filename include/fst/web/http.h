@@ -154,7 +154,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
     };
 
     template <class charT>
-    inline _FST::output_stream<charT>& operator<<(_FST::output_stream<charT>& stream, http::error e)
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, http::error e)
     {
         return stream << e.message();
     }
@@ -412,7 +412,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
     }
 
     template <class charT>
-    inline _FST::output_stream<charT>& operator<<(_FST::output_stream<charT>& stream, http::status s)
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, http::status s)
     {
         return stream << s.message();
     }
@@ -438,7 +438,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
     ///
     struct parameter
     {
-        using string_type = _FST::basic_string<char, _FST::allocator<char, _FST::web_memory_category>>;
+        using string_type = __fst::basic_string<char, __fst::allocator<char, __fst::web_memory_category>>;
 
         string_type name;
         string_type value;
@@ -446,7 +446,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
     struct header_field
     {
-        using string_type = _FST::basic_string<char, _FST::allocator<char, _FST::web_memory_category>>;
+        using string_type = __fst::basic_string<char, __fst::allocator<char, __fst::web_memory_category>>;
 
         string_type name;
         string_type value;
@@ -461,18 +461,18 @@ FST_BEGIN_SUB_NAMESPACE(http)
         static constexpr const char* https_scheme = "https://";
 
         using string_type = typename parameter::string_type;
-        using parameter_vector = _FST::small_vector<parameter, 4, alignof(parameter), _FST::default_memory_zone, _FST::web_memory_category>;
+        using parameter_vector = __fst::small_vector<parameter, 4, alignof(parameter), __fst::default_memory_zone, __fst::web_memory_category>;
 
         inline url(const char* uri)
             : _uri(uri)
         {}
 
-        inline url(_FST::string_view uri)
+        inline url(__fst::string_view uri)
             : _uri(uri)
         {}
 
         inline url(string_type&& uri) noexcept
-            : _uri(_FST::move(uri))
+            : _uri(__fst::move(uri))
         {}
 
         inline url(const string_type& uri)
@@ -490,27 +490,27 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return u;
         }
 
-        inline _FST::string_view get_string(bool withScheme) const { return withScheme ? _FST::string_view(_uri) : _FST::string_view(_uri).substr(get_scheme().size()); }
+        inline __fst::string_view get_string(bool withScheme) const { return withScheme ? __fst::string_view(_uri) : __fst::string_view(_uri).substr(get_scheme().size()); }
 
         /// Returns the domain uri.
         /// This 'https://www.abc.com/info' would return 'www.abc.com'.
-        inline _FST::string_view get_domain() const
+        inline __fst::string_view get_domain() const
         {
-            _FST::string_view domain = get_string(false);
+            __fst::string_view domain = get_string(false);
 
-            _FST::string_view::size_type pos = domain.find_first_of('/');
-            if (pos == _FST::string_view::npos) { return domain; }
+            __fst::string_view::size_type pos = domain.find_first_of('/');
+            if (pos == __fst::string_view::npos) { return domain; }
 
             return domain.substr(0, pos);
         }
 
         /// Returns the uri route.
         /// This 'https://www.abc.com/info' would return '/info'.
-        inline _FST::string_view get_route() const
+        inline __fst::string_view get_route() const
         {
-            _FST::string_view u = _uri.view().substr(get_scheme().size());
-            _FST::string_view::size_type pos = u.find_first_of('/');
-            return pos == _FST::string_view::npos ? _FST::string_view() : u.substr(pos);
+            __fst::string_view u = _uri.view().substr(get_scheme().size());
+            __fst::string_view::size_type pos = u.find_first_of('/');
+            return pos == __fst::string_view::npos ? __fst::string_view() : u.substr(pos);
         }
 
         /// Returns the uri route.
@@ -523,7 +523,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         /// Get the uri scheme.
         /// This 'https://www.abc.com/info' would return 'https://'.
-        inline _FST::string_view get_scheme() const noexcept { return _uri.view().substr(0, find_end_of_scheme(_uri.view())); }
+        inline __fst::string_view get_scheme() const noexcept { return _uri.view().substr(0, find_end_of_scheme(_uri.view())); }
 
         inline url& with_scheme(scheme sc)
         {
@@ -541,7 +541,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         inline url& with_parameter(parameter&& param)
         {
-            _parameters.push_back(_FST::move(param));
+            _parameters.push_back(__fst::move(param));
             return *this;
         }
 
@@ -556,7 +556,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
             if (allowDuplicates)
             {
-                _parameters.push_back(_FST::move(param));
+                _parameters.push_back(__fst::move(param));
                 return;
             }
 
@@ -564,12 +564,12 @@ FST_BEGIN_SUB_NAMESPACE(http)
             {
                 if (p.name == param.name)
                 {
-                    p = _FST::move(param);
+                    p = __fst::move(param);
                     return;
                 }
             }
 
-            _parameters.push_back(_FST::move(param));
+            _parameters.push_back(__fst::move(param));
         }
 
         inline void add_parameter(const parameter& param, bool allowDuplicates = true)
@@ -596,7 +596,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         inline size_t parameter_count() const noexcept { return _parameters.size(); }
 
-        inline bool has_parameter(_FST::string_view name) const noexcept
+        inline bool has_parameter(__fst::string_view name) const noexcept
         {
             for (const parameter& p : _parameters)
             {
@@ -606,7 +606,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return false;
         }
 
-        inline bool remove_parameter(_FST::string_view name)
+        inline bool remove_parameter(__fst::string_view name)
         {
             for (size_t i = 0; i < _parameters.size(); i++)
             {
@@ -620,7 +620,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return false;
         }
 
-        inline const parameter* get_parameter(_FST::string_view name) const noexcept
+        inline const parameter* get_parameter(__fst::string_view name) const noexcept
         {
             for (const parameter& p : _parameters)
             {
@@ -668,7 +668,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         string_type _uri;
         parameter_vector _parameters;
 
-        static inline size_t find_end_of_scheme(_FST::string_view uri)
+        static inline size_t find_end_of_scheme(__fst::string_view uri)
         {
             size_t i = 0;
 
@@ -677,13 +677,13 @@ FST_BEGIN_SUB_NAMESPACE(http)
                 i++;
             }
 
-            const _FST::string_view key = "://";
+            const __fst::string_view key = "://";
             return ((uri).substr(i).substr(0, key.size()) == key) ? i + 3 : 0;
         }
     };
 
     template <class charT>
-    inline _FST::output_stream<charT>& operator<<(_FST::output_stream<charT>& stream, const http::url& u)
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, const http::url& u)
     {
         return stream << u.get_string(true, true);
     }
@@ -693,8 +693,8 @@ FST_BEGIN_SUB_NAMESPACE(http)
     {
       public:
         using string_type = typename parameter::string_type;
-        using header_field_vector = _FST::vector<header_field, alignof(header_field), _FST::default_memory_zone, _FST::web_memory_category>;
-        using data_vector = _FST::vector<char, alignof(char), _FST::default_memory_zone, _FST::web_memory_category>;
+        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::default_memory_zone, __fst::web_memory_category>;
+        using data_vector = __fst::vector<char, alignof(char), __fst::default_memory_zone, __fst::web_memory_category>;
 
         inline request(const http::url& u)
             : _url(u)
@@ -704,7 +704,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         inline request& with_url(http::url&& u)
         {
-            _url = _FST::move(u);
+            _url = __fst::move(u);
             return *this;
         }
 
@@ -714,7 +714,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return *this;
         }
 
-        inline void set_url(http::url&& u) { _url = _FST::move(u); }
+        inline void set_url(http::url&& u) { _url = __fst::move(u); }
 
         inline void set_url(const http::url& u) { _url = u; }
 
@@ -742,7 +742,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         ///
         inline request& with_header(header_field&& field)
         {
-            _headers.push_back(_FST::move(field));
+            _headers.push_back(__fst::move(field));
             return *this;
         }
 
@@ -754,7 +754,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         }
 
         ///
-        inline void add_header(header_field&& field) { _headers.push_back(_FST::move(field)); }
+        inline void add_header(header_field&& field) { _headers.push_back(__fst::move(field)); }
 
         ///
         inline void add_header(const header_field& field) { _headers.push_back(field); }
@@ -762,7 +762,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         ///
         inline bool has_headers() const noexcept { return !_headers.empty(); }
 
-        inline bool has_header(_FST::string_view name) const noexcept
+        inline bool has_header(__fst::string_view name) const noexcept
         {
             for (const header_field& h : _headers)
             {
@@ -772,7 +772,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return false;
         }
 
-        inline bool remove_header(_FST::string_view name)
+        inline bool remove_header(__fst::string_view name)
         {
             for (size_t i = 0; i < _headers.size(); i++)
             {
@@ -786,7 +786,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return false;
         }
 
-        inline const header_field* get_header(_FST::string_view name) const noexcept
+        inline const header_field* get_header(__fst::string_view name) const noexcept
         {
             for (const header_field& h : _headers)
             {
@@ -804,11 +804,11 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         /// Returns the domain uri.
         /// This 'https://www.abc.com/info' would return 'www.abc.com'.
-        inline _FST::string_view get_domain() const { return _url.get_domain(); }
+        inline __fst::string_view get_domain() const { return _url.get_domain(); }
 
         /// Returns the uri route.
         /// This 'https://www.abc.com/info' would return '/info'.
-        inline _FST::string_view get_route() const { return _url.get_route(); }
+        inline __fst::string_view get_route() const { return _url.get_route(); }
 
         /// Returns the uri route.
         /// This 'https://www.abc.com/info' would return '/info'.
@@ -820,7 +820,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         /// Get the uri scheme.
         /// This 'https://www.abc.com/info' would return 'https://'.
-        inline _FST::string_view get_scheme() const noexcept { return _url.get_scheme(); }
+        inline __fst::string_view get_scheme() const noexcept { return _url.get_scheme(); }
 
         inline request& with_scheme(scheme sc)
         {
@@ -838,7 +838,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         inline request& with_parameter(parameter&& param)
         {
-            _url.add_parameter(_FST::move(param));
+            _url.add_parameter(__fst::move(param));
             return *this;
         }
 
@@ -848,7 +848,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return *this;
         }
 
-        inline void add_parameter(parameter&& param, bool allowDuplicates = true) { _url.add_parameter(_FST::move(param), allowDuplicates); }
+        inline void add_parameter(parameter&& param, bool allowDuplicates = true) { _url.add_parameter(__fst::move(param), allowDuplicates); }
 
         inline void add_parameter(const parameter& param, bool allowDuplicates = true) { _url.add_parameter(param, allowDuplicates); }
 
@@ -856,26 +856,26 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
         inline size_t parameter_count() const noexcept { return _url.parameter_count(); }
 
-        inline bool has_parameter(_FST::string_view name) const noexcept { return _url.has_parameter(name); }
+        inline bool has_parameter(__fst::string_view name) const noexcept { return _url.has_parameter(name); }
 
-        inline bool remove_parameter(_FST::string_view name) { return _url.remove_parameter(name); }
+        inline bool remove_parameter(__fst::string_view name) { return _url.remove_parameter(name); }
 
-        inline const parameter* get_parameter(_FST::string_view name) const noexcept { return _url.get_parameter(name); }
+        inline const parameter* get_parameter(__fst::string_view name) const noexcept { return _url.get_parameter(name); }
 
         inline string_type get_parameters_string() const { return _url.get_parameters_string(); }
 
-        inline _FST::http::url::parameter_vector& get_parameters() noexcept { return _url.get_parameters(); }
+        inline __fst::http::url::parameter_vector& get_parameters() noexcept { return _url.get_parameters(); }
 
-        inline const _FST::http::url::parameter_vector& get_parameters() const noexcept { return _url.get_parameters(); }
+        inline const __fst::http::url::parameter_vector& get_parameters() const noexcept { return _url.get_parameters(); }
 
         inline void set_body(const data_vector& __data) noexcept { _data = __data; }
 
-        inline void set_body(data_vector&& __data) noexcept { _data = _FST::move(__data); }
+        inline void set_body(data_vector&& __data) noexcept { _data = __fst::move(__data); }
 
-        inline void set_body(_FST::string_view __data) noexcept
+        inline void set_body(__fst::string_view __data) noexcept
         {
             _data.resize(__data.size());
-            _FST::memcpy(_data.data(), __data.data(), __data.size());
+            __fst::memcpy(_data.data(), __data.data(), __data.size());
         }
 
         ///
@@ -888,23 +888,23 @@ FST_BEGIN_SUB_NAMESPACE(http)
         inline const data_vector& body() const noexcept { return _data; }
 
         ///
-        inline _FST::string_view body_as_string() const noexcept { return _FST::string_view(_data.data(), _data.size()); }
+        inline __fst::string_view body_as_string() const noexcept { return __fst::string_view(_data.data(), _data.size()); }
 
         ///
-        _FST::http::response send(bool with_header = true) const noexcept;
+        __fst::http::response send(bool with_header = true) const noexcept;
 
       private:
-        _FST::http::url _url;
+        __fst::http::url _url;
         header_field_vector _headers;
         data_vector _data;
-        _FST::http::method _method = _FST::http::method::GET;
+        __fst::http::method _method = __fst::http::method::GET;
     };
 
     class response
     {
       public:
-        using data_vector = _FST::vector<char, alignof(char), _FST::default_memory_zone, _FST::web_memory_category>;
-        using header_field_vector = _FST::vector<header_field, alignof(header_field), _FST::default_memory_zone, _FST::web_memory_category>;
+        using data_vector = __fst::vector<char, alignof(char), __fst::default_memory_zone, __fst::web_memory_category>;
+        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::default_memory_zone, __fst::web_memory_category>;
 
         response() = default;
         response(const response&) = default;
@@ -920,7 +920,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         {}
 
         inline response(data_vector&& data, int statusCode, error_code err)
-            : _data(_FST::move(data))
+            : _data(__fst::move(data))
             , _status(statusCode)
             , _error(err)
         {}
@@ -935,7 +935,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             : _data(data)
             , _status(statusCode)
             , _error(error_code::none)
-            , _headers(_FST::move(headers))
+            , _headers(__fst::move(headers))
         {}
 
         ~response() = default;
@@ -967,15 +967,15 @@ FST_BEGIN_SUB_NAMESPACE(http)
         inline const data_vector& data() const noexcept { return _data; }
 
         //
-        inline _FST::byte_range bytes() noexcept { return _FST::byte_range((_FST::byte*) _data.data(), _data.size()); }
+        inline __fst::byte_range bytes() noexcept { return __fst::byte_range((__fst::byte*) _data.data(), _data.size()); }
 
         //
-        inline _FST::byte_view bytes() const noexcept { return _FST::byte_view((const _FST::byte*) _data.data(), _data.size()); }
+        inline __fst::byte_view bytes() const noexcept { return __fst::byte_view((const __fst::byte*) _data.data(), _data.size()); }
 
         ///
-        inline _FST::string_view as_string() const noexcept { return _FST::string_view(_data.data(), _data.size()); }
+        inline __fst::string_view as_string() const noexcept { return __fst::string_view(_data.data(), _data.size()); }
 
-        inline bool has_header(_FST::string_view name) const noexcept
+        inline bool has_header(__fst::string_view name) const noexcept
         {
             for (const header_field& h : _headers)
             {
@@ -985,7 +985,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return false;
         }
 
-        inline const header_field* get_header(_FST::string_view name) const noexcept
+        inline const header_field* get_header(__fst::string_view name) const noexcept
         {
             for (const header_field& h : _headers)
             {
@@ -995,14 +995,14 @@ FST_BEGIN_SUB_NAMESPACE(http)
             return nullptr;
         }
 
-        inline const _FST::string_view get_header_value(_FST::string_view name) const noexcept
+        inline const __fst::string_view get_header_value(__fst::string_view name) const noexcept
         {
             for (const header_field& h : _headers)
             {
                 if (h.name == name) { return h.value.view(); }
             }
 
-            return _FST::string_view();
+            return __fst::string_view();
         }
 
         ///

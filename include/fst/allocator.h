@@ -75,10 +75,10 @@ FST_BEGIN_NAMESPACE
     // non-static memory zone
     template <class T, class _MemoryZone, class _MemoryCategory>
     class memory_zone_allocator<T, _MemoryZone, _MemoryCategory,
-        _FST::enable_if_t<!_FST::is_static_memory_zone<_MemoryZone>::value && _FST::is_memory_category<_MemoryCategory>::value>>
+        __fst::enable_if_t<!__fst::is_static_memory_zone<_MemoryZone>::value && __fst::is_memory_category<_MemoryCategory>::value>>
     {
       public:
-        static_assert(!_FST::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
+        static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
@@ -89,8 +89,8 @@ FST_BEGIN_NAMESPACE
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
-        using propagate_on_container_move_assignment = _FST::true_t;
-        using is_always_equal = _FST::false_t;
+        using propagate_on_container_move_assignment = __fst::true_t;
+        using is_always_equal = __fst::false_t;
 
         template <class U>
         struct rebind
@@ -101,9 +101,9 @@ FST_BEGIN_NAMESPACE
         static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
-        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
 
-        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return __fst::addressof(t); }
 
         constexpr memory_zone_allocator() noexcept = default;
         constexpr memory_zone_allocator(const memory_zone_allocator&) noexcept = default;
@@ -113,9 +113,9 @@ FST_BEGIN_NAMESPACE
         inline constexpr memory_zone_allocator(const memory_zone_allocator<U, _MemoryZone, _MemoryCategory>&) noexcept
         {}
 
-        template <class... Args, _FST::enable_if_t<_FST::is_constructible_v<_MemoryZone, Args...>, int> = 0>
+        template <class... Args, __fst::enable_if_t<__fst::is_constructible_v<_MemoryZone, Args...>, int> = 0>
         inline memory_zone_allocator(Args&&... args) noexcept
-            : _zone(_FST::forward<Args>(args)...)
+            : _zone(__fst::forward<Args>(args)...)
         {}
 
         inline ~memory_zone_allocator() noexcept = default;
@@ -137,14 +137,14 @@ FST_BEGIN_NAMESPACE
 
         template <class U>
         FST_NODISCARD friend inline constexpr bool operator==(
-            const memory_zone_allocator& lhs, const _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
+            const memory_zone_allocator& lhs, const __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
         {
             return lhs == rhs;
         }
 
         template <class U>
         FST_NODISCARD friend inline constexpr bool operator!=(
-            const memory_zone_allocator& lhs, const _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
+            const memory_zone_allocator& lhs, const __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
         {
             return lhs != rhs;
         }
@@ -157,10 +157,10 @@ FST_BEGIN_NAMESPACE
     // static memory zone
     template <class T, class _MemoryZone, class _MemoryCategory>
     class memory_zone_allocator<T, _MemoryZone, _MemoryCategory,
-        _FST::enable_if_t<_FST::is_static_memory_zone<_MemoryZone>::value && _FST::is_memory_category<_MemoryCategory>::value>>
+        __fst::enable_if_t<__fst::is_static_memory_zone<_MemoryZone>::value && __fst::is_memory_category<_MemoryCategory>::value>>
     {
       public:
-        static_assert(!_FST::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
+        static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
@@ -171,8 +171,8 @@ FST_BEGIN_NAMESPACE
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
-        using propagate_on_container_move_assignment = _FST::true_t;
-        using is_always_equal = _FST::true_t;
+        using propagate_on_container_move_assignment = __fst::true_t;
+        using is_always_equal = __fst::true_t;
 
         template <class U>
         struct rebind
@@ -183,9 +183,9 @@ FST_BEGIN_NAMESPACE
         static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
-        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
 
-        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return __fst::addressof(t); }
 
         constexpr memory_zone_allocator() noexcept = default;
         constexpr memory_zone_allocator(const memory_zone_allocator&) noexcept = default;
@@ -213,13 +213,13 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline allocator_proxy proxy() noexcept { return make_allocator_proxy(this); }
 
         template <class U>
-        FST_NODISCARD friend inline constexpr bool operator==(memory_zone_allocator, _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>) noexcept
+        FST_NODISCARD friend inline constexpr bool operator==(memory_zone_allocator, __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>) noexcept
         {
             return true;
         }
 
         template <class U>
-        FST_NODISCARD friend inline constexpr bool operator!=(memory_zone_allocator, _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>) noexcept
+        FST_NODISCARD friend inline constexpr bool operator!=(memory_zone_allocator, __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>) noexcept
         {
             return false;
         }
@@ -228,10 +228,10 @@ FST_BEGIN_NAMESPACE
     // memory_zone_proxy
     /*template <class T, class _MemoryZone, class _MemoryCategory>
     class memory_zone_allocator<T, _MemoryZone, _MemoryCategory,
-        _FST::enable_if_t<_FST::is_memory_zone_proxy_v<_MemoryZone> && _FST::is_memory_category<_MemoryCategory>::value>>
+        __fst::enable_if_t<__fst::is_memory_zone_proxy_v<_MemoryZone> && __fst::is_memory_category<_MemoryCategory>::value>>
     {
       public:
-        static_assert(!_FST::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
+        static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
@@ -242,8 +242,8 @@ FST_BEGIN_NAMESPACE
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
-        using propagate_on_container_move_assignment = _FST::true_t;
-        using is_always_equal = _FST::false_t;
+        using propagate_on_container_move_assignment = __fst::true_t;
+        using is_always_equal = __fst::false_t;
 
         template <class U>
         struct rebind
@@ -254,9 +254,9 @@ FST_BEGIN_NAMESPACE
         static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
-        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
 
-        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return __fst::addressof(t); }
 
         constexpr memory_zone_allocator() noexcept = default;
         constexpr memory_zone_allocator(const memory_zone_allocator&) noexcept = default;
@@ -266,7 +266,7 @@ FST_BEGIN_NAMESPACE
         inline constexpr memory_zone_allocator(const memory_zone_allocator<U, _MemoryZone, _MemoryCategory>&) noexcept
         {}
 
-        inline memory_zone_allocator(_FST::memory_zone_proxy zone) noexcept
+        inline memory_zone_allocator(__fst::memory_zone_proxy zone) noexcept
             : _zone(zone)
         {}
 
@@ -289,30 +289,30 @@ FST_BEGIN_NAMESPACE
 
         template <class U>
         FST_NODISCARD friend inline constexpr bool operator==(
-            const memory_zone_allocator& lhs, const _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
+            const memory_zone_allocator& lhs, const __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
         {
             return lhs._zone.id() == rhs._zone.id();
         }
 
         template <class U>
         FST_NODISCARD friend inline constexpr bool operator!=(
-            const memory_zone_allocator& lhs, const _FST::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
+            const memory_zone_allocator& lhs, const __fst::memory_zone_allocator<U, _MemoryZone, _MemoryCategory>& rhs) noexcept
         {
             return lhs._zone.id() != rhs._zone.id();
         }
 
       private:
-        _FST::memory_zone_proxy _zone;
+        __fst::memory_zone_proxy _zone;
     };*/
 
-    template <class T, class _MemoryCategory = _FST::default_memory_category, class _MemoryZone = _FST::default_memory_zone>
-    using allocator = _FST::memory_zone_allocator<T, _MemoryZone, _MemoryCategory>;
+    template <class T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
+    using allocator = __fst::memory_zone_allocator<T, _MemoryZone, _MemoryCategory>;
 
-    template <class T, class _MemoryCategory = _FST::default_memory_category>
-    using default_allocator = _FST::memory_zone_allocator<T, _FST::default_memory_zone, _MemoryCategory>;
+    template <class T, class _MemoryCategory = __fst::default_memory_category>
+    using default_allocator = __fst::memory_zone_allocator<T, __fst::default_memory_zone, _MemoryCategory>;
 
-    template <class T, class _MemoryCategory = _FST::dsp_memory_category>
-    using simd_allocator = _FST::memory_zone_allocator<T, _FST::simd_memory_zone, _MemoryCategory>;
+    template <class T, class _MemoryCategory = __fst::dsp_memory_category>
+    using simd_allocator = __fst::memory_zone_allocator<T, __fst::simd_memory_zone, _MemoryCategory>;
 FST_END_NAMESPACE
 
 //
@@ -320,7 +320,7 @@ FST_END_NAMESPACE
     class memory_allocator
     {
       public:
-        static_assert(!_FST::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
+        static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
@@ -331,8 +331,8 @@ FST_END_NAMESPACE
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
-        using propagate_on_container_move_assignment = _FST::true_t;
-        using is_always_equal = _FST::false_t;
+        using propagate_on_container_move_assignment = __fst::true_t;
+        using is_always_equal = __fst::false_t;
 
         template <class U>
         struct rebind
@@ -343,9 +343,9 @@ FST_END_NAMESPACE
         static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
-        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
 
-        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return _FST::addressof(t); }
+        FST_NODISCARD inline constexpr const T* address(const T& t) const noexcept { return __fst::addressof(t); }
 
         constexpr memory_allocator() noexcept = default;
         constexpr memory_allocator(const memory_allocator&) noexcept = default;
@@ -357,13 +357,13 @@ FST_END_NAMESPACE
             , _mid(other._mid)
         {}
 
-        inline memory_allocator(_FST::memory_zone_proxy z, _FST::memory_category_id mid) noexcept
+        inline memory_allocator(__fst::memory_zone_proxy z, __fst::memory_category_id mid) noexcept
             : _zone(z)
             , _mid(mid)
         {}
 
-        template <class _Zone, _FST::enable_if_t<_FST::is_memory_zone<_Zone>::value, int> = 0>
-        inline memory_allocator(_Zone& z, _FST::memory_category_id mid) noexcept
+        template <class _Zone, __fst::enable_if_t<__fst::is_memory_zone<_Zone>::value, int> = 0>
+        inline memory_allocator(_Zone& z, __fst::memory_category_id mid) noexcept
             : _zone(z.proxy())
             , _mid(mid)
         {}
@@ -386,18 +386,18 @@ FST_END_NAMESPACE
         FST_NODISCARD inline allocator_proxy proxy() noexcept { return make_allocator_proxy(this); }
 
         template <class U>
-        FST_NODISCARD friend inline constexpr bool operator==(const memory_allocator& lhs, const _FST::memory_allocator<U>& rhs) noexcept
+        FST_NODISCARD friend inline constexpr bool operator==(const memory_allocator& lhs, const __fst::memory_allocator<U>& rhs) noexcept
         {
             return lhs._zone.zone_id() == rhs._zone.zone_id() && lhs._mid == rhs.mid;
         }
 
         template <class U>
-        FST_NODISCARD friend inline constexpr bool operator!=(const memory_allocator& lhs, const _FST::memory_allocator<U>& rhs) noexcept
+        FST_NODISCARD friend inline constexpr bool operator!=(const memory_allocator& lhs, const __fst::memory_allocator<U>& rhs) noexcept
         {
             return lhs._zone.zone_id() != rhs._zone.zone_id() || lhs._mid != rhs.mid;
         }
 
       private:
-        _FST::memory_zone_proxy _zone;
-        _FST::memory_category_id _mid;
+        __fst::memory_zone_proxy _zone;
+        __fst::memory_category_id _mid;
     };*/

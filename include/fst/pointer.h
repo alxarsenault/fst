@@ -97,7 +97,7 @@ FST_BEGIN_NAMESPACE
     };
 
     ///
-    template <class _T, class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category>
+    template <class _T, class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
     class unique_ptr
     {
       public:
@@ -106,13 +106,13 @@ FST_BEGIN_NAMESPACE
         using memory_zone_type = _MemoryZone;
 
         template <class _Zone>
-        using enable_if_zone_default_constructible_t = _FST::enable_if_t<!_FST::is_pointer_v<_Zone> && _FST::is_default_constructible_v<_Zone>, int>;
+        using enable_if_zone_default_constructible_t = __fst::enable_if_t<!__fst::is_pointer_v<_Zone> && __fst::is_default_constructible_v<_Zone>, int>;
 
         template <class _Zone>
-        using enable_if_zone_copy_constructible_t = _FST::enable_if_t<_FST::is_copy_constructible_v<_Zone>, int>;
+        using enable_if_zone_copy_constructible_t = __fst::enable_if_t<__fst::is_copy_constructible_v<_Zone>, int>;
 
         template <class _Zone>
-        using enable_if_zone_move_constructible_t = _FST::enable_if_t<!_FST::is_reference_v<_Zone> && _FST::is_move_constructible_v<_Zone>, int>;
+        using enable_if_zone_move_constructible_t = __fst::enable_if_t<!__fst::is_reference_v<_Zone> && __fst::is_move_constructible_v<_Zone>, int>;
 
         template <class... _Args>
         inline constexpr unique_ptr(make_tag, _Args&&... args)
@@ -120,7 +120,7 @@ FST_BEGIN_NAMESPACE
         {
             _T* ptr = (_T*) memory_zone_type::aligned_allocate(sizeof(_T), alignof(_T), _MemoryCategory::id());
             fst_assert(ptr, "allocation failed");
-            _data.first() = fst_placement_new(ptr) _T(_FST::forward<_Args>(args)...);
+            _data.first() = fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...);
         }
 
         template <class _Zone = memory_zone_type, enable_if_zone_default_constructible_t<_Zone> = 0>
@@ -129,7 +129,7 @@ FST_BEGIN_NAMESPACE
         {}
 
         template <class _Zone = memory_zone_type, enable_if_zone_default_constructible_t<_Zone> = 0>
-        inline constexpr unique_ptr(_FST::nullptr_t) noexcept
+        inline constexpr unique_ptr(__fst::nullptr_t) noexcept
             : _data{ nullptr, memory_zone_type{} }
         {}
 
@@ -145,28 +145,28 @@ FST_BEGIN_NAMESPACE
 
         template <class _Zone = memory_zone_type, enable_if_zone_move_constructible_t<_Zone> = 0>
         inline constexpr unique_ptr(pointer ptr, memory_zone_type&& mem_zone) noexcept
-            : _data{ ptr, _FST::move(mem_zone) }
+            : _data{ ptr, __fst::move(mem_zone) }
         {}
 
         template <class _Dx2 = memory_zone_type,
-            _FST::enable_if_t<_FST::conjunction_v<_FST::is_reference<_Dx2>, _FST::is_constructible<_Dx2, _FST::remove_reference_t<_Dx2>>>, int> = 0>
-        unique_ptr(pointer, _FST::remove_reference_t<memory_zone_type>&&) = delete;
+            __fst::enable_if_t<__fst::conjunction_v<__fst::is_reference<_Dx2>, __fst::is_constructible<_Dx2, __fst::remove_reference_t<_Dx2>>>, int> = 0>
+        unique_ptr(pointer, __fst::remove_reference_t<memory_zone_type>&&) = delete;
 
-        template <class _Zone = memory_zone_type, _FST::enable_if_t<_FST::is_move_constructible_v<_Zone>, int> = 0>
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_move_constructible_v<_Zone>, int> = 0>
         unique_ptr(unique_ptr&& _Right) noexcept
-            : _data{ _Right.get(), _FST::forward<memory_zone_type>(_Right.get_memory_zone()) }
+            : _data{ _Right.get(), __fst::forward<memory_zone_type>(_Right.get_memory_zone()) }
         {
             (void) _Right.release();
         }
 
         template <class _Ty2, class _Dx2,
-            _FST::enable_if_t<
-                _FST::conjunction_v<_FST::negation<_FST::is_c_array<_Ty2>>, _FST::is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer, pointer>,
-                    _FST::conditional_t<_FST::is_reference_v<memory_zone_type>, _FST::is_same<_Dx2, memory_zone_type>, _FST::is_convertible<_Dx2, memory_zone_type>>>,
+            __fst::enable_if_t<
+                __fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>, __fst::is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer, pointer>,
+                    __fst::conditional_t<__fst::is_reference_v<memory_zone_type>, __fst::is_same<_Dx2, memory_zone_type>, __fst::is_convertible<_Dx2, memory_zone_type>>>,
                 int>
             = 0>
         unique_ptr(unique_ptr<_Ty2, _Dx2>&& _Right) noexcept
-            : _data{ _Right.get(), _FST::forward<_Dx2>(_Right.get_memory_zone()) }
+            : _data{ _Right.get(), __fst::forward<_Dx2>(_Right.get_memory_zone()) }
         {
 
             _Right.release();
@@ -180,7 +180,7 @@ FST_BEGIN_NAMESPACE
             _T* ptr = (_T*) memory_zone_type::aligned_allocate(sizeof(_T), alignof(_T), _MemoryCategory::id());
             fst_assert(ptr, "allocation failed");
 
-            ptr = fst_placement_new(ptr) _T(_FST::forward<_Args>(args)...);
+            ptr = fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...);
             return unique_ptr(ptr);
         }
 
@@ -195,30 +195,30 @@ FST_BEGIN_NAMESPACE
 
         unique_ptr& operator=(const unique_ptr&) = delete;
 
-        inline constexpr unique_ptr& operator=(_FST::nullptr_t) noexcept
+        inline constexpr unique_ptr& operator=(__fst::nullptr_t) noexcept
         {
             reset();
             return *this;
         }
 
         /*template <class _Ty2, class _Dx2, class _C2,
-            _FST::enable_if_t<_FST::conjunction_v<_FST::negation<_FST::is_c_array<_Ty2>>, _FST::is_assignable<memory_zone_type&, _Dx2>,
-                                  _FST::is_convertible<typename unique_ptr<_Ty2, _Dx2, _C2>::pointer, pointer>>,
+            __fst::enable_if_t<__fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>, __fst::is_assignable<memory_zone_type&, _Dx2>,
+                                  __fst::is_convertible<typename unique_ptr<_Ty2, _Dx2, _C2>::pointer, pointer>>,
                 int> = 0>
         inline unique_ptr& operator=(unique_ptr<_Ty2, _Dx2, _C2>&& _Right) noexcept
         {
             reset(_Right.release());
-            _data.second() = _FST::forward<_Dx2>(_Right._data.second());
+            _data.second() = __fst::forward<_Dx2>(_Right._data.second());
             return *this;
         }*/
 
-        template <class _Zone = memory_zone_type, _FST::enable_if_t<_FST::is_move_assignable_v<_Zone>, int> = 0>
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_move_assignable_v<_Zone>, int> = 0>
         unique_ptr& operator=(unique_ptr&& _Right) noexcept
         {
-            if (this != _FST::addressof(_Right))
+            if (this != __fst::addressof(_Right))
             {
                 reset(_Right.get());
-                _data.second() = _FST::forward<memory_zone_type>(_Right._data.second());
+                _data.second() = __fst::forward<memory_zone_type>(_Right._data.second());
                 (void) _Right.release();
             }
             return *this;
@@ -227,7 +227,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD memory_zone_type& get_memory_zone() noexcept { return _data.second(); }
         FST_NODISCARD const memory_zone_type& get_memory_zone() const noexcept { return _data.second(); }
 
-        FST_NODISCARD _FST::add_lvalue_reference_t<_T> operator*() const noexcept { return *_data.first(); }
+        FST_NODISCARD __fst::add_lvalue_reference_t<_T> operator*() const noexcept { return *_data.first(); }
 
         FST_NODISCARD pointer operator->() const noexcept { return _data.first(); }
 
@@ -235,49 +235,49 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD inline explicit operator bool() const noexcept { return static_cast<bool>(_data.first()); }
 
-        FST_NODISCARD inline pointer release() noexcept { return _FST::exchange(_data.first(), nullptr); }
+        FST_NODISCARD inline pointer release() noexcept { return __fst::exchange(_data.first(), nullptr); }
 
         inline void reset(pointer ptr = nullptr) noexcept
         {
-            if (pointer old_ptr = _FST::exchange(_data.first(), ptr)) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
+            if (pointer old_ptr = __fst::exchange(_data.first(), ptr)) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
         }
 
       private:
-        _FST::pair<pointer, _MemoryZone> _data;
+        __fst::pair<pointer, _MemoryZone> _data;
     };
 
     ///
-    template <class _T, class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category, class... _Args,
-        _FST::enable_if_t<_FST::conjunction_v<_FST::is_static_memory_zone<_MemoryZone>, _FST::is_memory_category<_MemoryCategory>>, int> = 0>
+    template <class _T, class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category, class... _Args,
+        __fst::enable_if_t<__fst::conjunction_v<__fst::is_static_memory_zone<_MemoryZone>, __fst::is_memory_category<_MemoryCategory>>, int> = 0>
     inline _T* make(_Args && ... args) noexcept
     {
         _T* ptr = (_T*) _MemoryZone::aligned_allocate(sizeof(_T), alignof(_T), _MemoryCategory::id());
         fst_assert(ptr, "allocation failed");
-        return fst_placement_new(ptr) _T(_FST::forward<_Args>(args)...);
+        return fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...);
     }
 
     ///
-    template <class _T, class _MemoryZone, class _MemoryCategory = _FST::default_memory_category, class... _Args,
-        _FST::enable_if_t<_FST::conjunction_v<_FST::is_memory_zone<_MemoryZone>, _FST::is_memory_category<_MemoryCategory>>, int> = 0>
+    template <class _T, class _MemoryZone, class _MemoryCategory = __fst::default_memory_category, class... _Args,
+        __fst::enable_if_t<__fst::conjunction_v<__fst::is_memory_zone<_MemoryZone>, __fst::is_memory_category<_MemoryCategory>>, int> = 0>
     inline _T* make(_MemoryZone & mem_zone, _Args && ... args) noexcept
     {
         _T* ptr = (_T*) mem_zone.aligned_allocate(sizeof(_T), alignof(_T), _MemoryCategory::id());
         fst_assert(ptr, "allocation failed");
-        return fst_placement_new(ptr) _T(_FST::forward<_Args>(args)...);
+        return fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...);
     }
 
     ///
-    template <class _T, class _MemoryZone, class... _Args, _FST::enable_if_t<_FST::is_memory_zone<_MemoryZone>::value, int> = 0>
-    inline _T* make(_MemoryZone & mem_zone, _FST::memory_category_id mid, _Args && ... args) noexcept
+    template <class _T, class _MemoryZone, class... _Args, __fst::enable_if_t<__fst::is_memory_zone<_MemoryZone>::value, int> = 0>
+    inline _T* make(_MemoryZone & mem_zone, __fst::memory_category_id mid, _Args && ... args) noexcept
     {
         _T* ptr = (_T*) mem_zone.aligned_allocate(sizeof(_T), alignof(_T), mid);
         fst_assert(ptr, "allocation failed");
-        return fst_placement_new(ptr) _T(_FST::forward<_Args>(args)...);
+        return fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...);
     }
 
     ///
-    template <class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category, class _T,
-        _FST::enable_if_t<_FST::conjunction_v<_FST::is_static_memory_zone<_MemoryZone>, _FST::is_memory_category<_MemoryCategory>>, int> = 0>
+    template <class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category, class _T,
+        __fst::enable_if_t<__fst::conjunction_v<__fst::is_static_memory_zone<_MemoryZone>, __fst::is_memory_category<_MemoryCategory>>, int> = 0>
     inline void destroy(_T * ptr) noexcept
     {
         fst_assert(ptr, "tried to destroy nullptr");
@@ -285,8 +285,8 @@ FST_BEGIN_NAMESPACE
     }
 
     ///
-    template <class _MemoryCategory = _FST::default_memory_category, class _MemoryZone, class _T,
-        _FST::enable_if_t<_FST::conjunction_v<_FST::is_memory_zone<_MemoryZone>, _FST::is_memory_category<_MemoryCategory>>, int> = 0>
+    template <class _MemoryCategory = __fst::default_memory_category, class _MemoryZone, class _T,
+        __fst::enable_if_t<__fst::conjunction_v<__fst::is_memory_zone<_MemoryZone>, __fst::is_memory_category<_MemoryCategory>>, int> = 0>
     inline void destroy(_T * ptr, _MemoryZone & mem_zone) noexcept
     {
         fst_assert(ptr, "tried to destroy nullptr");
@@ -294,8 +294,8 @@ FST_BEGIN_NAMESPACE
     }
 
     ///
-    template <class _MemoryZone, class _T, _FST::enable_if_t<_FST::is_memory_zone<_MemoryZone>::value, int> = 0>
-    inline void destroy(_T * ptr, _MemoryZone & mem_zone, _FST::memory_category_id mid) noexcept
+    template <class _MemoryZone, class _T, __fst::enable_if_t<__fst::is_memory_zone<_MemoryZone>::value, int> = 0>
+    inline void destroy(_T * ptr, _MemoryZone & mem_zone, __fst::memory_category_id mid) noexcept
     {
         fst_assert(ptr, "tried to destroy nullptr");
         mem_zone.aligned_deallocate(ptr, mid);

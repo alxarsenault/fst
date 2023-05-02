@@ -30,11 +30,11 @@
 
 FST_BEGIN_NAMESPACE
 
-    template <class _Key, class _T, size_t _Alignment = alignof(_T), class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category>
+    template <class _Key, class _T, size_t _Alignment = alignof(_T), class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
     class unordered_map
     {
       public:
-        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
         using key_type = _Key;
         using value_type = _T;
@@ -45,15 +45,15 @@ FST_BEGIN_NAMESPACE
         using pointer = value_type*;
         using const_pointer = const value_type*;
         using reference = value_type&;
-        using const_reference = _FST::cref_t<value_type>;
+        using const_reference = __fst::cref_t<value_type>;
 
         using iterator = pointer;
         using const_iterator = const_pointer;
 
-        using key_const_reference = _FST::cref_t<key_type>;
+        using key_const_reference = __fst::cref_t<key_type>;
 
-        using key_vector = _FST::vector<key_type, alignof(key_type), _MemoryZone, _MemoryCategory>;
-        using value_vector = _FST::vector<value_type, _Alignment, _MemoryZone, _MemoryCategory>;
+        using key_vector = __fst::vector<key_type, alignof(key_type), _MemoryZone, _MemoryCategory>;
+        using value_vector = __fst::vector<value_type, _Alignment, _MemoryZone, _MemoryCategory>;
 
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_type size() const noexcept { return _values.size(); }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _values.empty(); }
@@ -107,7 +107,7 @@ FST_BEGIN_NAMESPACE
             return _values.back();
         }
 
-        template <class U = key_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U> && _FST::is_same_v<U, key_type>, int> = 0>
+        template <class U = key_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U> && __fst::is_same_v<U, key_type>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE reference operator[](key_type&& key) noexcept
         {
             for (size_type i = 0; i < size(); i++)
@@ -115,7 +115,7 @@ FST_BEGIN_NAMESPACE
                 if (_keys[i] == key) { return _values[i]; }
             }
 
-            _keys.push_back(_FST::move(key));
+            _keys.push_back(__fst::move(key));
             _values.push_back(value_type{});
             return _values.back();
         }
@@ -147,7 +147,7 @@ FST_BEGIN_NAMESPACE
             }
 
             _keys.push_back(key);
-            _values.emplace_back(_FST::forward<_Args>(args)...);
+            _values.emplace_back(__fst::forward<_Args>(args)...);
             return true;
         }
 
@@ -180,7 +180,7 @@ FST_BEGIN_NAMESPACE
 
         inline size_type erase(const_iterator it) noexcept
         {
-            size_type index = _FST::distance(_values.cbegin(), it);
+            size_type index = __fst::distance(_values.cbegin(), it);
             if (_values.size() <= index) { return 0; }
 
             _keys.erase_at(index);
@@ -196,12 +196,12 @@ FST_BEGIN_NAMESPACE
         value_vector _values;
     };
 
-    template <class _Key, class _T, size_t _Size, size_t _Alignment = alignof(_T), class _MemoryZone = _FST::default_memory_zone,
-        class _MemoryCategory = _FST::default_memory_category>
+    template <class _Key, class _T, size_t _Size, size_t _Alignment = alignof(_T), class _MemoryZone = __fst::default_memory_zone,
+        class _MemoryCategory = __fst::default_memory_category>
     class small_unordered_map
     {
       public:
-        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
         using key_type = _Key;
         using value_type = _T;
@@ -212,15 +212,15 @@ FST_BEGIN_NAMESPACE
         using pointer = value_type*;
         using const_pointer = const value_type*;
         using reference = value_type&;
-        using const_reference = _FST::cref_t<value_type>;
+        using const_reference = __fst::cref_t<value_type>;
 
         using iterator = pointer;
         using const_iterator = const_pointer;
 
-        using key_const_reference = _FST::cref_t<key_type>;
+        using key_const_reference = __fst::cref_t<key_type>;
 
-        using key_vector = _FST::small_vector<key_type, _Size, alignof(key_type), _MemoryZone, _MemoryCategory>;
-        using value_vector = _FST::small_vector<value_type, _Size, _Alignment, _MemoryZone, _MemoryCategory>;
+        using key_vector = __fst::small_vector<key_type, _Size, alignof(key_type), _MemoryZone, _MemoryCategory>;
+        using value_vector = __fst::small_vector<value_type, _Size, _Alignment, _MemoryZone, _MemoryCategory>;
 
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_type size() const noexcept { return _values.size(); }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _values.empty(); }
@@ -272,7 +272,7 @@ FST_BEGIN_NAMESPACE
             return _values.back();
         }
 
-        template <class U = key_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U> && _FST::is_same_v<U, key_type>, int> = 0>
+        template <class U = key_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U> && __fst::is_same_v<U, key_type>, int> = 0>
         FST_NODISCARD FST_ALWAYS_INLINE reference operator[](key_type&& key) noexcept
         {
             for (size_type i = 0; i < size(); i++)
@@ -280,7 +280,7 @@ FST_BEGIN_NAMESPACE
                 if (_keys[i] == key) { return _values[i]; }
             }
 
-            _keys.push_back(_FST::move(key));
+            _keys.push_back(__fst::move(key));
             _values.push_back(value_type{});
             return _values.back();
         }
@@ -332,7 +332,7 @@ FST_BEGIN_NAMESPACE
 
         inline size_type erase(const_iterator it) noexcept
         {
-            difference_type index = _FST::distance(_values.cbegin(), it);
+            difference_type index = __fst::distance(_values.cbegin(), it);
             if (_values.size() <= (size_type) index) { return 0; }
 
             _keys.erase_at((size_type) index);

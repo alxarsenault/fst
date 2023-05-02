@@ -35,7 +35,7 @@
 #include "fst/allocator.h"
 
 FST_BEGIN_NAMESPACE
-    template <class _CharT, class _Allocator = _FST::memory_zone_allocator<_CharT, _FST::default_memory_zone, _FST::default_memory_category>, class Enable = void>
+    template <class _CharT, class _Allocator = __fst::memory_zone_allocator<_CharT, __fst::default_memory_zone, __fst::default_memory_category>, class Enable = void>
     class basic_string;
 
     template <class _CharT, class _Allocator, class Enable>
@@ -43,7 +43,7 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using value_type = _CharT;
-        using traits_type = _FST::char_traits<_CharT>;
+        using traits_type = __fst::char_traits<_CharT>;
         using size_type = size_t;
         using difference_type = ptrdiff_t;
         using reference = value_type&;
@@ -54,11 +54,11 @@ FST_BEGIN_NAMESPACE
         using const_iterator = const_pointer;
 
         using allocator_type = _Allocator;
-        using view_type = _FST::basic_string_view<value_type>;
+        using view_type = __fst::basic_string_view<value_type>;
 
-        static constexpr size_type npos = (_FST::numeric_limits<size_type>::max)();
+        static constexpr size_type npos = (__fst::numeric_limits<size_type>::max)();
 
-        basic_string(_FST::nullptr_t) = delete;
+        basic_string(__fst::nullptr_t) = delete;
 
         inline constexpr basic_string() noexcept
             : _content{ small_array{}, allocator_type{} }
@@ -73,7 +73,7 @@ FST_BEGIN_NAMESPACE
         {
             if (count <= small_capacity)
             {
-                _FST::memfill(small_data(), c, count);
+                __fst::memfill(small_data(), c, count);
                 small_data()[count] = 0;
                 set_small();
             }
@@ -81,7 +81,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = count + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memfill(big_data(), c, count);
+                __fst::memfill(big_data(), c, count);
                 big_data()[count] = 0;
                 big_size() = count;
                 big_capacity() = count;
@@ -96,7 +96,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = str.size() + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
 
                 big_size() = alloc_length - 1;
                 big_capacity() = alloc_length - 1;
@@ -112,7 +112,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = str.size() + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
 
                 big_size() = alloc_length - 1;
                 big_capacity() = alloc_length - 1;
@@ -139,7 +139,7 @@ FST_BEGIN_NAMESPACE
 
             if (len <= small_capacity)
             {
-                _FST::memmove(small_data(), str.data(), len * sizeof(value_type));
+                __fst::memmove(small_data(), str.data(), len * sizeof(value_type));
                 small_data()[len] = 0;
                 set_small();
             }
@@ -147,7 +147,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), len * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), len * sizeof(value_type));
 
                 big_data()[len] = 0;
                 big_size() = len;
@@ -163,7 +163,7 @@ FST_BEGIN_NAMESPACE
 
             if (len <= small_capacity)
             {
-                _FST::memmove(small_data(), str.data(), len * sizeof(value_type));
+                __fst::memmove(small_data(), str.data(), len * sizeof(value_type));
                 small_data()[len] = 0;
                 set_small();
             }
@@ -171,7 +171,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), len * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), len * sizeof(value_type));
 
                 big_data()[len] = 0;
                 big_size() = len;
@@ -186,7 +186,7 @@ FST_BEGIN_NAMESPACE
             if (len <= small_capacity)
             {
                 pointer _data = small_data();
-                _FST::memmove(_data, str, len * sizeof(value_type));
+                __fst::memmove(_data, str, len * sizeof(value_type));
                 _data[len] = (value_type) 0;
                 set_small();
             }
@@ -194,7 +194,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str, alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str, alloc_length * sizeof(value_type));
 
                 big_size() = len;
                 big_capacity() = len;
@@ -209,7 +209,7 @@ FST_BEGIN_NAMESPACE
             if (len <= small_capacity)
             {
                 pointer _data = small_data();
-                _FST::memmove(_data, str, len * sizeof(value_type));
+                __fst::memmove(_data, str, len * sizeof(value_type));
                 _data[len] = (value_type) 0;
                 set_small();
             }
@@ -217,7 +217,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str, alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str, alloc_length * sizeof(value_type));
 
                 big_size() = len;
                 big_capacity() = len;
@@ -230,7 +230,7 @@ FST_BEGIN_NAMESPACE
             if (len <= small_capacity)
             {
                 pointer _data = small_data();
-                _FST::memmove(_data, str, len * sizeof(value_type));
+                __fst::memmove(_data, str, len * sizeof(value_type));
                 _data[len] = (value_type) 0;
                 set_small();
             }
@@ -238,7 +238,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str, alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str, alloc_length * sizeof(value_type));
 
                 big_size() = len;
                 big_capacity() = len;
@@ -257,7 +257,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = str.size() + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
 
                 big_size() = alloc_length - 1;
                 big_capacity() = alloc_length - 1;
@@ -285,7 +285,7 @@ FST_BEGIN_NAMESPACE
             if (len <= small_capacity)
             {
                 pointer _data = small_data();
-                _FST::memmove(_data, str.data(), len * sizeof(value_type));
+                __fst::memmove(_data, str.data(), len * sizeof(value_type));
                 _data[len] = (value_type) 0;
                 set_small();
             }
@@ -293,7 +293,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str.data(), alloc_length * sizeof(value_type));
 
                 big_size() = len;
                 big_capacity() = len;
@@ -311,7 +311,7 @@ FST_BEGIN_NAMESPACE
             if (len <= small_capacity)
             {
                 pointer _data = small_data();
-                _FST::memmove(_data, str, len * sizeof(value_type));
+                __fst::memmove(_data, str, len * sizeof(value_type));
                 _data[len] = (value_type) 0;
                 set_small();
             }
@@ -319,7 +319,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = len + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                _FST::memmove(big_data(), str, alloc_length * sizeof(value_type));
+                __fst::memmove(big_data(), str, alloc_length * sizeof(value_type));
 
                 big_size() = len;
                 big_capacity() = len;
@@ -415,7 +415,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD constexpr basic_string substr(size_type _Off = 0, size_type _Count = npos) const noexcept
         {
             // return [_Off, _Off + _Count) as new string
-            return basic_string(data() + _Off, _FST::minimum(_Count, size() - _Off));
+            return basic_string(data() + _Off, __fst::minimum(_Count, size() - _Off));
         }
 
         constexpr basic_string& append(size_type count, value_type ch) noexcept
@@ -484,7 +484,7 @@ FST_BEGIN_NAMESPACE
 
             pointer new_data = grow_copy(new_size, _size, _data);
 
-            _FST::memmove(new_data + _size, str, count * sizeof(value_type));
+            __fst::memmove(new_data + _size, str, count * sizeof(value_type));
             new_data[new_size] = 0;
 
             deallocate_if_big();
@@ -509,7 +509,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str.data(), _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str.data(), __fst::minimum(_size, ssize));
         }
 
         FST_NODISCARD inline constexpr int compare(view_type str) const noexcept
@@ -519,7 +519,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str.data(), _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str.data(), __fst::minimum(_size, ssize));
         }
 
         FST_NODISCARD inline constexpr int compare(const_pointer str) const noexcept
@@ -529,7 +529,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str, _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str, __fst::minimum(_size, ssize));
         }
 
         FST_ALWAYS_INLINE constexpr void clear() noexcept
@@ -640,15 +640,15 @@ FST_BEGIN_NAMESPACE
 
             if (count <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memfill(_data + index, c, count);
+                __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memfill(_data + index, c, count);
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            _FST::memfill(new_data + index, c, count);
+            __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
+            __fst::memfill(new_data + index, c, count);
             new_data[new_size] = 0;
 
             deallocate_if_big();
@@ -676,15 +676,15 @@ FST_BEGIN_NAMESPACE
 
             if (count <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memmove(_data + index, str.data(), count * sizeof(value_type));
+                __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memmove(_data + index, str.data(), count * sizeof(value_type));
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            _FST::memmove(new_data + index, str.data(), count * sizeof(value_type));
+            __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
+            __fst::memmove(new_data + index, str.data(), count * sizeof(value_type));
             new_data[new_size] = 0;
 
             deallocate_if_big();
@@ -709,7 +709,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(index <= _size, "basic_string::insert index out of bounds.");
             fst_assert(index_str <= str_size, "basic_string::insert index_str out of bounds.");
 
-            const size_type s_size = _FST::minimum(count, str_size - index_str);
+            const size_type s_size = __fst::minimum(count, str_size - index_str);
             const size_type delta = _size - index;
 
             const size_type new_size = _size + s_size;
@@ -718,15 +718,15 @@ FST_BEGIN_NAMESPACE
 
             if (s_size <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memmove(_data + index, str.data() + index_str, s_size * sizeof(value_type));
+                __fst::memmove((void*) (_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memmove(_data + index, str.data() + index_str, s_size * sizeof(value_type));
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
-            _FST::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
+            __fst::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
+            __fst::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
             new_data[new_size] = 0;
 
             deallocate_if_big();
@@ -756,11 +756,11 @@ FST_BEGIN_NAMESPACE
 
             fst_assert(index <= _size, "basic_string::insert index out of bounds.");
 
-            size_type s_size = _FST::minimum(count, _size - index);
+            size_type s_size = __fst::minimum(count, _size - index);
             size_type delta = _size - s_size;
 
             pointer _data = data();
-            _FST::memmove((void*) (_data + index), (const void*) (_data + index + s_size), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data + index), (const void*) (_data + index + s_size), delta * sizeof(value_type));
 
             const size_type new_size = _size - s_size;
 
@@ -773,7 +773,7 @@ FST_BEGIN_NAMESPACE
         inline constexpr size_type find(value_type c) const noexcept
         {
             const value_type* ptr = traits_type::find(data(), size(), c);
-            return ptr == nullptr ? npos : _FST::distance(begin(), ptr);
+            return ptr == nullptr ? npos : __fst::distance(begin(), ptr);
         }
 
         inline constexpr size_type find(view_type str) const noexcept
@@ -838,11 +838,11 @@ FST_BEGIN_NAMESPACE
                         break;
                     }
 
-                    if (it1 == p_end) return ret == end() ? npos : _FST::distance(begin(), ret);
+                    if (it1 == p_end) return ret == end() ? npos : __fst::distance(begin(), ret);
                 }
                 ++p_beg;
             }
-            return ret == end() ? npos : _FST::distance(begin(), ret);
+            return ret == end() ? npos : __fst::distance(begin(), ret);
         }
 
         // private:
@@ -865,9 +865,9 @@ FST_BEGIN_NAMESPACE
 
         static constexpr size_t small_array_size = sizeof(big);
         static constexpr size_t small_capacity = small_array_size / sizeof(value_type) - sizeof(value_type);
-        using small_array = _FST::array<char, small_array_size, alignment>;
+        using small_array = __fst::array<char, small_array_size, alignment>;
 
-        alignas(alignment) _FST::pair<small_array, allocator_type> _content;
+        alignas(alignment) __fst::pair<small_array, allocator_type> _content;
 
         static_assert(sizeof(big) == sizeof(small_array), "wrong size");
 
@@ -904,17 +904,17 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = new_size + 1;
             pointer new_data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(new_data, _data, old_size * sizeof(value_type));
+            __fst::memmove(new_data, _data, old_size * sizeof(value_type));
             return new_data;
         }
     };
 
     template <class _CharT, class _Allocator>
-    class basic_string<_CharT, _Allocator, _FST::enable_if_t<(sizeof(_CharT) > sizeof(char))>>
+    class basic_string<_CharT, _Allocator, __fst::enable_if_t<(sizeof(_CharT) > sizeof(char))>>
     {
       public:
         using value_type = _CharT;
-        using traits_type = _FST::char_traits<_CharT>;
+        using traits_type = __fst::char_traits<_CharT>;
         using size_type = size_t;
         using reference = value_type&;
         using const_reference = const value_type&;
@@ -924,11 +924,11 @@ FST_BEGIN_NAMESPACE
         using const_iterator = const_pointer;
 
         using allocator_type = _Allocator;
-        using view_type = _FST::basic_string_view<value_type>;
+        using view_type = __fst::basic_string_view<value_type>;
 
-        static constexpr size_type npos = (_FST::numeric_limits<size_type>::max)();
+        static constexpr size_type npos = (__fst::numeric_limits<size_type>::max)();
 
-        basic_string(_FST::nullptr_t) = delete;
+        basic_string(__fst::nullptr_t) = delete;
 
         inline constexpr basic_string() noexcept
             : _content{ content{}, allocator_type{} }
@@ -943,7 +943,7 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = count + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memfill(_content.first().data, c, count);
+            __fst::memfill(_content.first().data, c, count);
             _content.first().data[count] = 0;
             _content.first().size = count;
             _content.first().capacity = count;
@@ -953,7 +953,7 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = str.size() + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
 
             _content.first().size = alloc_length - 1;
             _content.first().capacity = alloc_length - 1;
@@ -964,7 +964,7 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = str.size() + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
 
             _content.first().size = alloc_length - 1;
         }
@@ -988,7 +988,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), len * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), len * sizeof(value_type));
 
             _content.first().data[len] = 0;
             _content.first().size = len;
@@ -1002,7 +1002,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), len * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), len * sizeof(value_type));
 
             _content.first().data[len] = 0;
             _content.first().size = len;
@@ -1015,7 +1015,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
 
             _content.first().size = len;
             _content.first().capacity = len;
@@ -1028,7 +1028,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
 
             _content.first().size = len;
             _content.first().capacity = len;
@@ -1039,7 +1039,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
 
             _content.first().size = len;
             _content.first().capacity = len;
@@ -1053,7 +1053,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = str.size() + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
 
             _content.first().size = alloc_length - 1;
             _content.first().capacity = alloc_length - 1;
@@ -1078,7 +1078,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str.data(), alloc_length * sizeof(value_type));
 
             _content.first().size = len;
             _content.first().capacity = len;
@@ -1094,7 +1094,7 @@ FST_BEGIN_NAMESPACE
 
             const size_type alloc_length = len + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
+            __fst::memmove(_content.first().data, str, alloc_length * sizeof(value_type));
 
             _content.first().size = len;
             _content.first().capacity = len;
@@ -1187,7 +1187,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD constexpr basic_string substr(size_type _Off = 0, size_type _Count = npos) const noexcept
         {
             // return [_Off, _Off + _Count) as new string
-            return basic_string(data() + _Off, _FST::minimum(_Count, size() - _Off));
+            return basic_string(data() + _Off, __fst::minimum(_Count, size() - _Off));
         }
 
         constexpr basic_string& append(size_type count, value_type ch) noexcept
@@ -1255,7 +1255,7 @@ FST_BEGIN_NAMESPACE
 
             pointer new_data = grow_copy(new_size, _size, _data);
 
-            _FST::memmove(new_data + _size, str, count * sizeof(value_type));
+            __fst::memmove(new_data + _size, str, count * sizeof(value_type));
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
@@ -1279,7 +1279,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str.data(), _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str.data(), __fst::minimum(_size, ssize));
         }
 
         FST_NODISCARD inline constexpr int compare(view_type str) const noexcept
@@ -1289,7 +1289,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str.data(), _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str.data(), __fst::minimum(_size, ssize));
         }
 
         FST_NODISCARD inline constexpr int compare(const_pointer str) const noexcept
@@ -1299,7 +1299,7 @@ FST_BEGIN_NAMESPACE
 
             if (_size != ssize) { return _size < ssize ? -1 : _size > ssize ? 1 : 0; }
 
-            return traits_type::compare(data(), str, _FST::minimum(_size, ssize));
+            return traits_type::compare(data(), str, __fst::minimum(_size, ssize));
         }
 
         FST_ALWAYS_INLINE constexpr void clear() noexcept
@@ -1322,7 +1322,7 @@ FST_BEGIN_NAMESPACE
 
                     const size_type alloc_length = new_size + 1;
                     _content.first().data = (pointer) _content.second().allocate(alloc_length);
-                    _FST::memset(_content.first().data, 0, alloc_length * sizeof(value_type));
+                    __fst::memset(_content.first().data, 0, alloc_length * sizeof(value_type));
 
                     _content.first().capacity = new_size;
                     _content.first().size = new_size;
@@ -1413,15 +1413,15 @@ FST_BEGIN_NAMESPACE
 
             if (count <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memfill(_data + index, c, count);
+                __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memfill(_data + index, c, count);
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            _FST::memfill(new_data + index, c, count);
+            __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
+            __fst::memfill(new_data + index, c, count);
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
@@ -1448,15 +1448,15 @@ FST_BEGIN_NAMESPACE
 
             if (count <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memmove(_data + index, str.data(), count * sizeof(value_type));
+                __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memmove(_data + index, str.data(), count * sizeof(value_type));
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            _FST::memmove(new_data + index, str.data(), count * sizeof(value_type));
+            __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
+            __fst::memmove(new_data + index, str.data(), count * sizeof(value_type));
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
@@ -1480,7 +1480,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(index <= _size, "basic_string::insert index out of bounds.");
             fst_assert(index_str <= str_size, "basic_string::insert index_str out of bounds.");
 
-            const size_type s_size = _FST::minimum(count, str_size - index_str);
+            const size_type s_size = __fst::minimum(count, str_size - index_str);
             const size_type delta = _size - index;
 
             const size_type new_size = _size + s_size;
@@ -1489,15 +1489,15 @@ FST_BEGIN_NAMESPACE
 
             if (s_size <= _capacity - _size)
             {
-                _FST::memmove((void*) (_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
-                _FST::memmove(_data + index, str.data() + index_str, s_size * sizeof(value_type));
+                __fst::memmove((void*) (_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
+                __fst::memmove(_data + index, str.data() + index_str, s_size * sizeof(value_type));
                 _data[new_size] = 0;
                 return *this;
             }
 
             pointer new_data = grow_copy(new_size, _size, _data);
-            _FST::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
-            _FST::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
+            __fst::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
+            __fst::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
@@ -1525,11 +1525,11 @@ FST_BEGIN_NAMESPACE
 
             fst_assert(index <= _size, "basic_string::insert index out of bounds.");
 
-            size_type s_size = _FST::minimum(count, _size - index);
+            size_type s_size = __fst::minimum(count, _size - index);
             size_type delta = _size - s_size;
 
             pointer _data = data();
-            _FST::memmove((void*) (_data + index), (const void*) (_data + index + s_size), delta * sizeof(value_type));
+            __fst::memmove((void*) (_data + index), (const void*) (_data + index + s_size), delta * sizeof(value_type));
 
             const size_type new_size = _size - s_size;
 
@@ -1601,15 +1601,15 @@ FST_BEGIN_NAMESPACE
                         break;
                     }
 
-                    if (it1 == p_end) return ret == end() ? npos : _FST::distance(begin(), ret);
+                    if (it1 == p_end) return ret == end() ? npos : __fst::distance(begin(), ret);
                 }
                 ++p_beg;
             }
-            return ret == end() ? npos : _FST::distance(begin(), ret);
+            return ret == end() ? npos : __fst::distance(begin(), ret);
         }
 
-        friend inline _FST::output_stream<value_type>& operator<<(
-            _FST::output_stream<value_type>& stream, const _FST::basic_string<value_type, allocator_type>& str) noexcept
+        friend inline __fst::output_stream<value_type>& operator<<(
+            __fst::output_stream<value_type>& stream, const __fst::basic_string<value_type, allocator_type>& str) noexcept
         {
             stream.write(str.c_str(), str.size());
             return stream;
@@ -1626,7 +1626,7 @@ FST_BEGIN_NAMESPACE
             size_type padding;
         };
 
-        alignas(alignment) _FST::pair<content, allocator_type> _content;
+        alignas(alignment) __fst::pair<content, allocator_type> _content;
 
         FST_NODISCARD FST_ALWAYS_INLINE pointer grow_copy(size_type new_size, size_type old_size) noexcept { return grow_copy(new_size, old_size, data()); }
 
@@ -1634,7 +1634,7 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = new_size + 1;
             pointer new_data = (pointer) _content.second().allocate(alloc_length);
-            _FST::memmove(new_data, _data, old_size * sizeof(value_type));
+            __fst::memmove(new_data, _data, old_size * sizeof(value_type));
             return new_data;
         }
     };
@@ -1654,17 +1654,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator==(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) == rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) == rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator==(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator==(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.compare(rhs) == 0;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator==(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator==(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs == rhs.view();
     }
@@ -1685,17 +1685,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator!=(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) != rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) != rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator!=(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator!=(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.view() != rhs;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator!=(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator!=(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs != rhs.view();
     }
@@ -1716,17 +1716,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator<(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) < rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) < rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator<(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator<(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.view() < rhs;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator<(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator<(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs < rhs.view();
     }
@@ -1747,17 +1747,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator>(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) > rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) > rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator>(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator>(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.view() > rhs;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator>(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator>(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs > rhs.view();
     }
@@ -1778,17 +1778,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator<=(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) <= rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) <= rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator<=(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator<=(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.view() <= rhs;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator<=(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator<=(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs <= rhs.view();
     }
@@ -1809,17 +1809,17 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _Allocator>
     inline constexpr bool operator>=(const _CharT* lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
-        return _FST::basic_string_view<_CharT>(lhs) >= rhs.view();
+        return __fst::basic_string_view<_CharT>(lhs) >= rhs.view();
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator>=(const basic_string<_CharT, _Allocator>& lhs, _FST::basic_string_view<_CharT> rhs) noexcept
+    inline constexpr bool operator>=(const basic_string<_CharT, _Allocator>& lhs, __fst::basic_string_view<_CharT> rhs) noexcept
     {
         return lhs.view() >= rhs;
     }
 
     template <typename _CharT, class _Allocator>
-    inline constexpr bool operator>=(_FST::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
+    inline constexpr bool operator>=(__fst::basic_string_view<_CharT> lhs, const basic_string<_CharT, _Allocator>& rhs) noexcept
     {
         return lhs >= rhs.view();
     }
@@ -1862,61 +1862,61 @@ FST_BEGIN_NAMESPACE
     template <typename _CharT, class _LAllocator, class _RAllocator>
     inline basic_string<_CharT, _LAllocator> operator+(basic_string<_CharT, _LAllocator>&& __lhs, const basic_string<_CharT, _RAllocator>& __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <typename _CharT, class _LAllocator, class _RAllocator>
     inline basic_string<_CharT, _LAllocator> operator+(const basic_string<_CharT, _LAllocator>& __lhs, basic_string<_CharT, _RAllocator>&& __rhs) noexcept
     {
-        return _FST::move(__rhs.insert(0, __lhs));
+        return __fst::move(__rhs.insert(0, __lhs));
     }
 
     template <typename _CharT, class _LAllocator, class _RAllocator>
     inline basic_string<_CharT, _LAllocator> operator+(basic_string<_CharT, _LAllocator>&& __lhs, basic_string<_CharT, _RAllocator>&& __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <typename _CharT, class _Allocator>
     inline basic_string<_CharT, _Allocator> operator+(basic_string<_CharT, _Allocator>&& __lhs, const _CharT* __rhs) noexcept
     {
-        return _FST::move(__lhs.append(__rhs));
+        return __fst::move(__lhs.append(__rhs));
     }
 
     template <typename _CharT, class _Allocator>
     inline basic_string<_CharT, _Allocator> operator+(const _CharT* __lhs, basic_string<_CharT, _Allocator>&& __rhs) noexcept
     {
-        return _FST::move(__rhs.insert(0, __lhs));
+        return __fst::move(__rhs.insert(0, __lhs));
     }
 
     template <typename _CharT, class _Allocator>
     inline basic_string<_CharT, _Allocator> operator+(_CharT __lhs, basic_string<_CharT, _Allocator>&& __rhs) noexcept
     {
         __rhs.insert(0, __lhs);
-        return _FST::move(__rhs);
+        return __fst::move(__rhs);
     }
 
     template <typename _CharT, class _Allocator>
     inline basic_string<_CharT, _Allocator> operator+(basic_string<_CharT, _Allocator>&& __lhs, _CharT __rhs) noexcept
     {
         __lhs.push_back(__rhs);
-        return _FST::move(__lhs);
+        return __fst::move(__lhs);
     }
 
     template <class _CharT, class _Allocator>
-    inline _FST::output_stream<_CharT>& operator<<(_FST::output_stream<_CharT>& stream, const _FST::basic_string<_CharT, _Allocator>& str) noexcept
+    inline __fst::output_stream<_CharT>& operator<<(__fst::output_stream<_CharT>& stream, const __fst::basic_string<_CharT, _Allocator>& str) noexcept
     {
         stream.write(str.data(), str.size());
         return stream;
     }
 
-    using string = basic_string<char, _FST::allocator<char>>;
-    using wstring = basic_string<wchar_t, _FST::allocator<wchar_t>>;
-    using u16string = basic_string<char16_t, _FST::allocator<char16_t>>;
-    using u32string = basic_string<char32_t, _FST::allocator<char32_t>>;
+    using string = basic_string<char, __fst::allocator<char>>;
+    using wstring = basic_string<wchar_t, __fst::allocator<wchar_t>>;
+    using u16string = basic_string<char16_t, __fst::allocator<char16_t>>;
+    using u32string = basic_string<char32_t, __fst::allocator<char32_t>>;
 
 #if FST_HAS_CHAR8_T
-    using u8string = basic_string<char8_t, _FST::allocator<char8_t>>;
+    using u8string = basic_string<char8_t, __fst::allocator<char8_t>>;
 #endif // FST_HAS_CHAR8_T
 
 FST_END_NAMESPACE
@@ -1924,7 +1924,7 @@ FST_END_NAMESPACE
 #if FST_USE_STL
 #include <ostream>
 template <class _CharT, class _Traits, class _Allocator>
-inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, const _FST::basic_string<_CharT, _Allocator>& str)
+inline std::basic_ostream<_CharT, _Traits>& operator<<(std::basic_ostream<_CharT, _Traits>& stream, const __fst::basic_string<_CharT, _Allocator>& str)
 {
     return stream.write(str.data(), str.size());
 }

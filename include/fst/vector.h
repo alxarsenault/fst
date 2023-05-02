@@ -37,14 +37,14 @@ FST_BEGIN_NAMESPACE
     //class vector_range_base
     //{
     //  public:
-    //    static_assert(_FST::is_trivially_copyable_v<_T>, "_Alignment must be a power of two");
+    //    static_assert(__fst::is_trivially_copyable_v<_T>, "_Alignment must be a power of two");
 
-    //    // static_assert(_FST::is_power_of_two(_Size), "_Size must be a power of
+    //    // static_assert(__fst::is_power_of_two(_Size), "_Size must be a power of
     //    // two");
-    //    static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+    //    static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-    //    using memory_zone_type = _FST::void_memory_zone;
-    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return _FST::_global_void_memory_zone; }
+    //    using memory_zone_type = __fst::void_memory_zone;
+    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return __fst::_global_void_memory_zone; }
 
     //    //constexpr vector_range_base() noexcept = default;
 
@@ -55,38 +55,38 @@ FST_BEGIN_NAMESPACE
     //    constexpr vector_range_base& operator=(const vector_range_base&) noexcept = default;
     //    constexpr vector_range_base& operator=(vector_range_base&&) noexcept = default;
 
-    //    template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && _FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && __fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_Container& c) noexcept
     //        : _data(c.data())
     //    {
 
-    //        // static_assert(_FST::static_capacity_v<_Container> <= _Size, "Wrong
+    //        // static_assert(__fst::static_capacity_v<_Container> <= _Size, "Wrong
     //        // size");
 
-    //        fst_assert(!_data || (_FST::is_aligned(_data, _Alignment) && c.capacity() >= _Size), "Wrong alignment");
+    //        fst_assert(!_data || (__fst::is_aligned(_data, _Alignment) && c.capacity() >= _Size), "Wrong alignment");
     //    }
 
-    //    template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && !_FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && !__fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_Container& c) noexcept
     //        : _data(c.data())
     //    {
 
-    //        // static_assert(_FST::static_capacity_v<_Container> <= _Size, "Wrong
+    //        // static_assert(__fst::static_capacity_v<_Container> <= _Size, "Wrong
     //        // size");
 
-    //        fst_assert(!_data || (_FST::is_aligned(_data, _Alignment) && c.capacity() >= _Size), "Wrong alignment");
+    //        fst_assert(!_data || (__fst::is_aligned(_data, _Alignment) && c.capacity() >= _Size), "Wrong alignment");
     //    }
 
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_T* p) noexcept
     //        : _data(p)
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //    }
 
     //    //constexpr vector_range_base(const vector_range_base&) noexcept = default;
     //    //constexpr vector_range_base& operator=(const vector_range_base&) noexcept = default;
 
-    //    //template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && _FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    //template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && __fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    //constexpr vector_range_base& operator=(_Container& c) noexcept
     //    //    {
     //    //    //_data = c.data();
@@ -95,7 +95,7 @@ FST_BEGIN_NAMESPACE
     //    //    return *this;
     //    //}
 
-    //    //template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && !_FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    //template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && !__fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    //constexpr vector_range_base& operator=(_Container& c) noexcept
     //    //    {
 
@@ -116,7 +116,7 @@ FST_BEGIN_NAMESPACE
 
     //    FST_ALWAYS_INLINE constexpr void reset(_T* p) noexcept
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //        _data = p;
     //    }
 
@@ -125,33 +125,33 @@ FST_BEGIN_NAMESPACE
     //};
 
     //template <class _T, size_t _Alignment>
-    //class vector_range_base<_T, _FST::dynamic_size, _Alignment>
+    //class vector_range_base<_T, __fst::dynamic_size, _Alignment>
     //{
     //  public:
-    //    static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
-    //    static_assert(_FST::is_trivially_copyable_v<_T>, "_Alignment must be a power of two");
+    //    static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+    //    static_assert(__fst::is_trivially_copyable_v<_T>, "_Alignment must be a power of two");
 
-    //    using memory_zone_type = _FST::void_memory_zone;
-    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return _FST::_global_void_memory_zone; }
+    //    using memory_zone_type = __fst::void_memory_zone;
+    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return __fst::_global_void_memory_zone; }
 
     //    constexpr vector_range_base() noexcept = default;
 
-    //    template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && !_FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && !__fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_Container& c) noexcept
     //        : _data(c.data())
     //        , _capacity(c.capacity())
     //        , _size(0)
     //    {
-    //        fst_assert(!_data || _FST::is_aligned(_data, _Alignment), "Wrong alignment");
+    //        fst_assert(!_data || __fst::is_aligned(_data, _Alignment), "Wrong alignment");
     //    }
 
-    //    template <class _Container, _FST::enable_if_t<_FST::is_iterable<_Container>::value && _FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    template <class _Container, __fst::enable_if_t<__fst::is_iterable<_Container>::value && __fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_Container& c) noexcept
     //        : _data(c.data())
     //        , _capacity(c.capacity())
     //        , _size(0)
     //    {
-    //        fst_assert(!_data || _FST::is_aligned(_data, _Alignment), "Wrong alignment");
+    //        fst_assert(!_data || __fst::is_aligned(_data, _Alignment), "Wrong alignment");
     //    }
 
     //    FST_ALWAYS_INLINE constexpr vector_range_base(_T* p, size_t __capacity, size_t __size = 0) noexcept
@@ -160,16 +160,16 @@ FST_BEGIN_NAMESPACE
     //        , _size(__size)
     //    {
     //        fst_assert(p || (!p && __capacity == 0), "nullptr with size");
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //    }
 
-    //    FST_ALWAYS_INLINE constexpr vector_range_base(_FST::nullptr_t, size_t) noexcept
+    //    FST_ALWAYS_INLINE constexpr vector_range_base(__fst::nullptr_t, size_t) noexcept
     //        : _data(nullptr)
     //        , _capacity(0)
     //        , _size(0)
     //    {}
 
-    //    template <class _TT, size_t _TSize, size_t _TAlignment, _FST::enable_if_t<_FST::is_convertible_v<_TT*, _T*>, int> = 0>
+    //    template <class _TT, size_t _TSize, size_t _TAlignment, __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr vector_range_base(const vector_range_base<_TT, _TSize, _TAlignment>& r) noexcept
     //        : _data(r._data)
     //        , _capacity(r.capacity())
@@ -179,7 +179,7 @@ FST_BEGIN_NAMESPACE
     //    constexpr vector_range_base(const vector_range_base&) noexcept = default;
     //    constexpr vector_range_base& operator=(const vector_range_base&) noexcept = default;
 
-    //    /*template <class _Container, _FST::enable_if_t<_FST::is_container_v<_Container> && _FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    /*template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container> && __fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    constexpr vector_range_base& operator=(_Container& c) noexcept
     //    {
     //        _data = c.data();
@@ -188,7 +188,7 @@ FST_BEGIN_NAMESPACE
     //        return *this;
     //    }
 
-    //    template <class _Container, _FST::enable_if_t<_FST::is_container_v<_Container> && !_FST::is_base_of_v<vector_range_base, _Container>, int> = 0>
+    //    template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container> && !__fst::is_base_of_v<vector_range_base, _Container>, int> = 0>
     //    constexpr vector_range_base& operator=(_Container& c) noexcept
     //    {
     //        _data = c.data();
@@ -212,7 +212,7 @@ FST_BEGIN_NAMESPACE
 
     //    FST_ALWAYS_INLINE constexpr void reset(_T* p, size_t __size) noexcept
     //    {
-    //        fst_assert(!p || _FST::is_aligned(p, _Alignment), "Wrong alignment");
+    //        fst_assert(!p || __fst::is_aligned(p, _Alignment), "Wrong alignment");
     //        _data = p;
     //        _size = 0;
     //        _capacity = __size;
@@ -227,8 +227,8 @@ FST_BEGIN_NAMESPACE
     class heap_vector_base : public _MemoryZone
     {
       public:
-        // static_assert(_Size == _FST::dynamic_size, "should be dynamic");
-        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        // static_assert(_Size == __fst::dynamic_size, "should be dynamic");
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
         using memory_zone_type = _MemoryZone;
         FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type& get_memory_zone() const noexcept { return (memory_zone_type&) *this; }
@@ -239,7 +239,7 @@ FST_BEGIN_NAMESPACE
         }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
         FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return _FST::dynamic_size; }
+        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
         FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return true; }
 
@@ -247,7 +247,7 @@ FST_BEGIN_NAMESPACE
         {
             if (_data)
             {
-                if constexpr (!_FST::is_trivially_destructible_v<_T>)
+                if constexpr (!__fst::is_trivially_destructible_v<_T>)
                 {
                     for (size_t i = 0; i < size(); i++)
                     {
@@ -272,7 +272,7 @@ FST_BEGIN_NAMESPACE
 
             if (_data)
             {
-                _FST::relocate(tmp_data, _data, _size);
+                __fst::relocate(tmp_data, _data, _size);
                 _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
             }
 
@@ -305,10 +305,10 @@ FST_BEGIN_NAMESPACE
 
     //
     //template <class _T, size_t _Size, class _ArrayType, size_t _Alignment = alignof(_T)>
-    //class basic_vector : public _FST::contiguous_container_base<_T, _ArrayType>
+    //class basic_vector : public __fst::contiguous_container_base<_T, _ArrayType>
     //{
     //  public:
-    //    using base = _FST::contiguous_container_base<_T, _ArrayType>;
+    //    using base = __fst::contiguous_container_base<_T, _ArrayType>;
     //    using value_type = typename base::value_type;
     //    using size_type = typename base::size_type;
     //    using difference_type = typename base::difference_type;
@@ -350,7 +350,7 @@ FST_BEGIN_NAMESPACE
 
     //    inline ~basic_vector() noexcept
     //    {
-    //        if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+    //        if constexpr (!__fst::is_trivially_destructible_v<value_type>)
     //        {
     //            for (size_type i = 0; i < size(); i++)
     //            {
@@ -365,7 +365,7 @@ FST_BEGIN_NAMESPACE
     //    {
     //        if (size() < capacity())
     //        {
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::copy_element((*this)[base::_size++], value); }
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[base::_size++], value); }
     //            else
     //            {
     //                fst_placement_new(this->data() + base::_size++)
@@ -377,9 +377,9 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (base::grow(_FST::next_power_of_two(capacity())))
+    //            if (base::grow(__fst::next_power_of_two(capacity())))
     //            {
-    //                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::copy_element((*this)[base::_size++], value); }
+    //                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[base::_size++], value); }
     //                else
     //                {
     //                    fst_placement_new(this->data() + base::_size++)
@@ -393,16 +393,16 @@ FST_BEGIN_NAMESPACE
     //        fst_error("DSDS");
     //    }
 
-    //    template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U>, int> = 0>
+    //    template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
     //    {
     //        if (size() < capacity())
     //        {
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<U>(value)); }
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<U>(value)); }
     //            else
     //            {
     //                fst_placement_new(this->data() + base::_size++)
-    //                value_type(_FST::forward<U>(value));
+    //                value_type(__fst::forward<U>(value));
     //            }
 
     //            return;
@@ -410,13 +410,13 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (base::grow(_FST::next_power_of_two(capacity())))
+    //            if (base::grow(__fst::next_power_of_two(capacity())))
     //            {
-    //                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<U>(value)); }
+    //                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<U>(value)); }
     //                else
     //                {
     //                    fst_placement_new(this->data() + base::_size++)
-    //                    value_type(_FST::forward<U>(value));
+    //                    value_type(__fst::forward<U>(value));
     //                }
 
     //                return;
@@ -426,15 +426,15 @@ FST_BEGIN_NAMESPACE
     //        fst_error("DSDS");
     //    }
 
-    //    /*template <class U, _FST::enable_if_t<_FST::is_same_v<U, value_type>, int> = 0>
+    //    /*template <class U, __fst::enable_if_t<__fst::is_same_v<U, value_type>, int> = 0>
     //    FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
     //    {
     //        if (size() < capacity())
     //        {
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<U>(value)); }
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<U>(value)); }
     //            else
     //            {
-    //                fst_placement_new(this->data() + base::_size++) value_type(_FST::forward<U>(value));
+    //                fst_placement_new(this->data() + base::_size++) value_type(__fst::forward<U>(value));
     //            }
 
     //            return;
@@ -442,12 +442,12 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (base::grow(_FST::next_power_of_two(capacity())))
+    //            if (base::grow(__fst::next_power_of_two(capacity())))
     //            {
-    //                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<U>(value)); }
+    //                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<U>(value)); }
     //                else
     //                {
-    //                    fst_placement_new(this->data() + base::_size++) value_type(_FST::forward<U>(value));
+    //                    fst_placement_new(this->data() + base::_size++) value_type(__fst::forward<U>(value));
     //                }
 
     //                return;
@@ -460,14 +460,14 @@ FST_BEGIN_NAMESPACE
     //    template <typename... _Args>
     //    FST_ALWAYS_INLINE constexpr reference emplace_back(_Args&&... args) noexcept
     //    {
-    //        // push_back(value_type(_FST::forward<_Args>(args)...));
+    //        // push_back(value_type(__fst::forward<_Args>(args)...));
     //        if (size() < capacity())
     //        {
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<_Args>(args)...); }
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<_Args>(args)...); }
     //            else
     //            {
     //                fst_placement_new(this->data() + base::_size++)
-    //                value_type(_FST::forward<_Args>(args)...);
+    //                value_type(__fst::forward<_Args>(args)...);
     //            }
 
     //            return this->back();
@@ -475,13 +475,13 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (base::grow(_FST::next_power_of_two(capacity())))
+    //            if (base::grow(__fst::next_power_of_two(capacity())))
     //            {
-    //                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[base::_size++], _FST::forward<_Args>(args)...); }
+    //                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[base::_size++], __fst::forward<_Args>(args)...); }
     //                else
     //                {
     //                    fst_placement_new(this->data() + base::_size++)
-    //                    value_type(_FST::forward<_Args>(args)...);
+    //                    value_type(__fst::forward<_Args>(args)...);
     //                }
 
     //                return this->back();
@@ -502,24 +502,24 @@ FST_BEGIN_NAMESPACE
 
     //        if (size() < capacity())
     //        {
-    //            const size_type index = _FST::pdistance(cbegin(), pos);
+    //            const size_type index = __fst::pdistance(cbegin(), pos);
 
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>)
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>)
     //            {
-    //                _FST::memmove(begin() + index + 1, begin() + index, (base::_size - index) * sizeof(value_type));
-    //                _FST::copy_element((*this)[index], value);
+    //                __fst::memmove(begin() + index + 1, begin() + index, (base::_size - index) * sizeof(value_type));
+    //                __fst::copy_element((*this)[index], value);
     //            }
     //            else
     //            {
     //                fst_placement_new(end())
-    //                value_type(_FST::move(back()));
+    //                value_type(__fst::move(back()));
 
     //                for (size_type i = size() - 1; i > index; i--)
     //                {
-    //                    _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+    //                    __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
     //                }
 
-    //                _FST::copy_element((*this)[index], value);
+    //                __fst::copy_element((*this)[index], value);
     //            }
 
     //            base::_size++;
@@ -528,13 +528,13 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            const size_type index = _FST::pdistance(cbegin(), pos);
+    //            const size_type index = __fst::pdistance(cbegin(), pos);
 
-    //            if (!base::grow(_FST::next_power_of_two(capacity()),
+    //            if (!base::grow(__fst::next_power_of_two(capacity()),
     //                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
     //                    {
-    //                        _FST::relocate(ndata, data, index);
-    //                        _FST::relocate(ndata + index + 1, data + index, size - index);
+    //                        __fst::relocate(ndata, data, index);
+    //                        __fst::relocate(ndata + index + 1, data + index, size - index);
     //                        fst_placement_new(ndata + index)
     //                        value_type(value);
     //                    }))
@@ -551,40 +551,40 @@ FST_BEGIN_NAMESPACE
     //        else
     //        {
     //            fst_assert(base::_size != capacity(), "Can't push_back when fixed_vector is full.");
-    //            //_FST::move_element((*this)[base::_size++], _FST::move(value));
+    //            //__fst::move_element((*this)[base::_size++], __fst::move(value));
     //            return end();
     //        }
     //    }
 
-    //    template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U>, int> = 0>
+    //    template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
     //    inline constexpr iterator insert(const_iterator pos, U&& value) noexcept
     //    {
     //        if (!base::_size || pos == cend())
     //        {
-    //            push_back(_FST::move(value));
+    //            push_back(__fst::move(value));
     //            return end() - 1;
     //        }
 
     //        if (size() < capacity())
     //        {
-    //            const size_type index = _FST::pdistance(cbegin(), pos);
+    //            const size_type index = __fst::pdistance(cbegin(), pos);
 
-    //            if constexpr (_FST::is_trivially_copyable_v<_T>)
+    //            if constexpr (__fst::is_trivially_copyable_v<_T>)
     //            {
-    //                _FST::memmove(begin() + index + 1, begin() + index, (base::_size - index) * sizeof(value_type));
-    //                _FST::copy_element((*this)[index], value);
+    //                __fst::memmove(begin() + index + 1, begin() + index, (base::_size - index) * sizeof(value_type));
+    //                __fst::copy_element((*this)[index], value);
     //            }
     //            else
     //            {
     //                fst_placement_new(end())
-    //                value_type(_FST::move(back()));
+    //                value_type(__fst::move(back()));
 
     //                for (size_type i = size() - 1; i > index; i--)
     //                {
-    //                    _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+    //                    __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
     //                }
 
-    //                _FST::move_element((*this)[index], _FST::move(value));
+    //                __fst::move_element((*this)[index], __fst::move(value));
     //            }
 
     //            base::_size++;
@@ -593,15 +593,15 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            const size_type index = _FST::pdistance(cbegin(), pos);
+    //            const size_type index = __fst::pdistance(cbegin(), pos);
 
-    //            if (!base::grow(_FST::next_power_of_two(capacity()),
+    //            if (!base::grow(__fst::next_power_of_two(capacity()),
     //                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
     //                    {
-    //                        _FST::relocate(ndata, data, index);
-    //                        _FST::relocate(ndata + index + 1, data + index, size - index);
+    //                        __fst::relocate(ndata, data, index);
+    //                        __fst::relocate(ndata + index + 1, data + index, size - index);
     //                        fst_placement_new(ndata + index)
-    //                        value_type(_FST::move(value));
+    //                        value_type(__fst::move(value));
     //                    }))
     //            {
 
@@ -622,7 +622,7 @@ FST_BEGIN_NAMESPACE
     //    FST_ALWAYS_INLINE constexpr void pop_back() noexcept
     //    {
     //        fst_assert(base::_size > 0, "Can't pop_back an empty fixed_vector.");
-    //        if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
+    //        if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
     //        --base::_size;
     //    }
 
@@ -636,15 +636,15 @@ FST_BEGIN_NAMESPACE
     //            return;
     //        }
 
-    //        if constexpr (_FST::is_trivially_copyable_v<value_type>) { _FST::memmove(begin() + index, begin() + index + 1, (base::_size - index) * sizeof(value_type)); }
+    //        if constexpr (__fst::is_trivially_copyable_v<value_type>) { __fst::memmove(begin() + index, begin() + index + 1, (base::_size - index) * sizeof(value_type)); }
     //        else
     //        {
     //            for (size_type i = index; i < size() - 1; i++)
     //            {
-    //                (*this)[i] = _FST::move((*this)[i + 1]);
+    //                (*this)[i] = __fst::move((*this)[i + 1]);
     //            }
 
-    //            if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
+    //            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
     //        }
 
     //        base::_size--;
@@ -660,9 +660,9 @@ FST_BEGIN_NAMESPACE
     //            return;
     //        }
 
-    //        _FST::move_element((*this)[index], _FST::move(this->back()));
+    //        __fst::move_element((*this)[index], __fst::move(this->back()));
 
-    //        if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
+    //        if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[base::_size].~value_type(); }
     //        base::_size--;
     //    }
 
@@ -670,7 +670,7 @@ FST_BEGIN_NAMESPACE
     //    {
     //        if (count <= size())
     //        {
-    //            if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+    //            if constexpr (!__fst::is_trivially_destructible_v<value_type>)
     //            {
     //                for (size_type i = count; i < size(); i++)
     //                {
@@ -683,7 +683,7 @@ FST_BEGIN_NAMESPACE
 
     //        if (count <= capacity())
     //        {
-    //            if constexpr (!_FST::is_trivially_default_constructible_v<value_type>)
+    //            if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
     //            {
     //                for (size_type i = size(); i < count; i++)
     //                {
@@ -699,13 +699,13 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (!base::grow(_FST::next_power_of_two(count)))
+    //            if (!base::grow(__fst::next_power_of_two(count)))
     //            {
     //                fst_assert(count <= capacity());
     //                return;
     //            }
 
-    //            if constexpr (!_FST::is_trivially_default_constructible_v<value_type>)
+    //            if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
     //            {
     //                for (size_type i = size(); i < count; i++)
     //                {
@@ -721,7 +721,7 @@ FST_BEGIN_NAMESPACE
     //    {
     //        if (count <= size())
     //        {
-    //            if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+    //            if constexpr (!__fst::is_trivially_destructible_v<value_type>)
     //            {
     //                for (size_type i = count; i < size(); i++)
     //                {
@@ -734,11 +734,11 @@ FST_BEGIN_NAMESPACE
 
     //        if (count <= capacity())
     //        {
-    //            if constexpr (_FST::is_trivially_copyable_v<value_type>)
+    //            if constexpr (__fst::is_trivially_copyable_v<value_type>)
     //            {
     //                for (size_type i = size(); i < count; i++)
     //                {
-    //                    _FST::copy_element((*this)[i], value);
+    //                    __fst::copy_element((*this)[i], value);
     //                }
     //            }
     //            else
@@ -757,17 +757,17 @@ FST_BEGIN_NAMESPACE
 
     //        if constexpr (is_resizable())
     //        {
-    //            if (!base::grow(_FST::next_power_of_two(count)))
+    //            if (!base::grow(__fst::next_power_of_two(count)))
     //            {
     //                fst_assert(count <= capacity());
     //                return;
     //            }
 
-    //            if constexpr (_FST::is_trivially_copyable_v<value_type>)
+    //            if constexpr (__fst::is_trivially_copyable_v<value_type>)
     //            {
     //                for (size_type i = size(); i < count; i++)
     //                {
-    //                    _FST::copy_element((*this)[i], value);
+    //                    __fst::copy_element((*this)[i], value);
     //                }
     //            }
     //            else
@@ -784,7 +784,7 @@ FST_BEGIN_NAMESPACE
 
     //    /*FST_ALWAYS_INLINE constexpr void swap(basic_fixed_vector& __a) noexcept
     //{
-    //        _FST::swap_ranges(data(), data() + _Size, __a.data());
+    //        __fst::swap_ranges(data(), data() + _Size, __a.data());
     //}*/
     //};
 
@@ -829,9 +829,9 @@ FST_BEGIN_NAMESPACE
 
     //// fixed_vector_range
     //template <typename _T, size_t _Size, size_t _Alignment = alignof(_T)>
-    //struct fixed_vector_range : _FST::basic_vector<_T, _Size, _FST::vector_range_base<_T, _Size, _Alignment>, _Alignment>
+    //struct fixed_vector_range : __fst::basic_vector<_T, _Size, __fst::vector_range_base<_T, _Size, _Alignment>, _Alignment>
     //{
-    //    using basic_vector_base = _FST::basic_vector<_T, _Size, _FST::vector_range_base<_T, _Size, _Alignment>, _Alignment>;
+    //    using basic_vector_base = __fst::basic_vector<_T, _Size, __fst::vector_range_base<_T, _Size, _Alignment>, _Alignment>;
     //    FST_EXPOSE_BASIC_VECTOR(basic_vector_base);
 
     //    constexpr fixed_vector_range() noexcept = default;
@@ -844,29 +844,29 @@ FST_BEGIN_NAMESPACE
 
     //// vector_range
     //template <typename _T, size_t _Alignment = alignof(_T)>
-    //struct vector_range : _FST::basic_vector<_T, _FST::dynamic_size, _FST::vector_range_base<_T, _FST::dynamic_size, _Alignment>, _Alignment>
+    //struct vector_range : __fst::basic_vector<_T, __fst::dynamic_size, __fst::vector_range_base<_T, __fst::dynamic_size, _Alignment>, _Alignment>
     //{
-    //    using basic_vector_base = _FST::basic_vector<_T, _FST::dynamic_size, _FST::vector_range_base<_T, _FST::dynamic_size, _Alignment>, _Alignment>;
+    //    using basic_vector_base = __fst::basic_vector<_T, __fst::dynamic_size, __fst::vector_range_base<_T, __fst::dynamic_size, _Alignment>, _Alignment>;
     //    FST_EXPOSE_BASIC_VECTOR(basic_vector_base);
     //};
 
     //// clang-format off
     //// is_fixed_vector_range
-    //template <class _T> struct is_fixed_vector_range : _FST::false_t {};
+    //template <class _T> struct is_fixed_vector_range : __fst::false_t {};
     //template <class _T, size_t _Size, size_t _Alignment>
-    //struct is_fixed_vector_range<_FST::fixed_vector_range<_T, _Size, _Alignment>> : _FST::true_t {};
+    //struct is_fixed_vector_range<__fst::fixed_vector_range<_T, _Size, _Alignment>> : __fst::true_t {};
 
     //// is_vector_range
-    //template <class _T> struct is_vector_range : _FST::false_t {};
+    //template <class _T> struct is_vector_range : __fst::false_t {};
     //template <class _T, size_t _Alignment>
-    //struct is_vector_range<_FST::vector_range<_T, _Alignment>> : _FST::true_t {};
+    //struct is_vector_range<__fst::vector_range<_T, _Alignment>> : __fst::true_t {};
     //// clang-format on
 
-    template <typename _T, size_t _Alignment = alignof(_T), class _MemoryZone = _FST::default_memory_zone, class _MemoryCategory = _FST::default_memory_category>
+    template <typename _T, size_t _Alignment = alignof(_T), class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
     class vector
     {
       public:
-        static_assert(_FST::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
         using memory_zone_type = _MemoryZone;
         FST_DECLARE_CONTAINER_TYPES(_T);
@@ -874,7 +874,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD FST_ALWAYS_INLINE const memory_zone_type& get_memory_zone() const noexcept { return _data.second(); }
         FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type& get_memory_zone() noexcept { return _data.second(); }
 
-        template <class _Zone = memory_zone_type, _FST::enable_if_t<_FST::is_default_constructible_v<_Zone>, int> = 0>
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_default_constructible_v<_Zone>, int> = 0>
         inline vector() noexcept
             : _data(nullptr, memory_zone_type{})
             , _size(0)
@@ -882,7 +882,7 @@ FST_BEGIN_NAMESPACE
 
         {}
 
-        template <class _Zone = memory_zone_type, _FST::enable_if_t<_FST::is_copy_constructible_v<_Zone>, int> = 0>
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_copy_constructible_v<_Zone>, int> = 0>
         inline vector(const memory_zone_type& zone) noexcept
             : _data(nullptr, zone)
             , _size(0)
@@ -895,7 +895,7 @@ FST_BEGIN_NAMESPACE
 
             if (grow(vec.size()))
             {
-                _FST::copy_construct_range(_data.first(), vec.data(), vec.size());
+                __fst::copy_construct_range(_data.first(), vec.data(), vec.size());
                 _size = vec.size();
                 _capacity = vec.size();
             }
@@ -903,7 +903,7 @@ FST_BEGIN_NAMESPACE
         }
 
         vector(vector&& vec) noexcept
-            : _data(nullptr, _FST::move(vec.get_memory_zone()))
+            : _data(nullptr, __fst::move(vec.get_memory_zone()))
         {
             _data.first() = vec._data.first();
             _capacity = vec._capacity;
@@ -918,7 +918,7 @@ FST_BEGIN_NAMESPACE
         {
             if (_data.first())
             {
-                _FST::destruct_range(data(), size());
+                __fst::destruct_range(data(), size());
                 _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
             }
         }
@@ -929,7 +929,7 @@ FST_BEGIN_NAMESPACE
 
             if (grow(vec.size()))
             {
-                _FST::copy_construct_range(data(), vec.data(), vec.size());
+                __fst::copy_construct_range(data(), vec.data(), vec.size());
                 _size = vec.size();
                 _capacity = vec.size();
             }
@@ -955,7 +955,7 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
         FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return _FST::dynamic_size; }
+        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _data.first() == nullptr || _size == 0; }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_full() const noexcept { return (bool) _size == _capacity; }
@@ -968,7 +968,7 @@ FST_BEGIN_NAMESPACE
         {
             if (_data.first())
             {
-                _FST::destruct_range(data(), size());
+                __fst::destruct_range(data(), size());
                 _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
             }
 
@@ -980,7 +980,7 @@ FST_BEGIN_NAMESPACE
         FST_ALWAYS_INLINE constexpr void clear() noexcept
         {
 
-            if (_data.first()) { _FST::destruct_range(data(), size()); }
+            if (_data.first()) { __fst::destruct_range(data(), size()); }
 
             _size = 0;
         }
@@ -989,15 +989,15 @@ FST_BEGIN_NAMESPACE
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::copy_element((*this)[_size++], value); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
                 else { fst_placement_new(this->data() + _size++) value_type(value); }
 
                 return;
             }
 
-            if (grow(_FST::next_power_of_two(capacity())))
+            if (grow(__fst::next_power_of_two(capacity())))
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::copy_element((*this)[_size++], value); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
                 else { fst_placement_new(this->data() + _size++) value_type(value); }
 
                 return;
@@ -1006,21 +1006,21 @@ FST_BEGIN_NAMESPACE
             fst_error("DLKSJDKLSJDLS");
         }
 
-        template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U>, int> = 0>
+        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
         FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
 
                 return;
             }
 
-            if (grow(_FST::next_power_of_two(capacity())))
+            if (grow(__fst::next_power_of_two(capacity())))
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
 
                 return;
             }
@@ -1028,26 +1028,26 @@ FST_BEGIN_NAMESPACE
             fst_error("DLKSJDKLSJDLS");
         }
 
-        /*template <class U, _FST::enable_if_t<_FST::is_same_v<U, value_type>, int> = 0>
+        /*template <class U, __fst::enable_if_t<__fst::is_same_v<U, value_type>, int> = 0>
         FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
         {
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
                 else
                 {
-                    fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value));
+                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
                 }
 
                 return;
             }
 
-            if (grow(_FST::next_power_of_two(capacity())))
+            if (grow(__fst::next_power_of_two(capacity())))
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<U>(value)); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
                 else
                 {
-                    fst_placement_new(this->data() + _size++) value_type(_FST::forward<U>(value));
+                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
                 }
 
                 return;
@@ -1059,19 +1059,19 @@ FST_BEGIN_NAMESPACE
         template <typename... _Args>
         FST_ALWAYS_INLINE constexpr reference emplace_back(_Args&&... args) noexcept
         {
-            // push_back(value_type(_FST::forward<_Args>(args)...));
+            // push_back(value_type(__fst::forward<_Args>(args)...));
             if (size() < capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<_Args>(args)...); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<_Args>(args)...); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
 
                 return this->back();
             }
 
-            if (grow(_FST::next_power_of_two(capacity())))
+            if (grow(__fst::next_power_of_two(capacity())))
             {
-                if constexpr (_FST::is_trivially_copyable_v<_T>) { _FST::move_element((*this)[_size++], _FST::forward<_Args>(args)...); }
-                else { fst_placement_new(this->data() + _size++) value_type(_FST::forward<_Args>(args)...); }
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
 
                 return this->back();
             }
@@ -1091,36 +1091,36 @@ FST_BEGIN_NAMESPACE
 
             if (size() < capacity())
             {
-                const size_type index = _FST::pdistance(cbegin(), pos);
+                const size_type index = __fst::pdistance(cbegin(), pos);
 
-                if constexpr (_FST::is_trivially_copyable_v<_T>)
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
                 {
-                    _FST::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    _FST::copy_element((*this)[index], value);
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
                 }
                 else
                 {
-                    fst_placement_new(end()) value_type(_FST::move(back()));
+                    fst_placement_new(end()) value_type(__fst::move(back()));
 
                     for (size_type i = size() - 1; i > index; i--)
                     {
-                        _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
                     }
 
-                    _FST::copy_element((*this)[index], value);
+                    __fst::copy_element((*this)[index], value);
                 }
 
                 _size++;
                 return begin() + index;
             }
 
-            const size_type index = _FST::pdistance(cbegin(), pos);
+            const size_type index = __fst::pdistance(cbegin(), pos);
 
-            if (!grow(_FST::next_power_of_two(capacity()),
+            if (!grow(__fst::next_power_of_two(capacity()),
                     [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
                     {
-                        _FST::relocate(ndata, data, index);
-                        _FST::relocate(ndata + index + 1, data + index, size - index);
+                        __fst::relocate(ndata, data, index);
+                        __fst::relocate(ndata + index + 1, data + index, size - index);
                         fst_placement_new(ndata + index) value_type(value);
                     }))
             {
@@ -1134,48 +1134,48 @@ FST_BEGIN_NAMESPACE
             return begin() + index;
         }
 
-        template <class U = value_type, _FST::enable_if_t<!_FST::is_trivial_cref_v<U>, int> = 0>
+        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
         inline constexpr iterator insert(const_iterator pos, U&& value) noexcept
         {
             if (!_size || pos == cend())
             {
-                push_back(_FST::move(value));
+                push_back(__fst::move(value));
                 return end() - 1;
             }
 
             if (size() < capacity())
             {
-                const size_type index = _FST::pdistance(cbegin(), pos);
+                const size_type index = __fst::pdistance(cbegin(), pos);
 
-                if constexpr (_FST::is_trivially_copyable_v<_T>)
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
                 {
-                    _FST::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    _FST::copy_element((*this)[index], value);
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
                 }
                 else
                 {
-                    fst_placement_new(end()) value_type(_FST::move(back()));
+                    fst_placement_new(end()) value_type(__fst::move(back()));
 
                     for (size_type i = size() - 1; i > index; i--)
                     {
-                        _FST::move_element((*this)[i], _FST::move((*this)[i - 1]));
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
                     }
 
-                    _FST::move_element((*this)[index], _FST::move(value));
+                    __fst::move_element((*this)[index], __fst::move(value));
                 }
 
                 _size++;
                 return begin() + index;
             }
 
-            const size_type index = _FST::pdistance(cbegin(), pos);
+            const size_type index = __fst::pdistance(cbegin(), pos);
 
-            if (!grow(_FST::next_power_of_two(capacity()),
+            if (!grow(__fst::next_power_of_two(capacity()),
                     [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
                     {
-                        _FST::relocate(ndata, data, index);
-                        _FST::relocate(ndata + index + 1, data + index, size - index);
-                        fst_placement_new(ndata + index) value_type(_FST::move(value));
+                        __fst::relocate(ndata, data, index);
+                        __fst::relocate(ndata + index + 1, data + index, size - index);
+                        fst_placement_new(ndata + index) value_type(__fst::move(value));
                     }))
             {
 
@@ -1190,7 +1190,7 @@ FST_BEGIN_NAMESPACE
         FST_ALWAYS_INLINE constexpr void pop_back() noexcept
         {
             fst_assert(_size > 0, "Can't pop_back an empty fixed_vector.");
-            if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             --_size;
         }
 
@@ -1204,21 +1204,21 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            if constexpr (_FST::is_trivially_copyable_v<value_type>) { _FST::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
+            if constexpr (__fst::is_trivially_copyable_v<value_type>) { __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
             else
             {
                 for (size_type i = index; i < size() - 1; i++)
                 {
-                    this->data()[i] = _FST::move(this->data()[i + 1]);
+                    this->data()[i] = __fst::move(this->data()[i + 1]);
                 }
 
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             }
 
             _size--;
         }
 
-        FST_ALWAYS_INLINE constexpr void erase(const_iterator it) noexcept { erase_at(_FST::pdistance(cbegin(), it)); }
+        FST_ALWAYS_INLINE constexpr void erase(const_iterator it) noexcept { erase_at(__fst::pdistance(cbegin(), it)); }
 
         FST_ALWAYS_INLINE constexpr void unordered_erase(size_type index) noexcept
         {
@@ -1230,9 +1230,9 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            _FST::move_element((*this)[index], _FST::move(this->back()));
+            __fst::move_element((*this)[index], __fst::move(this->back()));
 
-            if constexpr (!_FST::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
             _size--;
         }
 
@@ -1251,7 +1251,7 @@ FST_BEGIN_NAMESPACE
         {
             if (count <= size())
             {
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
                 {
                     for (size_type i = count; i < size(); i++)
                     {
@@ -1264,7 +1264,7 @@ FST_BEGIN_NAMESPACE
 
             if (count <= capacity())
             {
-                if constexpr (!_FST::is_trivially_default_constructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
                 {
                     for (size_type i = size(); i < count; i++)
                     {
@@ -1277,13 +1277,13 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            if (!grow(_FST::next_power_of_two(count)))
+            if (!grow(__fst::next_power_of_two(count)))
             {
                 fst_assert(count <= capacity());
                 return;
             }
 
-            if constexpr (!_FST::is_trivially_default_constructible_v<value_type>)
+            if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
             {
                 for (size_type i = size(); i < count; i++)
                 {
@@ -1298,7 +1298,7 @@ FST_BEGIN_NAMESPACE
         {
             if (count <= size())
             {
-                if constexpr (!_FST::is_trivially_destructible_v<value_type>)
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
                 {
                     for (size_type i = count; i < size(); i++)
                     {
@@ -1311,11 +1311,11 @@ FST_BEGIN_NAMESPACE
 
             if (count <= capacity())
             {
-                if constexpr (_FST::is_trivially_copyable_v<value_type>)
+                if constexpr (__fst::is_trivially_copyable_v<value_type>)
                 {
                     for (size_type i = size(); i < count; i++)
                     {
-                        _FST::copy_element((*this)[i], value);
+                        __fst::copy_element((*this)[i], value);
                     }
                 }
                 else
@@ -1331,17 +1331,17 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            if (!grow(_FST::next_power_of_two(count)))
+            if (!grow(__fst::next_power_of_two(count)))
             {
                 fst_assert(count <= capacity());
                 return;
             }
 
-            if constexpr (_FST::is_trivially_copyable_v<value_type>)
+            if constexpr (__fst::is_trivially_copyable_v<value_type>)
             {
                 for (size_type i = size(); i < count; i++)
                 {
-                    _FST::copy_element((*this)[i], value);
+                    __fst::copy_element((*this)[i], value);
                 }
             }
             else
@@ -1360,7 +1360,7 @@ FST_BEGIN_NAMESPACE
         FST_ALWAYS_INLINE constexpr void resize_extra(size_type count, const_reference value) noexcept { resize(size() + count, value); }
 
       private:
-        _FST::pair<_T*, _MemoryZone> _data = {};
+        __fst::pair<_T*, _MemoryZone> _data = {};
         size_t _size = 0;
         size_t _capacity = 0;
 
@@ -1373,7 +1373,7 @@ FST_BEGIN_NAMESPACE
 
             if (_data.first())
             {
-                _FST::relocate(tmp_data, _data.first(), _size);
+                __fst::relocate(tmp_data, _data.first(), _size);
                 _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
             }
 
@@ -1402,11 +1402,11 @@ FST_BEGIN_NAMESPACE
 
     // is_vector
     template <class _T>
-    struct is_vector : _FST::false_t
+    struct is_vector : __fst::false_t
     {};
 
     template <class _T, size_t _Alignment, class _MemoryZone, class _MemoryCategory>
-    struct is_vector<_FST::vector<_T, _Alignment, _MemoryZone, _MemoryCategory>> : _FST::true_t
+    struct is_vector<__fst::vector<_T, _Alignment, _MemoryZone, _MemoryCategory>> : __fst::true_t
     {};
 
 FST_END_NAMESPACE

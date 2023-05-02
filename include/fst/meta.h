@@ -30,14 +30,14 @@
 FST_BEGIN_NAMESPACE
 
     template <typename F, size_t... I>
-    constexpr void for_each_seq(F && f, _FST::index_sequence<I...>)
+    constexpr void for_each_seq(F && f, __fst::index_sequence<I...>)
     {
 
         (f(I), ...);
     }
 
     template <typename F, size_t... I>
-    constexpr void for_each_seq_t(F && f, _FST::index_sequence<I...>)
+    constexpr void for_each_seq_t(F && f, __fst::index_sequence<I...>)
     {
 
         (f.template operator()<I>(), ...);
@@ -47,12 +47,12 @@ FST_BEGIN_NAMESPACE
     constexpr void for_each(F && f)
     {
 
-        fst::for_each_seq([&](size_t i) { f(i); }, _FST::make_index_sequence<N>{});
+        fst::for_each_seq([&](size_t i) { f(i); }, __fst::make_index_sequence<N>{});
     }
 
     template <size_t N, typename F>
     constexpr void for_each_t(F && f)
     {
-        fst::for_each_seq_t(f, _FST::make_index_sequence<N>{});
+        fst::for_each_seq_t(f, __fst::make_index_sequence<N>{});
     }
 FST_END_NAMESPACE

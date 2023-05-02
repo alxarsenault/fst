@@ -47,8 +47,8 @@ FST_BEGIN_NAMESPACE
         file_view(const file_view&) = delete;
 
         inline file_view(file_view&& fb) noexcept
-            : _data(_FST::exchange(fb._data, nullptr))
-            , _size(_FST::exchange(fb._size, (size_type) 0))
+            : _data(__fst::exchange(fb._data, nullptr))
+            , _size(__fst::exchange(fb._size, (size_type) 0))
         {}
 
         inline ~file_view() noexcept { close(); }
@@ -58,12 +58,12 @@ FST_BEGIN_NAMESPACE
         inline file_view& operator=(file_view&& fb) noexcept
         {
             close();
-            _data = _FST::exchange(fb._data, nullptr);
-            _size = _FST::exchange(fb._size, (size_type) 0);
+            _data = __fst::exchange(fb._data, nullptr);
+            _size = __fst::exchange(fb._size, (size_type) 0);
             return *this;
         }
 
-        FST_NODISCARD _FST::status open(const char* file_path) noexcept;
+        FST_NODISCARD __fst::status open(const char* file_path) noexcept;
 
         void close() noexcept;
 
@@ -91,9 +91,9 @@ FST_BEGIN_NAMESPACE
             return *(_data + _size - 1);
         }
 
-        FST_NODISCARD FST_ALWAYS_INLINE _FST::string_view str() const noexcept { return _FST::string_view((const char*) _data, _size); }
+        FST_NODISCARD FST_ALWAYS_INLINE __fst::string_view str() const noexcept { return __fst::string_view((const char*) _data, _size); }
 
-        FST_NODISCARD FST_ALWAYS_INLINE _FST::byte_view content() const noexcept { return _FST::byte_view((const _FST::byte_view::value_type*) _data, _size); }
+        FST_NODISCARD FST_ALWAYS_INLINE __fst::byte_view content() const noexcept { return __fst::byte_view((const __fst::byte_view::value_type*) _data, _size); }
 
         FST_NODISCARD FST_ALWAYS_INLINE iterator begin() const noexcept { return _data; }
         FST_NODISCARD FST_ALWAYS_INLINE iterator end() const noexcept { return _data + _size; }
