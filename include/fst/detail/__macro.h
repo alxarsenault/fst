@@ -1,7 +1,4 @@
-
-//
-// MARK: Config.
-//
+// clang-format off
 #ifndef __has_include
 #define __has_include(x) 0
 #endif
@@ -28,7 +25,7 @@
 
 ///
 #define FST_CONCAT(_X, _Y) __FST_CONCAT(_X, _Y)
-#define __FST_CONCAT(_X, _Y) _X##_Y
+#define __FST_CONCAT(_X, _Y) _X ## _Y
 
 ///
 #define FST_EXPAND(X) X
@@ -39,3 +36,4 @@
 #define __FST_ARGS_DUMMY(...) dummy, ##__VA_ARGS__
 #define __FST_SELECT_5(_1, _2, _3, _4, _5, num, ...) num
 #define __FST_IS_MACRO_EMPTY(...) FST_EXPAND(__FST_SELECT_5(__VA_ARGS__, 0, 0, 0, 0, 1))
+// clang-format on
