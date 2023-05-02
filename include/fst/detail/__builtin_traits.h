@@ -2,9 +2,9 @@
 #if __FST_MSVC__ || __FST_CLANG__
 #define FST_IS_CONVERTIBLE_TO(_From, _To) __is_convertible_to(_From, _To)
 #define FST_IS_BASE_OF(_Base, _Derived) __is_base_of(_Base, _Derived)
-#define FST_IS_TRIVIALLY_CONSTRUCTIBLE(X, ...) (__is_trivially_constructible(X, __VA_ARGS__))
+#define FST_IS_TRIVIALLY_CONSTRUCTIBLE(...) (__is_trivially_constructible(__VA_ARGS__))
 #define FST_IS_TRIVIAL(_T) (__is_trivially_constructible(_T) && __is_trivially_copyable(_T))
-#define FST_IS_CONSTRUCTIBLE(X, ...) __is_constructible(X, __VA_ARGS__)
+#define FST_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define FST_IS_TRIVIALLY_COPYABLE(X) __is_trivially_copyable(X)
 #define FST_IS_TRIVIALLY_DESTRUCTIBLE(X) __is_trivially_destructible(X)
 #define FST_IS_ASSIGNABLE(T, U) __is_assignable(T, U)

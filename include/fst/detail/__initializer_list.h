@@ -105,45 +105,43 @@ namespace std
     FST_PRAGMA_PUSH()
     FST_PRAGMA_DISABLE_WARNING_CLANG("-Wlanguage-extension-token")
 
-    __if_not_exists(initializer_list)
+    template <typename T>
+    class initializer_list
     {
-        template <typename T>
-        class initializer_list
-        {
-          private:
-            const T* m_first;
-            const T* m_last;
+      private:
+        const T* m_first;
+        const T* m_last;
 
-          public:
-            using value_type = T;
-            using reference = const T&;
-            using const_reference = const T&;
-            using size_type = size_t;
-            using iterator = const T*;
-            using const_iterator = const T*;
+      public:
+        using value_type = T;
+        using reference = const T&;
+        using const_reference = const T&;
+        using size_type = size_t;
+        using iterator = const T*;
+        using const_iterator = const T*;
 
-            constexpr initializer_list() noexcept
-                : m_first(nullptr)
-                , m_last(nullptr)
-            {}
+        constexpr initializer_list() noexcept
+            : m_first(nullptr)
+            , m_last(nullptr)
+        {}
 
-            constexpr size_t size() const noexcept { return (size_type) (m_last - m_first); }
-            constexpr const T* begin() const noexcept { return m_first; }
-            constexpr const T* end() const noexcept { return m_last; }
-        };
+        constexpr size_t size() const noexcept { return (size_type) (m_last - m_first); }
+        constexpr const T* begin() const noexcept { return m_first; }
+        constexpr const T* end() const noexcept { return m_last; }
+    };
 
-        template <typename T>
-        constexpr const T* begin(initializer_list<T> il) noexcept
-        {
-            return il.begin();
-        }
-
-        template <typename T>
-        constexpr const T* end(initializer_list<T> il) noexcept
-        {
-            return il.end();
-        }
+    template <typename T>
+    constexpr const T* begin(initializer_list<T> il) noexcept
+    {
+        return il.begin();
     }
+
+    template <typename T>
+    constexpr const T* end(initializer_list<T> il) noexcept
+    {
+        return il.end();
+    }
+
     FST_PRAGMA_POP()
 #endif
 
