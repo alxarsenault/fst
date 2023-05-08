@@ -126,6 +126,9 @@ function(fst_set_compile_options TARGET EXPOSURE)
             /wd4820 # bytes padding added after struct
             /wd4868 # compiler may not enforce left-to-right evaluation order in braced initializer list
             /wd4866 # compiler may not enforce left-to-right evaluation order for call to operator_name
+            /wd4062 # enumerator in switch of enum is not handled
+            /wd4626 # derived class : assignment operator was implicitly defined as deleted because a base class assignment operator is inaccessible or deleted
+            /wd26812 # The enum type is unscoped. Prefer enum class over 'enum
         )
 
         set(FST_MSVC_PRIVATE_DEBUG_OPTIONS ${FST_MSVC_PRIVATE_COMMON_OPTIONS})

@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 #include "fst/common.h"
@@ -45,6 +45,8 @@ FST_BEGIN_NAMESPACE
 // template <typename A, typename B>
 // inline constexpr bool is_array_of_type_convertible_v =
 // is_array_of_type_convertible<A, B>::value;
+
+template <class _T> FST_INLINE_VAR constexpr size_t bitsize = sizeof(_T) * 8;
 
 // declval
 template <class _T> __fst::add_rvalue_reference_t<_T> declval() noexcept;
@@ -448,11 +450,151 @@ template <class, class, bool, class...> struct member_func_ptr { using type = vo
 template <class Ret, class _T, class... Rest> struct member_func_ptr<Ret, _T, true, Rest...> { using type = Ret (_T::*)(Rest...); };
 } // namespace detail
 
-template <class... _Args> struct type_list{
 
-   template<template <class... > class _T>
+
+
+template <class... _Args>
+struct type_list;
+
+//
+namespace vargs_detail
+{
+    template<size_t, size_t, class...Args>
+    struct drop_first_n_imp;
+
+    template<size_t N, size_t I, class K, class...Args>
+    struct drop_first_n_imp<N, I, K, Args...> : __fst::conditional_t<I == N - 1, __fst::type_list<Args...>, drop_first_n_imp<N, I + 1, Args...>> {};
+
+
+    template<class A, class B>
+    struct keep_first_n_imp;
+
+
+    template<class...Args, class...RArgs>
+    struct keep_first_n_imp<__fst::type_list<Args..., RArgs...>, __fst::type_list<RArgs...>> : __fst::type_list<Args...>
+    {};
+
+    // 
+    //template<size_t, size_t, class...Args>
+    //struct keep_first_n_imp;
+
+    //template<size_t N, size_t I, class K, class...Args>
+    //struct keep_first_n_imp<N, I, K, Args...> : __fst::conditional_t<I == N - 1, __fst::type_list<Args...>, keep_first_n_imp<N, I + 1, Args...>> {};
+    
+    
+    /*template<size_t N, class...Args>
+    struct drop_first_n : drop_first_n_imp<N, 0, Args...>
+    {
+    };*/
+
+    template<size_t, size_t, class...Args>
+    struct get_type_at_index_imp;
+
+    
+   template<size_t N, size_t I>
+    struct get_type_at_index_imp<N, I>
+    {
+        static_assert(__fst::always_false<__fst::type_identity<get_type_at_index_imp>>, "out of range index");
+    };
+ 
+    template<size_t N, size_t I, class T, class...Args>
+    struct get_type_at_index_imp<N, I, T, Args...>
+        : __fst::conditional_t<N == I, __fst::type_identity<T>, get_type_at_index_imp<N, I + 1, Args...>>
+    {
+    };
+} // namespace vargs_detail
+
+///
+template <class... _Args>
+struct type_list
+{   
+    using type = type_list;
+
+    template <size_t N>
+    using drop_first_n = typename vargs_detail::drop_first_n_imp<N, 0, _Args...>::type;
+
+    //template <size_t N>
+    //using keep_first_n = typename vargs_detail::keep_first_n_imp<type_list<_Args...>, vargs_detail::drop_first_n_imp<N, 0, _Args...>>::type;
+
+    static constexpr size_t size() noexcept {return sizeof...(_Args);}
+   
+    template<template <class... > class _T>
     using apply = _T<_Args...>;
+
+    template <size_t N>
+    using type_at = typename vargs_detail::get_type_at_index_imp<N, 0, _Args...>::type;
 };
+
+template <size_t _Index, class... _Ts>
+struct variadic_arg : __fst::type_list<_Ts...>::template type_at<_Index> {};
+
+template <size_t _Index, class... _Ts> using variadic_arg_t = typename __fst::variadic_arg<_Index, _Ts...>::type;
+
+//template<class ... _Args, size_t ...Indexes>
+//__fst::type_list<variadic_arg_t<Indexes, _Args...>...> djkkldw(__fst::type_list<_Args...>&, __fst::index_sequence<Indexes...>);
+
+
+//template <size_t _Count, class... _Ts>
+//using variadic_n_first_arg = decltype(djkkldw(__fst::declval<__fst::type_list<_Ts...>&>(), __fst::make_index_sequence<_Count>{}));
+
+//template <size_t _Count, class... _Ts>
+//struct variadic_n_first_arg : __fst::remove_cvref_t<decltype(
+//    []<size_t ...Indexes>(__fst::index_sequence<Indexes...>)-> __fst::type_list<__fst::type_list<_Ts...>::template type_at<Indexes>...>
+//    {
+//        return __fst::type_list<__fst::type_list<_Ts...>::template type_at<Indexes>...>{};
+//    }(__fst::make_index_sequence<_Count>{})
+//
+//        )> {};
+
+
+// variadic_arg_0
+//template <class _T0, class...> struct variadic_arg_0 { using type = _T0; };
+//template <class... _Ts> using variadic_arg_0_t = typename __fst::variadic_arg_0<_Ts...>::type;
+//
+//// variadic_arg_1
+//template <class, class _T1, class...> struct variadic_arg_1 { using type = _T1; };
+//template <class... _Ts> using variadic_arg_1_t = typename __fst::variadic_arg_1<_Ts...>::type;
+//
+//// variadic_arg_2
+//template <class, class, class _T2, class...> struct variadic_arg_2 { using type = _T2; };
+//template <class... _Ts> using variadic_arg_2_t = typename __fst::variadic_arg_2<_Ts...>::type;
+//
+//// variadic_arg_3
+//template <class, class, class, class _T3, class...> struct variadic_arg_3 { using type = _T3; };
+//template <class... _Ts> using variadic_arg_3_t = typename __fst::variadic_arg_3<_Ts...>::type;
+//
+//// variadic_arg_4
+//template <class, class, class, class, class _T4, class...> struct variadic_arg_4 { using type = _T4; };
+//template <class... _Ts> using variadic_arg_4_t = typename __fst::variadic_arg_4<_Ts...>::type;
+//
+//// variadic_arg_5
+//template <class, class, class, class, class, class _T5, class...> struct variadic_arg_5 { using type = _T5; };
+//template <class... _Ts> using variadic_arg_5_t = typename __fst::variadic_arg_5<_Ts...>::type;
+//
+//// variadic_arg_6
+//template <class, class, class, class, class, class, class _T6, class...> struct variadic_arg_6 { using type = _T6; };
+//template <class... _Ts> using variadic_arg_6_t = typename __fst::variadic_arg_6<_Ts...>::type;
+//
+//// variadic_arg_7
+//template <class, class, class, class, class, class, class, class _T7, class...> struct variadic_arg_7 { using type = _T7; };
+//template <class... _Ts> using variadic_arg_7_t = typename __fst::variadic_arg_7<_Ts...>::type;
+//
+//// variadic_arg_8
+//template <class, class, class, class, class, class, class, class, class _T8, class...> struct variadic_arg_8 { using type = _T8; };
+//template <class... _Ts> using variadic_arg_8_t = typename __fst::variadic_arg_8<_Ts...>::type;
+
+// variadic_arg
+//template <size_t _Index, class... _Ts> struct variadic_arg;
+//template <class... _Ts> struct variadic_arg<0, _Ts...> : __fst::variadic_arg_0<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<1, _Ts...> : __fst::variadic_arg_1<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<2, _Ts...> : __fst::variadic_arg_2<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<3, _Ts...> : __fst::variadic_arg_3<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<4, _Ts...> : __fst::variadic_arg_4<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<5, _Ts...> : __fst::variadic_arg_5<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<6, _Ts...> : __fst::variadic_arg_6<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<7, _Ts...> : __fst::variadic_arg_7<_Ts...> {};
+//template <class... _Ts> struct variadic_arg<8, _Ts...> : __fst::variadic_arg_8<_Ts...> {};
+//template <size_t _Index, class... _Ts> using variadic_arg_t = typename __fst::variadic_arg<_Index, _Ts...>::type;
 
 /*
 fea::member_func_ptr is a trait which constructs a member function pointer,
@@ -483,18 +625,57 @@ template <class Ret, class T, class... Args> struct function_args<Ret (T::*)(Arg
 template <class Func> struct function_args { using type = typename function_args<decltype(&Func::operator())>::type; };
 template <class Func> using function_args_t = typename function_args<Func>::type;
 
+// drop_first
+// Drop the first type from a parameter pack.
+template <class...> struct drop_first;
+template <class T, class... _Args> struct drop_first<T, _Args...> { using type = __fst::type_list<_Args...>; };
+template <class T, class... _Args> struct drop_first<__fst::type_list<T, _Args...>> { using type = __fst::type_list<_Args...>; };
+template <class... _Ts> using drop_first_t = typename drop_first<_Ts...>::type;
+
+namespace detail
+{
+   /* template<size_t,size_t, class...Args> struct drop_first_n_imp;
+    template<size_t N, size_t I, class K, class...Args>
+    struct drop_first_n_imp<N, I, K, Args...>
+        : __fst::conditional_t<I == N - 1, __fst::type_identity<__fst::type_list<Args...>>, drop_first_n_imp<N, I + 1, Args...>> {};
+
+    template<size_t,size_t, class...Args> struct keep_n_imp;
+    template<size_t N, size_t I, class... K, class...Args>
+    struct keep_n_imp<N, I, __fst::type_list<K...>, __fst::type_list<Args...>>
+        : __fst::conditional_t<I == N,
+            __fst::type_identity<__fst::type_list<K...>>,
+            keep_n_imp<N, I + 1, __fst::type_list<K..., __fst::variadic_arg_t<0, Args...>>, __fst::drop_first_t< Args...>>>
+    {
+    };
+ 
+    template<size_t,class T, class...Args>
+    struct get_type_index_imp;
+    template<size_t N, class T, class K, class...Args>
+    struct get_type_index_imp<N, T, K, Args...>
+        : __fst::conditional_t<__fst::is_same_v<T, K>, __fst::integral_constant<size_t, N>, get_type_index_imp<N + 1, T, Args...>>
+    {
+    };*/
+} // namespace detail
+
+//// drop_first_n
+//template<size_t N, class...Args>
+//struct drop_first_n { using type = typename detail::drop_first_n_imp<N, 0, Args...>::type; };
+//template <size_t N, class... _Ts> using drop_first_n_t = typename drop_first_n<N, _Ts...>::type;
+//
+//// keep_first_n
+//template<size_t N, class...Args>
+//struct keep_first_n { using type = typename detail::keep_n_imp<N, 0, __fst::type_list<>, __fst::type_list<Args...>>::type; };
+//template <size_t N, class... _Ts> using keep_first_n_t = typename keep_first_n<N, _Ts...>::type;
+//
+//// get_type_index
+//template<class T, class...Args> struct get_type_index : detail::get_type_index_imp<0, T, Args...> {};
+//template <class T, class... _Ts> using get_type_index_t = typename get_type_index<T, _Ts...>::type;
+
 /*
 The following based off of Functional C++ blog post :
 https://functionalcpp.wordpress.com/2013/08/05/function-traits/
 Extracts pretty much verything from a function pointer.
 */
-
- //drop_first
- //Drop the first type from a parameter pack.
-template <class...> struct drop_first;
-
-template <class T, class... _Args> struct drop_first<__fst::type_list<T, _Args...>> { using type = __fst::type_list<_Args...>; };
-//template <class T, class... _Args> struct drop_first<__fst::tuple<T, _Args...>> { using type = __fst::tuple<_Args...>; };
 
 // function_traits
 template <class F> struct function_traits;

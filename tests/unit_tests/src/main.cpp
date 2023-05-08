@@ -2,7 +2,7 @@
 #include "utest.h"
 #include "fst/profiler.h"
 //#include "fst/simd.h"
-
+#include "fst/string.h"
 CATCH_INTERNAL_START_WARNINGS_SUPPRESSION
 CATCH_INTERNAL_SUPPRESS_GLOBALS_WARNINGS
 static Catch::LeakDetector leakDetector;
@@ -13,8 +13,11 @@ TEST_CASE("fst")
     REQUIRE(true);
 }
 
+
+
 int main(int argc, char* argv[])
 {
+
     fst::print_version();
 
     FST_STRACE("main");

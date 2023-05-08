@@ -1,7 +1,7 @@
 #include "fst/stream.h"
 
-int main(int argc, char* argv[])
+int main(FST_ATTRIBUTE_UNUSED int argc, FST_ATTRIBUTE_UNUSED char* argv[])
 {
-	fst::print(argc, argv[0]);
-	return 0;
+    fst::print("fst");
+    return 0;
 }

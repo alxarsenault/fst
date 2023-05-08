@@ -35,3 +35,6 @@ build/*
 private/*
 tools/version.txt
 .vscode/*
+
+docs/html
+docs/xml

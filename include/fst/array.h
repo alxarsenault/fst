@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 
@@ -130,39 +130,8 @@ FST_BEGIN_NAMESPACE
     struct is_basic_heap_array<__fst::detail::basic_heap_array<_T, _Size, _Alignment, _MemoryZone, _MemoryCategory>> : __fst::true_t
     {};
 
-    /*template <class _T, size_t _Size, size_t _Alignment>
-    struct array
-    {
-        FST_DECLARE_CONTAINER_TYPES(_T);
-        using memory_zone_type = __fst::void_memory_zone;
-
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return memory_zone_type{}; }
-
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_type size() noexcept { return _Size; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_type alignment() noexcept { return _Alignment; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_type max_size() noexcept { return _Size; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_type capacity() noexcept { return _Size; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool empty() noexcept { return false; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_full() noexcept { return true; }
-
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_buffer_owner() noexcept { return true; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_data_owner() noexcept { return true; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_dynamically_allocted() noexcept { return false; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return false; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return true; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return true; }
-
-        FST_DECLARE_CONTAINER_DATA(_data);
-
-        alignas(_Alignment) _T _data[_Size];
-    };
-
-    template <class T, class... U>
-    array(T, U...) -> array<T, 1 + sizeof...(U)>;*/
-
     namespace detail
     {
-
         template <class _T, size_t _Size, size_t _Alignment>
         struct basic_array
         {

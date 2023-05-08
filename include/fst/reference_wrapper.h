@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 
@@ -46,7 +46,7 @@ FST_BEGIN_NAMESPACE
     {
       public:
         static_assert(__fst::is_object_v<_T> || __fst::is_function_v<_T>, "reference_wrapper<T> requires T to be an object type or a "
-                                                                        "function type.");
+                                                                          "function type.");
 
         using type = _T;
         using value_type = _T;
@@ -54,7 +54,8 @@ FST_BEGIN_NAMESPACE
         using reference = _T&;
 
         template <class _Uty,
-            __fst::enable_if_t<__fst::conjunction_v<__fst::negation<__fst::is_same<__fst::remove_cvref_t<_Uty>, reference_wrapper>>, _Refwrap_has_ctor_from<_T, _Uty>>, int> = 0>
+            __fst::enable_if_t<__fst::conjunction_v<__fst::negation<__fst::is_same<__fst::remove_cvref_t<_Uty>, reference_wrapper>>, _Refwrap_has_ctor_from<_T, _Uty>>, int>
+            = 0>
         FST_ALWAYS_INLINE constexpr reference_wrapper(_Uty&& v) noexcept
         {
             reference ref = static_cast<_Uty&&>(v);

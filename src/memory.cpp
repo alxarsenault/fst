@@ -109,6 +109,8 @@ FST_BEGIN_NAMESPACE
     {
 #if __FST_WINDOWS__
         void* ptr = ::_aligned_malloc(size, alignment);
+#elif __FST_MACOS__
+        void* ptr = ::aligned_alloc(alignment, size);
 #else
         void* ptr = ::aligned_alloc(alignment, size);
 #endif // __FST_WINDOWS__

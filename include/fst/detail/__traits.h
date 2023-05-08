@@ -40,7 +40,6 @@ using false_t = bool_t<false>;
 
 template <class _CharT> class output_stream;
 
-
 struct empty_t {};
 
 // nonesuch
@@ -367,30 +366,52 @@ template <class _T> struct is_arithmetic : __fst::bool_t<__fst::is_arithmetic_v<
 template <class _T> FST_INLINE_VAR constexpr bool is_object_v = __fst::is_const_v<const _T> && !__fst::is_void_v<_T>;
 template <class _T> struct is_object : __fst::bool_t<__fst::is_object_v<_T>> {};
 
-// is_signed
-template <class _T> struct is_signed : __fst::conditional_t<__fst::is_integral_v<_T>,
-                       __fst::bool_t<(static_cast<__fst::remove_cv_t<_T>>(-1) < static_cast<__fst::remove_cv_t<_T>>(0))>,
-                       __fst::bool_t<__fst::is_floating_point_v<_T>>> {};
-template <class _T> FST_INLINE_VAR constexpr bool is_signed_v = __fst::is_signed<_T>::value;
 
-FST_PRAGMA_PUSH()
-FST_PRAGMA_DISABLE_WARNING_MSVC(4296) // prevent expression is always true
-// is_unsigned
-template <class _T> struct is_unsigned
-    : __fst::conditional_t<__fst::is_integral_v<_T>,
-          __fst::bool_t<(static_cast<__fst::remove_cv_t<_T>>(-1) >= static_cast<__fst::remove_cv_t<_T>>(0))>,
-          __fst::false_t> {};
-template <class _T> FST_INLINE_VAR constexpr bool is_unsigned_v = __fst::is_unsigned<_T>::value;
-FST_PRAGMA_POP()
+template <class _T> FST_INLINE_VAR constexpr bool is_signed_v = __fst::is_any_of_v<__fst::remove_cv_t<_T>, FST_SIGNED_INTEGER_TYPES>;
+template <class _T> struct is_signed : __fst::bool_t<is_signed_v<_T>>{};
+
+
+template <class _T> FST_INLINE_VAR constexpr bool is_unsigned_v = __fst::is_any_of_v<__fst::remove_cv_t<_T>, FST_UNSIGNED_INTEGER_TYPES>;
+template <class _T> struct is_unsigned : __fst::bool_t<is_unsigned_v<_T>>{};
+
+//FST_PRAGMA_PUSH()
+//FST_PRAGMA_DISABLE_WARNING_MSVC(4296) // prevent expression is always false
+//// is_signed
+//template <class _T> struct is_signed : __fst::conditional_t<__fst::is_integral_v<_T>,
+//                       __fst::bool_t<(bool)(static_cast<__fst::remove_cv_t<_T>>(-1) < static_cast<__fst::remove_cv_t<_T>>(0))>,
+//                       __fst::bool_t<__fst::is_floating_point_v<_T>>> {};
+//template <class _T> FST_INLINE_VAR constexpr bool is_signed_v = __fst::is_signed<_T>::value;
+//FST_PRAGMA_POP()
+//
+//FST_PRAGMA_PUSH()
+//FST_PRAGMA_DISABLE_WARNING_MSVC(4296) // prevent expression is always true
+//// is_unsigned
+//template <class _T> struct is_unsigned
+//    : __fst::conditional_t<__fst::is_integral_v<_T>,
+//          __fst::bool_t<(bool)(static_cast<__fst::remove_cv_t<_T>>(-1) >= static_cast<__fst::remove_cv_t<_T>>(0))>,
+//          __fst::false_t> {};
+//template <class _T> FST_INLINE_VAR constexpr bool is_unsigned_v = __fst::is_unsigned<_T>::value;
+//FST_PRAGMA_POP()
 
 // make_unsigned
 template <typename T> struct make_unsigned { using type = T; };
 template <> struct make_unsigned<char> { using type = unsigned char; };
+template <> struct make_unsigned<int8_t> { using type = uint8_t; };
 template <> struct make_unsigned<short> { using type = unsigned short; };
 template <> struct make_unsigned<int> { using type = unsigned int; };
 template <> struct make_unsigned<long> { using type = unsigned long; };
 template <> struct make_unsigned<long long> { using type = unsigned long long; };
 template <class _T> using make_unsigned_t = typename __fst::make_unsigned<_T>::type;
+
+
+// make_signed
+template <typename T> struct make_signed { using type = T; };
+template <> struct make_signed<unsigned char> { using type = char; };
+template <> struct make_signed<unsigned short> { using type = short; };
+template <> struct make_signed<unsigned int> { using type = int; };
+template <> struct make_signed<unsigned long> { using type = long; };
+template <> struct make_signed<unsigned long long> { using type = long long; };
+template <class _T> using make_signed_t = typename __fst::make_signed<_T>::type;
 
 // is_nonbool_integral
 template <class _T>
@@ -463,57 +484,9 @@ template <class _Type, template <class...> class _Template>
 struct is_specialization : __fst::bool_t<is_specialization_v<_Type, _Template>> {};
 
 
-// variadic_arg_0
-template <class _T0, class...> struct variadic_arg_0 { using type = _T0; };
-template <class... _Ts> using variadic_arg_0_t = typename __fst::variadic_arg_0<_Ts...>::type;
-
-// variadic_arg_1
-template <class, class _T1, class...> struct variadic_arg_1 { using type = _T1; };
-template <class... _Ts> using variadic_arg_1_t = typename __fst::variadic_arg_1<_Ts...>::type;
-
-// variadic_arg_2
-template <class, class, class _T2, class...> struct variadic_arg_2 { using type = _T2; };
-template <class... _Ts> using variadic_arg_2_t = typename __fst::variadic_arg_2<_Ts...>::type;
-
-// variadic_arg_3
-template <class, class, class, class _T3, class...> struct variadic_arg_3 { using type = _T3; };
-template <class... _Ts> using variadic_arg_3_t = typename __fst::variadic_arg_3<_Ts...>::type;
-
-// variadic_arg_4
-template <class, class, class, class, class _T4, class...> struct variadic_arg_4 { using type = _T4; };
-template <class... _Ts> using variadic_arg_4_t = typename __fst::variadic_arg_4<_Ts...>::type;
-
-// variadic_arg_5
-template <class, class, class, class, class, class _T5, class...> struct variadic_arg_5 { using type = _T5; };
-template <class... _Ts> using variadic_arg_5_t = typename __fst::variadic_arg_5<_Ts...>::type;
-
-// variadic_arg_6
-template <class, class, class, class, class, class, class _T6, class...> struct variadic_arg_6 { using type = _T6; };
-template <class... _Ts> using variadic_arg_6_t = typename __fst::variadic_arg_6<_Ts...>::type;
-
-// variadic_arg_7
-template <class, class, class, class, class, class, class, class _T7, class...> struct variadic_arg_7 { using type = _T7; };
-template <class... _Ts> using variadic_arg_7_t = typename __fst::variadic_arg_7<_Ts...>::type;
-
-// variadic_arg_8
-template <class, class, class, class, class, class, class, class, class _T8, class...> struct variadic_arg_8 { using type = _T8; };
-template <class... _Ts> using variadic_arg_8_t = typename __fst::variadic_arg_8<_Ts...>::type;
-
-// variadic_arg
-template <size_t _Index, class... _Ts> struct variadic_arg;
-template <class... _Ts> struct variadic_arg<0, _Ts...> : __fst::variadic_arg_0<_Ts...> {};
-template <class... _Ts> struct variadic_arg<1, _Ts...> : __fst::variadic_arg_1<_Ts...> {};
-template <class... _Ts> struct variadic_arg<2, _Ts...> : __fst::variadic_arg_2<_Ts...> {};
-template <class... _Ts> struct variadic_arg<3, _Ts...> : __fst::variadic_arg_3<_Ts...> {};
-template <class... _Ts> struct variadic_arg<4, _Ts...> : __fst::variadic_arg_4<_Ts...> {};
-template <class... _Ts> struct variadic_arg<5, _Ts...> : __fst::variadic_arg_5<_Ts...> {};
-template <class... _Ts> struct variadic_arg<6, _Ts...> : __fst::variadic_arg_6<_Ts...> {};
-template <class... _Ts> struct variadic_arg<7, _Ts...> : __fst::variadic_arg_7<_Ts...> {};
-template <class... _Ts> struct variadic_arg<8, _Ts...> : __fst::variadic_arg_8<_Ts...> {};
-template <size_t _Index, class... _Ts> using variadic_arg_t = typename __fst::variadic_arg<_Index, _Ts...>::type;
-
 // is_buffer_convertible
 template <class _From, class _To> using is_buffer_convertible = __fst::is_convertible<_From (*)[], _To (*)[]>;
+template <class _From, class _To> FST_INLINE_VAR constexpr bool is_buffer_convertible_v = is_buffer_convertible<_From, _To>::value;
 
 // detector
 template <class Default, class AlwaysVoid, template <class...> class Op, class... Args>
@@ -571,8 +544,8 @@ using if_members = __fst::enable_if_has_members_t<T, Ops...>;
 // dependent_type
 template <class T, bool> struct dependent_type : T {};
 template <bool Dummy, class D> using dependent_type_condition = typename dependent_type<__fst::type_identity<D>, Dummy>::type;
-template <bool Dummy, class D> using enable_if_dependant_same = __fst::enable_if<__fst::is_same_v<D, __fst::true_t>>;
-template <bool Dummy, class D> using enable_if_dependant_same_t = typename enable_if_dependant_same<Dummy, D>::type;
+template <bool Dummy, class D> using enable_if_dependent_same = __fst::enable_if<__fst::is_same_v<D, __fst::true_t>, __fst::nullptr_t>;
+template <bool Dummy, class D> using enable_if_dependent_same_t = typename enable_if_dependent_same<Dummy, D>::type;
 
 //
 template <template <class...> class C> struct is_template_of_base { template <class T> struct type : __fst::false_t {}; template <class T> struct type<C<T>> : __fst::true_t {}; };

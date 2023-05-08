@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 
@@ -253,7 +253,12 @@ FST_BEGIN_NAMESPACE
         {
             const _CharT t[4] = { (_CharT) 't', (_CharT) 'r', (_CharT) 'u', (_CharT) 'e' };
             const _CharT f[5] = { (_CharT) 'f', (_CharT) 'a', (_CharT) 'l', (_CharT) 's', (_CharT) 'e' };
-            write(_Val ? t : f, (size_t) (5 - _Val, stream_modifier::normal));
+            if (_Val)
+                write(t, 4, stream_modifier::normal);
+            else
+                write(f, 5, stream_modifier::normal);
+
+            //write(_Val ? t : f, (size_t) (5 - _Val, stream_modifier::normal));
             return *this;
         }
 
@@ -398,7 +403,7 @@ FST_BEGIN_NAMESPACE
             {
                 if (value < 0)
                 {
-                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, 0 - static_cast<__fst::make_unsigned_t<_T>>(value));
+                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(0 - static_cast<__fst::make_unsigned_t<_T>>(value)));
                     *--begin = (_CharT) '-';
                     write(begin, size_t(&buffer[0] + 21 - begin), stream_modifier::normal);
                 }
@@ -459,15 +464,15 @@ FST_BEGIN_NAMESPACE
     {
       public:
         bool has_color = false;
-        inline output_stream_imp() {}
+        inline output_stream_imp() noexcept {}
 
-        inline output_stream<_CharT> get_stream()
+        inline output_stream<_CharT> get_stream() noexcept
         {
             return output_stream<_CharT>(
                 this, [](void* data, const _CharT* str, size_t size, stream_modifier mod) { ((output_stream_imp*) data)->write(str, size, mod); });
         }
 
-        inline void write(const _CharT* str, size_t size, stream_modifier mod)
+        inline void write(const _CharT* str, size_t size, stream_modifier mod) noexcept
         {
             if (mod < stream_modifier::endl)
             {
@@ -505,10 +510,10 @@ FST_BEGIN_NAMESPACE
         } };
 
     template <typename T, typename _Stream>
-    inline void print_element(_Stream & stream, const T& t);
+    inline void print_element(_Stream & stream, const T& t) noexcept;
 
     template <size_t I = 0, typename... _Ts, typename _Stream>
-    inline void print_tuple(_Stream & stream, const __fst::tuple<_Ts...>& t)
+    inline void print_tuple(_Stream & stream, const __fst::tuple<_Ts...>& t) noexcept
     {
         print_element(stream, t.template get<I>());
 
@@ -516,7 +521,7 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename T, typename _Stream>
-    inline void print_element(_Stream & stream, const T& t)
+    inline void print_element(_Stream & stream, const T& t) noexcept
     {
         if constexpr (has_stream_operator<_Stream, T>::value) { stream << t; }
         else if constexpr (is_iterable<T>::value)
@@ -553,7 +558,7 @@ FST_BEGIN_NAMESPACE
     }
 
     template <class _Stream, typename D = stream_detail::comma_t, class E = __fst::stream_detail::stream_endl_t, typename T, typename... Ts>
-    inline void basic_print(_Stream & stream, const T& t, const Ts&... ts)
+    inline void basic_print(_Stream & stream, const T& t, const Ts&... ts) noexcept
     {
         if constexpr (sizeof...(ts) > 0)
         {
@@ -569,7 +574,7 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename D = __fst::stream_detail::comma_t, class E = __fst::stream_detail::stream_endl_t, typename T, typename... Ts>
-    inline void print(const T& t, const Ts&... ts)
+    inline void print(const T& t, const Ts&... ts) noexcept
     {
         __fst::output_stream<char>& stream = __fst::cout;
         if constexpr (sizeof...(ts) > 0)
@@ -585,6 +590,41 @@ FST_BEGIN_NAMESPACE
             stream << E{};
         }
     }
+
+    enum class info_flags {
+        function = 2,
+        file = 4,
+        line = 8,
+        all = 2 | 4 | 8,
+    };
+
+    FST_DECLARE_ENUM_CLASS_OPERATORS(info_flags)
+
+    template <info_flags _Flags = info_flags::all>
+    struct debug
+    {
+        inline debug(__fst::source_location loc = __fst::source_location::current()) noexcept
+            : _loc{ loc }
+        {}
+
+        template <typename... Args>
+        inline void operator()(Args&&... args) const noexcept
+        {
+            __fst::output_stream<char>& stream = __fst::cout;
+
+            if constexpr ((_Flags & __fst::info_flags::file) != 0) { stream << _loc.file_name() << ' '; }
+            if constexpr ((_Flags & __fst::info_flags::line) != 0) { stream << _loc.line() << ' '; }
+            if constexpr ((_Flags & __fst::info_flags::function) != 0) { stream << _loc.function_name() << ' '; }
+
+            if constexpr (sizeof...(args) > 0)
+            {
+                basic_print<__fst::output_stream<char>, __fst::stream_detail::stream_space_t, __fst::stream_detail::stream_endl_t>(stream, args...);
+            }
+            else { stream << __fst::endl; }
+        }
+
+        __fst::source_location _loc;
+    };
 
     template <class T>
     struct space_padding
@@ -731,5 +771,11 @@ FST_BEGIN_NAMESPACE
     {
         return fspace_padding_right<_Size, T>(__fst::forward<T>(arg));
     }
+
+#define fst_fprint(...)                             \
+    {                                               \
+        FST_NAMESPACE::cout << __FUNCTION__ << ' '; \
+    }                                               \
+    FST_NAMESPACE::print(__VA_ARGS__)
 
 FST_END_NAMESPACE

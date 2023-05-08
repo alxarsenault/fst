@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 
@@ -62,6 +62,18 @@ FST_BEGIN_NAMESPACE
     {
         if constexpr (sizeof...(Ts) == 0) { return v2 < v1 ? v2 : v1; }
         else { return v2 < v1 ? minimum(__fst::forward<T1>(v2), __fst::forward<Ts>(vs)...) : minimum(__fst::forward<T0>(v1), __fst::forward<Ts>(vs)...); }
+    }
+
+    template <typename T, typename T1>
+    FST_NODISCARD inline constexpr bool is_one_of(T t, T1 t1) noexcept
+    {
+        return t == t1;
+    }
+
+    template <typename T, typename T1, typename... Ts>
+    FST_NODISCARD inline constexpr bool is_one_of(T t, T1 t1, Ts... ts) noexcept
+    {
+        return (t == t1) || __fst::is_one_of(t, ts...);
     }
 
     ///
@@ -960,9 +972,10 @@ FST_BEGIN_NAMESPACE
       public:
         using function_type = _Fct;
         static_assert(!__fst::is_reference<function_type>::value && !__fst::is_const<function_type>::value && !__fst::is_volatile<function_type>::value, "final_action "
-                                                                                                                                                      "should store its "
-                                                                                                                                                      "callable by "
-                                                                                                                                                      "value");
+                                                                                                                                                         "should store "
+                                                                                                                                                         "its "
+                                                                                                                                                         "callable by "
+                                                                                                                                                         "value");
 
         inline final_action(function_type&& f) noexcept
             : _fct(__fst::move(f))

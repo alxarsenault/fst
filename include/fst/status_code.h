@@ -1,26 +1,26 @@
-///
-/// MIT License
-///
-/// Copyright (c) 2023 Alexandre Arsenault
-///
-/// Permission is hereby granted, free of charge, to any person obtaining a copy
-/// of this software and associated documentation files (the "Software"), to deal
-/// in the Software without restriction, including without limitation the rights
-/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-/// copies of the Software, and to permit persons to whom the Software is
-/// furnished to do so, subject to the following conditions:
-///
-/// The above copyright notice and this permission notice shall be included in all
-/// copies or substantial portions of the Software.
-///
-/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-/// SOFTWARE.
-///
+//
+// MIT License
+//
+// Copyright (c) 2023 Alexandre Arsenault
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #pragma once
 
@@ -118,36 +118,39 @@ FST_BEGIN_NAMESPACE
         invalid_audio_format
     };
 
+    struct error_result;
+
     /// @struct status
     struct status
     {
         status_code code = status_code::success;
 
-        constexpr status() noexcept = default;
-
         inline constexpr status(status_code c) noexcept
             : code(c)
         {}
 
-        ~status() noexcept = default;
-
+        constexpr status() noexcept = default;
         constexpr status(const status&) noexcept = default;
         constexpr status(status&&) noexcept = default;
+
+        ~status() noexcept = default;
 
         constexpr status& operator=(const status&) noexcept = default;
         constexpr status& operator=(status&&) noexcept = default;
 
         /// Returns false on error.
-        inline constexpr explicit operator bool() const noexcept { return code == status_code::success; }
-
-        inline constexpr bool operator==(status c) const noexcept { return code == c.code; }
-
-        inline constexpr bool operator!=(status c) const noexcept { return code != c.code; }
-
-        inline constexpr bool valid() const noexcept { return code == status_code::success; }
+        FST_NODISCARD inline constexpr explicit operator bool() const noexcept { return code == status_code::success; }
 
         ///
-        inline constexpr const char* message() const noexcept
+        FST_NODISCARD inline constexpr bool valid() const noexcept { return code == status_code::success; }
+
+        FST_NODISCARD inline constexpr bool operator==(status c) const noexcept { return code == c.code; }
+        FST_NODISCARD inline constexpr bool operator!=(status c) const noexcept { return code != c.code; }
+        FST_NODISCARD inline constexpr bool operator==(error_result er) const noexcept;
+        FST_NODISCARD inline constexpr bool operator!=(error_result er) const noexcept;
+
+        ///
+        FST_NODISCARD inline constexpr const char* message() const noexcept
         {
             switch (code)
             {
@@ -230,12 +233,8 @@ FST_BEGIN_NAMESPACE
             case status_code::too_many_links: return "too_many_links";
             case status_code::too_many_symbolic_link_levels: return "too_many_symbolic_link_levels";
             case status_code::value_too_large: return "value_too_large";
-            case status_code::wrong_protocol_type:
-                return "wrong_protocol_type";
+            case status_code::wrong_protocol_type: return "wrong_protocol_type";
 
-                //
-                // Custom.
-                //
             case status_code::invalid_file_format: return "invalid_file_format";
             case status_code::invalid_file_content: return "invalid_file_content";
             case status_code::invalid_channel_size: return "invalid_channel_size";
@@ -245,6 +244,52 @@ FST_BEGIN_NAMESPACE
             return "unknown";
         }
     };
+
+    /// @struct error_result
+    struct error_result
+    {
+        status_code code = status_code::success;
+
+        inline constexpr error_result(status_code c) noexcept
+            : code(c)
+        {}
+
+        inline constexpr error_result(status st) noexcept
+            : code(st.code)
+        {}
+
+        constexpr error_result() noexcept = default;
+        constexpr error_result(const error_result&) noexcept = default;
+        constexpr error_result(error_result&&) noexcept = default;
+
+        ~error_result() noexcept = default;
+
+        constexpr error_result& operator=(const error_result&) noexcept = default;
+        constexpr error_result& operator=(error_result&&) noexcept = default;
+
+        /// Returns true on error.
+        FST_NODISCARD inline constexpr explicit operator bool() const noexcept { return code != status_code::success; }
+
+        ///
+        FST_NODISCARD inline constexpr bool valid() const noexcept { return code == status_code::success; }
+
+        FST_NODISCARD inline constexpr bool operator==(error_result c) const noexcept { return code == c.code; }
+        FST_NODISCARD inline constexpr bool operator!=(error_result c) const noexcept { return code != c.code; }
+        FST_NODISCARD inline constexpr bool operator==(status c) const noexcept { return code == c.code; }
+        FST_NODISCARD inline constexpr bool operator!=(status c) const noexcept { return code != c.code; }
+
+        ///
+        FST_NODISCARD inline constexpr const char* message() const noexcept { return status(code).message(); }
+    };
+
+    FST_NODISCARD inline constexpr bool status::operator==(error_result er) const noexcept
+    {
+        return code == er.code;
+    }
+    FST_NODISCARD inline constexpr bool status::operator!=(error_result er) const noexcept
+    {
+        return code != er.code;
+    }
 
     template <class charT>
     inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::status_code sc)
@@ -256,6 +301,12 @@ FST_BEGIN_NAMESPACE
     inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::status st)
     {
         return stream << st.message();
+    }
+
+    template <class charT>
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::error_result er)
+    {
+        return stream << er.message();
     }
 
 FST_END_NAMESPACE

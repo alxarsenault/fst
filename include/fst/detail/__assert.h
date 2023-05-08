@@ -54,6 +54,7 @@
 
 ///
 #define fst_assert(...) FST_EXPAND(__FST_ASSERT_NTH_ARG(__VA_ARGS__, __FST_ASSERT_2, __FST_ASSERT_1)(__VA_ARGS__))
+#define fst_cxpr_assert(...) FST_EXPAND(__FST_ASSERT_NTH_ARG(__VA_ARGS__, __FST_CXPR_ASSERT_2, __FST_CXPR_ASSERT_1)(__VA_ARGS__))
 
 ///
 #define fst_error(Msg)                                                                            \
@@ -73,6 +74,27 @@
 #ifndef FST_ASSERT_BREAK
 #define FST_ASSERT_BREAK() FST_DEBUGTRAP()
 #endif
+  //#define fst_cxpr_assert(CHECK) (FST_LIKELY(CHECK) ? void(0) : [] { assert(!#CHECK); }())
+
+
+
+
+// No message in assert
+#define __FST_CXPR_ASSERT_1(expr)                                   \
+    (void) ((!(expr)) &&                                       \
+            [](const char* expr_str)                           \
+            {                                                  \
+if(!__fst::is_constant_evaluated()){fst_assert(false);}\
+                return false;                                  \
+            }(#expr))
+
+#define __FST_CXPR_ASSERT_2(expr, msg)                              \
+    (void) ((!(expr)) &&                                       \
+            [](const char* expr_str, const char* msg_str)      \
+            {                                                  \
+                return false;                                  \
+            }(#expr, msg))
+
 
 #if FST_USE_ASSERT_MSG
 #define __FST_ASSERT_1(expr)                                                                          \

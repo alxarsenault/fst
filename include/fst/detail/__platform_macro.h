@@ -226,6 +226,12 @@
 
 #define FST_INTEGER_TYPES \
     bool, char, signed char, unsigned char, FST_UTF_CHAR_TYPES, short, unsigned short, int, unsigned int, long, unsigned long, long long, unsigned long long
+
+
+#define FST_SIGNED_INTEGER_TYPES char, signed char, short, int, long, long long
+#define FST_UNSIGNED_INTEGER_TYPES unsigned char, FST_UTF_CHAR_TYPES, unsigned short, unsigned int, unsigned long, unsigned long long
+
+
 #define FST_FLOAT_TYPES float, double, long double
 
 // fst_offsetof
