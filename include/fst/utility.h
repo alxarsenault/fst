@@ -48,7 +48,7 @@ FST_BEGIN_NAMESPACE
 
     /// Get the maximum of n values.
     /// @code
-    ///   int a = mts::maximum(1, 2, 3, 4, 5);
+    ///   int a = fst::maximum(1, 2, 3, 4, 5);
     /// @endcode
     template <typename T0, typename T1, typename... Ts>
     inline constexpr __fst::common_type_t<T0, T1, Ts...> maximum(T0 && v1, T1 && v2, Ts && ... vs)

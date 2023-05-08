@@ -64,7 +64,7 @@ FST_BEGIN_NAMESPACE
             fst_assert(_ptr != nullptr, "Pointer is null.");
         }
 
-        template <typename = __fst::enable_if_t<mts::is_different_v<__fst::nullptr_t, T>>>
+        template <typename = __fst::enable_if_t<__fst::is_different_v<__fst::nullptr_t, T>>>
         constexpr not_null(T u)
             : _ptr(__fst::move(u))
         {
@@ -425,7 +425,7 @@ FST_BEGIN_NAMESPACE
         {
             pointer ptr = (pointer) memory_zone_type::aligned_allocate(sizeof(_T), alignof(_T), _MemoryCategory::id());
             fst_assert(ptr, "allocation failed");
-            _data.first().set_pointer<pointer>(fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...));
+            _data.first().template set_pointer<pointer>(fst_placement_new(ptr) _T(__fst::forward<_Args>(args)...));
         }
 
         template <class _Zone = memory_zone_type, enable_if_zone_default_constructible_t<_Zone> = 0>
@@ -486,7 +486,7 @@ FST_BEGIN_NAMESPACE
 
         inline ~optional_ptr() noexcept
         {
-            if (pointer ptr = _data.first().get_pointer<pointer>(); ptr && owned())
+            if (pointer ptr = _data.first().template get_pointer<pointer>(); ptr && owned())
             {
                 ptr->~element_type();
                 _data.second().aligned_deallocate(ptr, _MemoryCategory::id());
@@ -530,23 +530,23 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD FST_ALWAYS_INLINE zone_const_reference get_memory_zone() const noexcept { return _data.second(); }
         FST_NODISCARD FST_ALWAYS_INLINE zone_reference get_memory_zone() noexcept { return _data.second(); }
 
-        FST_NODISCARD __fst::add_lvalue_reference_t<_T> operator*() const noexcept { return *_data.first().get_pointer<pointer>(); }
+        FST_NODISCARD __fst::add_lvalue_reference_t<_T> operator*() const noexcept { return *_data.first().template get_pointer<pointer>(); }
 
-        FST_NODISCARD pointer operator->() const noexcept { return _data.first().get_pointer<pointer>(); }
+        FST_NODISCARD pointer operator->() const noexcept { return _data.first().template get_pointer<pointer>(); }
 
-        FST_NODISCARD pointer get() const noexcept { return _data.first().get_pointer<pointer>(); }
+        FST_NODISCARD pointer get() const noexcept { return _data.first().template get_pointer<pointer>(); }
 
-        FST_NODISCARD inline explicit operator bool() const noexcept { return static_cast<bool>(_data.first().get_pointer<pointer>()); }
+        FST_NODISCARD inline explicit operator bool() const noexcept { return static_cast<bool>(_data.first().template get_pointer<pointer>()); }
 
         FST_NODISCARD inline pointer release() noexcept
         {
             _data.first().set_int(false);
-            return _data.first().exchange_pointer<pointer>(nullptr);
+            return _data.first().template exchange_pointer<pointer>(nullptr);
         }
 
         inline void reset() noexcept
         {
-            if (pointer old_ptr = _data.first().exchange_pointer<pointer>(nullptr); old_ptr && owned())
+            if (pointer old_ptr = _data.first().template exchange_pointer<pointer>(nullptr); old_ptr && owned())
             {
                 _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id());
             }
@@ -556,7 +556,7 @@ FST_BEGIN_NAMESPACE
 
         inline void reset(pointer ptr, bool powned) noexcept
         {
-            if (pointer old_ptr = _data.first().exchange_pointer<pointer>(ptr); old_ptr && owned()) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
+            if (pointer old_ptr = _data.first().template exchange_pointer<pointer>(ptr); old_ptr && owned()) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
 
             _data.first().set_int(powned && ptr != nullptr);
         }
