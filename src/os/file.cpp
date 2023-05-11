@@ -11,7 +11,7 @@
 FST_BEGIN_SUB_NAMESPACE(os)
     namespace
     {
-        using wstring_type = __fst::basic_string<wchar_t, __fst::memory_zone_allocator<wchar_t, __fst::default_memory_zone, __fst::os_memory_category>>;
+        using wstring_type = __fst::basic_string<wchar_t, __fst::memory_zone_allocator<wchar_t, __fst::os_memory_category,  __fst::default_memory_zone>>;
     }
 
     struct file::native

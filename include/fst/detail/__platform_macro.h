@@ -60,9 +60,9 @@
 // Keep in mind that if a function is marked noinline, the calling function will be smaller and thus, itself a candidate
 // for compiler inlining.
 #if __FST_MSVC__
-#define FST_NO_INLINE __declspec(noinline)
+#define FST_NOINLINE __declspec(noinline)
 #else
-#define FST_NO_INLINE
+#define FST_NOINLINE
 #endif //
 
 /// @macro FST_ATTRIBUTE_UNUSED

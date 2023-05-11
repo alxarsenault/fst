@@ -35,7 +35,7 @@
 #include "fst/allocator.h"
 
 FST_BEGIN_NAMESPACE
-    template <class _CharT, class _Allocator = __fst::memory_zone_allocator<_CharT, __fst::default_memory_zone, __fst::default_memory_category>, class Enable = void>
+    template <class _CharT, class _Allocator = __fst::allocator<_CharT>, class Enable = void>
     class basic_string;
 
     template <class _CharT, class _Allocator, class Enable>

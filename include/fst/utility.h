@@ -83,6 +83,12 @@ FST_BEGIN_NAMESPACE
     }
 
     ///
+    FST_NODISCARD inline bool is_aligned(uintptr_t addr, uintptr_t alignment) noexcept
+    {
+        return !(addr & (alignment - 1));
+    }
+
+    ///
     template <class T>
     FST_NODISCARD inline bool is_aligned(const void* ptr) noexcept
     {
@@ -101,9 +107,9 @@ FST_BEGIN_NAMESPACE
         return (uint32_t) exp;
     }
 
-    FST_NODISCARD FST_ALWAYS_INLINE size_t align(size_t cursor, size_t alignment) noexcept
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t align(size_t ptr, size_t alignment) noexcept
     {
-        return (cursor + (alignment - 1)) & ~(alignment - 1);
+        return (ptr + (alignment - 1)) & ~(alignment - 1);
     }
 
     FST_NODISCARD FST_ALWAYS_INLINE void* align(size_t alignment, size_t size, void*& ptr, size_t& avail_space) noexcept

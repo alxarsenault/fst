@@ -102,10 +102,10 @@ FST_BEGIN_NAMESPACE
     template <class SType>
     struct is_utf_string_type
         : __fst::bool_t<__fst::is_constructible_v<__fst::basic_string_view<char>, SType> //
-                       || __fst::is_constructible_v<__fst::basic_string_view<char16_t>, SType> //
-                       || __fst::is_constructible_v<__fst::basic_string_view<char32_t>, SType> //
-                       || __fst::is_constructible_v<__fst::basic_string_view<wchar_t>, SType> //
-                           FST_IF_CHAR8_T(|| __fst::is_constructible_v<__fst::basic_string_view<char8_t>, SType>)>
+                        || __fst::is_constructible_v<__fst::basic_string_view<char16_t>, SType> //
+                        || __fst::is_constructible_v<__fst::basic_string_view<char32_t>, SType> //
+                        || __fst::is_constructible_v<__fst::basic_string_view<wchar_t>, SType> //
+                            FST_IF_CHAR8_T(|| __fst::is_constructible_v<__fst::basic_string_view<char8_t>, SType>)>
     {};
 
     template <class SType>
@@ -206,6 +206,11 @@ FST_BEGIN_NAMESPACE
 
         static inline constexpr int compare(const char_type* s1, const char_type* s2, size_t count) { return __fst::strncmp(s1, s2, count); }
 
+        static inline constexpr bool compare(const char_type* s1, size_t size1, const char_type* s2, size_t size2)
+        {
+            return (size1 == size2) && (compare(s1, s2, size1) == 0);
+        }
+
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, const char_type _Ch) noexcept { return ::strchr(_First, _Ch); }
 
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
@@ -247,6 +252,11 @@ FST_BEGIN_NAMESPACE
             }
 
             return 0;
+        }
+
+        static inline constexpr bool compare(const char_type* s1, size_t size1, const char_type* s2, size_t size2)
+        {
+            return (size1 == size2) && (compare(s1, s2, size1) == 0);
         }
 
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
@@ -291,6 +301,11 @@ FST_BEGIN_NAMESPACE
             return 0;
         }
 
+        static inline constexpr bool compare(const char_type* s1, size_t size1, const char_type* s2, size_t size2)
+        {
+            return (size1 == size2) && (compare(s1, s2, size1) == 0);
+        }
+
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
         {
 
@@ -331,6 +346,11 @@ FST_BEGIN_NAMESPACE
             }
 
             return 0;
+        }
+
+        static inline constexpr bool compare(const char_type* s1, size_t size1, const char_type* s2, size_t size2)
+        {
+            return (size1 == size2) && (compare(s1, s2, size1) == 0);
         }
 
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
@@ -374,6 +394,11 @@ FST_BEGIN_NAMESPACE
             }
 
             return 0;
+        }
+
+        static inline constexpr bool compare(const char_type* s1, size_t size1, const char_type* s2, size_t size2)
+        {
+            return (size1 == size2) && (compare(s1, s2, size1) == 0);
         }
 
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
@@ -855,7 +880,7 @@ FST_BEGIN_NAMESPACE
         {}
 
         template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container> && __fst::is_different_v<__fst::remove_cvref_t<_Container>, basic_string_view>
-                                                          && __fst::is_same_v<__fst::container_value_type_t<_Container>, value_type>,
+                                                           && __fst::is_same_v<__fst::container_value_type_t<_Container>, value_type>,
                                         int>
                                     = 0>
         FST_ALWAYS_INLINE constexpr basic_string_view(const _Container& c) noexcept
@@ -982,7 +1007,8 @@ FST_BEGIN_NAMESPACE
     inline _StringType utf_cvt_as(const SType& str) noexcept;
 
     //
-    template <class SType, class _OutputContainer, __fst::enable_if_t<is_utf_string_type<SType>::value && __fst::is_container_v<_OutputContainer>, __fst::nullptr_t> = nullptr>
+    template <class SType, class _OutputContainer,
+        __fst::enable_if_t<is_utf_string_type<SType>::value && __fst::is_container_v<_OutputContainer>, __fst::nullptr_t> = nullptr>
     inline void utf_append_to(const SType& str, _OutputContainer& c_output) noexcept;
 
     ///

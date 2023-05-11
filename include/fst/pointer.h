@@ -246,7 +246,7 @@ FST_BEGIN_NAMESPACE
     };
 
     ///
-    template <class _T, class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
+    template <class _T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
     class unique_ptr
     {
       public:
@@ -309,14 +309,15 @@ FST_BEGIN_NAMESPACE
             (void) _Right.release();
         }
 
-        template <class _Ty2, class _Dx2,
-            __fst::enable_if_t<
-                __fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>, __fst::is_convertible<typename unique_ptr<_Ty2, _Dx2>::pointer, pointer>,
-                    __fst::conditional_t<__fst::is_reference_v<memory_zone_type>, __fst::is_same<_Dx2, memory_zone_type>, __fst::is_convertible<_Dx2, memory_zone_type>>>,
+        template <class _Ty2, class _OtherMemoryCategory, class _OtherMemoryZone,
+            __fst::enable_if_t<__fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>,
+                                   __fst::is_convertible<typename unique_ptr<_Ty2, _OtherMemoryCategory, _OtherMemoryZone>::pointer, pointer>,
+                                   __fst::conditional_t<__fst::is_reference_v<memory_zone_type>, __fst::is_same<_OtherMemoryZone, memory_zone_type>,
+                                       __fst::is_convertible<_OtherMemoryZone, memory_zone_type>>>,
                 int>
             = 0>
-        unique_ptr(unique_ptr<_Ty2, _Dx2>&& _Right) noexcept
-            : _data{ _Right.get(), __fst::forward<_Dx2>(_Right.get_memory_zone()) }
+        unique_ptr(unique_ptr<_Ty2, _OtherMemoryCategory, _OtherMemoryZone>&& _Right) noexcept
+            : _data{ _Right.get(), __fst::forward<_OtherMemoryZone>(_Right.get_memory_zone()) }
         {
 
             _Right.release();
@@ -397,7 +398,7 @@ FST_BEGIN_NAMESPACE
     };
 
     ///
-    template <class _T, class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
+    template <class _T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
     class optional_ptr
     {
       public:
@@ -453,8 +454,10 @@ FST_BEGIN_NAMESPACE
             : _data{ { ptr, powned }, __fst::move(mem_zone) }
         {}
 
-        template <class _Dx2 = memory_zone_type,
-            __fst::enable_if_t<__fst::conjunction_v<__fst::is_reference<_Dx2>, __fst::is_constructible<_Dx2, __fst::remove_reference_t<_Dx2>>>, int> = 0>
+        template <class _OtherMemoryCategory = memory_category, class _OtherMemoryZone = memory_zone_type,
+            __fst::enable_if_t<
+                __fst::conjunction_v<__fst::is_reference<_OtherMemoryZone>, __fst::is_constructible<_OtherMemoryZone, __fst::remove_reference_t<_OtherMemoryZone>>>, int>
+            = 0>
         optional_ptr(pointer, __fst::remove_reference_t<memory_zone_type>&&) = delete;
 
         template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_move_constructible_v<_Zone>, int> = 0>
@@ -464,14 +467,15 @@ FST_BEGIN_NAMESPACE
             (void) _Right.release();
         }
 
-        template <class _Ty2, class _Dx2,
-            __fst::enable_if_t<
-                __fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>, __fst::is_convertible<typename optional_ptr<_Ty2, _Dx2>::pointer, pointer>,
-                    __fst::conditional_t<__fst::is_reference_v<memory_zone_type>, __fst::is_same<_Dx2, memory_zone_type>, __fst::is_convertible<_Dx2, memory_zone_type>>>,
+        template <class _Ty2, class _OtherMemoryCategory, class _OtherMemoryZone,
+            __fst::enable_if_t<__fst::conjunction_v<__fst::negation<__fst::is_c_array<_Ty2>>,
+                                   __fst::is_convertible<typename optional_ptr<_Ty2, _OtherMemoryCategory, _OtherMemoryZone>::pointer, pointer>,
+                                   __fst::conditional_t<__fst::is_reference_v<memory_zone_type>, __fst::is_same<_OtherMemoryZone, memory_zone_type>,
+                                       __fst::is_convertible<_OtherMemoryZone, memory_zone_type>>>,
                 int>
             = 0>
-        optional_ptr(optional_ptr<_Ty2, _Dx2>&& _Right) noexcept
-            : _data{ { _Right.get(), _Right.owned() }, __fst::forward<_Dx2>(_Right.get_memory_zone()) }
+        optional_ptr(optional_ptr<_Ty2, _OtherMemoryCategory, _OtherMemoryZone>&& _Right) noexcept
+            : _data{ { _Right.get(), _Right.owned() }, __fst::forward<_OtherMemoryZone>(_Right.get_memory_zone()) }
         {
             (void) _Right.release();
         }
@@ -525,7 +529,7 @@ FST_BEGIN_NAMESPACE
         }
 
         /// Returns true if the pointer is owned.
-        FST_NODISCARD inline bool owned() const noexcept { return _data.first().get_int<bool>(); }
+        FST_NODISCARD inline bool owned() const noexcept { return _data.first().template get_int<bool>(); }
 
         FST_NODISCARD FST_ALWAYS_INLINE zone_const_reference get_memory_zone() const noexcept { return _data.second(); }
         FST_NODISCARD FST_ALWAYS_INLINE zone_reference get_memory_zone() noexcept { return _data.second(); }
@@ -556,7 +560,10 @@ FST_BEGIN_NAMESPACE
 
         inline void reset(pointer ptr, bool powned) noexcept
         {
-            if (pointer old_ptr = _data.first().template exchange_pointer<pointer>(ptr); old_ptr && owned()) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
+            if (pointer old_ptr = _data.first().template exchange_pointer<pointer>(ptr); old_ptr && owned())
+            {
+                _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id());
+            }
 
             _data.first().set_int(powned && ptr != nullptr);
         }

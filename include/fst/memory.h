@@ -24,21 +24,32 @@
 
 #pragma once
 
+///
+/// @file fst/memory.h
+/// @fst core
+/// @author Alexandre Arsenault (alx.arsenault@gmail.com)
+/// @date 2023
+///
+/// @ref memory_management.md
+///
+/// Declares everything related to memory zones and memory categories.
+///
+
 #include "fst/common.h"
+#include "fst/status_code.h"
 #include "fst/traits.h"
 
 #if __FST_CLANG__
 #define fst_alloca(size) __builtin_alloca(size)
 
-#else
-#if __FST_WINDOWS__
+#elif __FST_WINDOWS__
 #include <malloc.h>
-#define fst_alloca(size) alloca(size)
+#define fst_alloca(size) _alloca(size)
+
 #else
 #define fst_alloca(size) alloca(size)
-
-#endif //
 #endif
+
 FST_BEGIN_NAMESPACE
 
     ///
@@ -59,6 +70,18 @@ FST_BEGIN_NAMESPACE
 
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_zone_id)
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_category_id)
+
+    ///
+    struct default_memory_zone;
+
+    ///
+    struct simd_memory_zone;
+
+    ///
+    struct void_memory_zone;
+
+    ///
+    struct profiler_memory_zone;
 
     namespace simd
     {
@@ -86,36 +109,23 @@ FST_BEGIN_NAMESPACE
         FST_INLINE_VAR constexpr size_t vector_type_alignment_v = vector_type_alignment<T>::value;
     } // namespace simd.
 
-    ///
-    extern size_t mem_cache_size() noexcept;
+    /// Get the cpu cache size (in bytes).
+    size_t mem_cache_size() noexcept;
 
-    ///
-    extern size_t mem_page_size() noexcept;
+    /// Get the memory page size (in bytes).
+    size_t mem_page_size() noexcept;
 
-    ///
-    template <class T>
-    struct memory_category;
+    // clang-format off
+    template <class T> struct memory_category;
+    template <class T> struct memory_zone;
 
-    template <class T>
-    struct is_memory_category;
-
-    template <class T>
-    struct memory_zone;
-
-    template <class T>
-    struct is_memory_zone;
-
-    template <class T>
-    struct is_static_memory_zone;
+    template <class T> struct is_memory_category;
+    template <class T> struct is_memory_zone;
+    template <class T> struct is_static_memory_zone;
+    // clang-format on
 
     namespace memory
     {
-        ///
-        FST_NODISCARD extern __fst::memory_zone_id get_next_memory_zone_id() noexcept;
-
-        ///
-        FST_NODISCARD extern __fst::memory_category_id get_next_memory_category_id() noexcept;
-
         struct category_base
         {
           private:
@@ -126,7 +136,10 @@ FST_BEGIN_NAMESPACE
             friend struct __fst::is_memory_category;
 
             struct restricted_base
-            {};
+            {
+                FST_NODISCARD static __fst::memory_category_id get_next_memory_category_id() noexcept;
+                FST_IF_PROFILE(static bool register_memory_category(__fst::memory_category_id mid, const char* name) noexcept;)
+            };
         };
 
         ///
@@ -135,58 +148,34 @@ FST_BEGIN_NAMESPACE
           private:
             template <class T>
             friend struct __fst::memory_zone;
-
             template <class T>
             friend struct __fst::is_memory_zone;
-
             template <class T>
             friend struct __fst::is_static_memory_zone;
 
             struct restricted_base
             {
+                FST_NODISCARD static __fst::memory_zone_id get_next_memory_zone_id() noexcept;
+                FST_IF_PROFILE(static bool register_memory_zone(__fst::memory_zone_id zid, const char* name) noexcept;)
                 static void move_allocation(void* ptr, __fst::memory_zone_id zid, __fst::memory_category_id from_mid, __fst::memory_category_id to_mid) noexcept;
             };
         };
 
     } // namespace memory.
 
-#if FST_USE_PROFILER
-    extern bool register_memory_category(__fst::memory_category_id mid, const char* name) noexcept;
-    extern void register_memory_zone(__fst::memory_zone_id zid, const char* name) noexcept;
-
-    template <class _MemoryCategory>
-    struct memory_category_register
-    {
-        inline memory_category_register() noexcept { register_memory_category(_MemoryCategory::id(), _MemoryCategory::name); }
-    };
-
-    template <class _MemoryZone>
-    struct memory_zone_register
-    {
-        inline memory_zone_register() noexcept { register_memory_zone(_MemoryZone::id(), _MemoryZone::name); }
-    };
-#endif
     ///
     template <class T>
     struct memory_category : memory::category_base::restricted_base
     {
         FST_NODISCARD static inline __fst::memory_category_id id() noexcept
         {
-            static const __fst::memory_category_id value = memory::get_next_memory_category_id();
-#if FST_USE_PROFILER
-            FST_ATTRIBUTE_UNUSED static const bool st = register_memory_category(value, T::name);
-#endif
+            static const __fst::memory_category_id value = memory::category_base::restricted_base::get_next_memory_category_id();
+            FST_IF_PROFILE(FST_ATTRIBUTE_UNUSED static const bool st = register_memory_category(value, T::name);)
             return value;
         }
 
         FST_NODISCARD FST_ALWAYS_INLINE operator __fst::memory_category_id() const noexcept { return id(); }
     };
-
-    /*struct memory_category_t
-    {
-        __fst::memory_category_id id;
-        const char* name;
-    };*/
 
     ///
     struct default_memory_category : __fst::memory_category<default_memory_category>
@@ -210,6 +199,7 @@ FST_BEGIN_NAMESPACE
     FST_DECLARE_MEMORY_CATEGORY(ui_memory_category, "ui");
     FST_DECLARE_MEMORY_CATEGORY(profiler_memory_category, "profiler");
 
+    ///
     struct memory_zone_proxy
     {
         using data_type = void*;
@@ -250,16 +240,11 @@ FST_BEGIN_NAMESPACE
         __fst::memory_zone_id _zone_id;
     };
 
-    template <class T>
-    struct is_memory_zone_proxy : __fst::false_t
-    {};
-
-    template <>
-    struct is_memory_zone_proxy<__fst::memory_zone_proxy> : __fst::true_t
-    {};
-
-    template <class _T>
-    FST_INLINE_VAR constexpr bool is_memory_zone_proxy_v = __fst::is_memory_zone_proxy<_T>::value;
+    // clang-format off
+    template <class T> struct is_memory_zone_proxy : __fst::false_t {};
+    template <> struct is_memory_zone_proxy<__fst::memory_zone_proxy> : __fst::true_t {};
+    template <class _T> FST_INLINE_VAR constexpr bool is_memory_zone_proxy_v = __fst::is_memory_zone_proxy<_T>::value;
+    // clang-format on
 
     namespace detail
     {
@@ -325,15 +310,15 @@ FST_BEGIN_NAMESPACE
     template <class T>
     struct is_memory_zone
         : __fst::bool_t<__fst::is_base_of<__fst::memory::zone_base::restricted_base, T>::value
-                       && __fst::are_detected<T, detail::allocate_t, detail::deallocate_t, detail::aligned_allocate_t, detail::aligned_deallocate_t>::value>
+                        && __fst::are_detected<T, detail::allocate_t, detail::deallocate_t, detail::aligned_allocate_t, detail::aligned_deallocate_t>::value>
     {};
 
     ///
     template <class T>
     struct is_static_memory_zone
         : __fst::bool_t<__fst::is_base_of<__fst::memory::zone_base::restricted_base, T>::value
-                       && __fst::are_detected<T, detail::static_allocate_t, detail::static_deallocate_t, detail::static_aligned_allocate_t,
-                           detail::static_aligned_deallocate_t>::value>
+                        && __fst::are_detected<T, detail::static_allocate_t, detail::static_deallocate_t, detail::static_aligned_allocate_t,
+                            detail::static_aligned_deallocate_t>::value>
     {};
 
     ///
@@ -342,11 +327,12 @@ FST_BEGIN_NAMESPACE
     {
         FST_NODISCARD static inline __fst::memory_zone_id id() noexcept
         {
-            static const __fst::memory_zone_id value = memory::get_next_memory_zone_id();
+            static const __fst::memory_zone_id value = memory::zone_base::restricted_base::get_next_memory_zone_id();
+            FST_IF_PROFILE(FST_ATTRIBUTE_UNUSED static const bool st = memory::zone_base::restricted_base::register_memory_zone(value, T::name);)
             return value;
         }
 
-        static inline void move_allocation(void* ptr, __fst::memory_category_id from_mid, __fst::memory_category_id to_mid)
+        static inline void move_allocation(void* ptr, __fst::memory_category_id from_mid, __fst::memory_category_id to_mid) noexcept
         {
             memory::zone_base::restricted_base::move_allocation(ptr, T::id(), from_mid, to_mid);
         }
@@ -443,23 +429,15 @@ FST_BEGIN_NAMESPACE
 
                 return __fst::memory_zone_proxy{ [](size_t size, __fst::memory_category_id mid, void* data) { return ((_MemoryZone*) data)->allocate(size, mid); },
                     [](void* ptr, __fst::memory_category_id mid, void* data) { ((_MemoryZone*) data)->deallocate(ptr, mid); },
-                    [](size_t size, size_t alignment, __fst::memory_category_id mid, void* data) { return ((_MemoryZone*) data)->aligned_allocate(size, alignment, mid); },
+                    [](size_t size, size_t alignment, __fst::memory_category_id mid, void* data)
+                    { return ((_MemoryZone*) data)->aligned_allocate(size, alignment, mid); },
                     [](void* ptr, __fst::memory_category_id mid, void* data) { ((_MemoryZone*) data)->aligned_deallocate(ptr, mid); }, (void*) z, _MemoryZone::id() };
             }
         }
-
-#if FST_USE_PROFILER
-        static memory_zone_register<T> __memory_zone_registration;
-#endif
     };
 
-    template <class T, class _MemoryZone, class _MemoryCategory, class = void>
+    template <class T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone, class = void>
     class memory_zone_allocator;
-
-#if FST_USE_PROFILER
-    template <class T>
-    memory_zone_register<T> memory_zone<T>::__memory_zone_registration = {};
-#endif
 
     /// void_memory_zone
     struct void_memory_zone : __fst::memory_zone<void_memory_zone>
@@ -469,27 +447,27 @@ FST_BEGIN_NAMESPACE
         template <class T = void>
         FST_ALWAYS_INLINE static void* allocate(size_t, __fst::memory_category_id) noexcept
         {
-            static_assert(__fst::always_false<T>, "can't allocate in void_memory_zone");
+            fst_assert(__fst::always_false<T>, "can't allocate in void_memory_zone");
             return nullptr;
         }
 
         template <class T = void>
         FST_ALWAYS_INLINE static void deallocate(void*, __fst::memory_category_id) noexcept
         {
-            static_assert(__fst::always_false<T>, "can't deallocate in void_memory_zone");
+            fst_assert(__fst::always_false<T>, "can't deallocate in void_memory_zone");
         }
 
         template <class T = void>
         FST_ALWAYS_INLINE static void* aligned_allocate(size_t, size_t, __fst::memory_category_id) noexcept
         {
-            static_assert(__fst::always_false<T>, "can't aligned_allocate in void_memory_zone");
+            fst_assert(__fst::always_false<T>, "can't aligned_allocate in void_memory_zone");
             return nullptr;
         }
 
         template <class T = void>
         FST_ALWAYS_INLINE static void aligned_deallocate(void*, __fst::memory_category_id) noexcept
         {
-            static_assert(__fst::always_false<T>, "can't aligned_deallocate in void_memory_zone");
+            fst_assert(__fst::always_false<T>, "can't aligned_deallocate in void_memory_zone");
         }
     };
 
@@ -499,17 +477,9 @@ FST_BEGIN_NAMESPACE
     struct default_memory_zone : __fst::memory_zone<default_memory_zone>
     {
         static constexpr const char* name = "default";
-
-        //
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
-
-        //
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
-
-        //
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
-
-        //
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
     };
 
@@ -517,19 +487,10 @@ FST_BEGIN_NAMESPACE
     struct simd_memory_zone : public __fst::memory_zone<simd_memory_zone>
     {
         static constexpr const char* name = "simd";
-
         FST_NODISCARD static size_t default_alignment() noexcept;
-
-        //
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
-
-        //
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
-
-        //
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
-
-        //
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
     };
 
@@ -537,18 +498,33 @@ FST_BEGIN_NAMESPACE
     struct profiler_memory_zone : __fst::memory_zone<profiler_memory_zone>
     {
         static constexpr const char* name = "profiler";
-
-        //
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
-
-        //
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
-
-        //
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
-
-        //
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
+    };
+
+    ///
+    struct pool_memory_zone : __fst::memory_zone<pool_memory_zone>
+    {
+        static constexpr const char* name = "pool";
+        pool_memory_zone(size_t buckets, size_t bucket_size) noexcept;
+        pool_memory_zone(const pool_memory_zone& other) noexcept;
+        pool_memory_zone(pool_memory_zone&& other) noexcept;
+
+        ~pool_memory_zone() noexcept;
+
+        pool_memory_zone& operator=(const pool_memory_zone& other) noexcept;
+        pool_memory_zone& operator=(pool_memory_zone&& other) noexcept;
+
+        FST_NODISCARD void* allocate(size_t size, __fst::memory_category_id mid) const noexcept;
+        void deallocate(void* ptr, __fst::memory_category_id mid) const noexcept;
+        FST_NODISCARD void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) const noexcept;
+        void aligned_deallocate(void* ptr, __fst::memory_category_id mid) const noexcept;
+
+      private:
+        struct pool;
+        pool* _pool;
     };
 
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>

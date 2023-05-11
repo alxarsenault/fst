@@ -42,7 +42,7 @@ FST_BEGIN_SUB_NAMESPACE(os)
     {
       public:
         using handle = void*;
-        using pointer = __fst::unique_ptr<__fst::os::window, __fst::default_memory_zone, __fst::os_memory_category>;
+        using pointer = __fst::unique_ptr<__fst::os::window, __fst::os_memory_category>;
         struct native;
 
         class delegate

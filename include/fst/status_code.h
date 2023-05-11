@@ -112,10 +112,13 @@ FST_BEGIN_NAMESPACE
         text_file_busy = 139, // ETXTBSY
         operation_would_block = 140, // EWOULDBLOCK
 
+        already_created,
         invalid_file_format,
         invalid_file_content,
         invalid_channel_size,
-        invalid_audio_format
+        invalid_audio_format,
+
+        invalid
     };
 
     struct error_result;
@@ -156,6 +159,8 @@ FST_BEGIN_NAMESPACE
             {
             case status_code::success: return "success";
             case status_code::unknown: return "unknown";
+            case status_code::invalid: return "invalid";
+
             case status_code::address_family_not_supported: return "address_family_not_supported";
             case status_code::address_in_use: return "address_in_use";
             case status_code::address_not_available: return "address_not_available";
@@ -235,6 +240,7 @@ FST_BEGIN_NAMESPACE
             case status_code::value_too_large: return "value_too_large";
             case status_code::wrong_protocol_type: return "wrong_protocol_type";
 
+                            case status_code::already_created: return "already_created";
             case status_code::invalid_file_format: return "invalid_file_format";
             case status_code::invalid_file_content: return "invalid_file_content";
             case status_code::invalid_channel_size: return "invalid_channel_size";
@@ -282,10 +288,77 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD inline constexpr const char* message() const noexcept { return status(code).message(); }
     };
 
+    /// status_ref
+    class status_ref
+    {
+        status_code* _code = nullptr;
+        constexpr status_ref() noexcept = default;
+
+      public:
+        static inline constexpr status_ref empty() noexcept { return status_ref(); }
+
+        inline constexpr status_ref(status_code& c) noexcept
+            : _code(&c)
+        {}
+
+        inline constexpr status_ref(status& st) noexcept
+            : _code(&st.code)
+        {}
+
+        inline constexpr status_ref(error_result& er) noexcept
+            : _code(&er.code)
+        {}
+
+        constexpr status_ref(const status_ref&) noexcept = default;
+        constexpr status_ref(status_ref&&) noexcept = default;
+
+        ~status_ref() noexcept = default;
+
+        constexpr status_ref& operator=(const status_ref&) noexcept = default;
+        constexpr status_ref& operator=(status_ref&&) noexcept = default;
+
+        constexpr status_ref& operator=(status_code c) noexcept
+        {
+            if (_code) *_code = c;
+            return *this;
+        }
+
+        constexpr status_ref& operator=(status st) noexcept
+        {
+            if (_code) *_code = st.code;
+            return *this;
+        }
+
+        constexpr status_ref& operator=(error_result er) noexcept
+        {
+            if (_code) *_code = er.code;
+            return *this;
+        }
+
+        FST_NODISCARD inline constexpr status_code code() const noexcept { return _code ? *_code : status_code::invalid; }
+
+        /// Returns true on success.
+        FST_NODISCARD inline constexpr explicit operator bool() const noexcept { return _code && *_code == status_code::success; }
+
+        ///
+        FST_NODISCARD inline constexpr bool valid() const noexcept { return _code && *_code == status_code::success; }
+
+        FST_NODISCARD inline constexpr bool operator==(status_ref c) const noexcept { return _code && c._code && *_code == *c._code; }
+        FST_NODISCARD inline constexpr bool operator!=(status_ref c) const noexcept { return _code && c._code && *_code != *c._code; }
+        FST_NODISCARD inline constexpr bool operator==(error_result c) const noexcept { return _code && *_code == c.code; }
+        FST_NODISCARD inline constexpr bool operator!=(error_result c) const noexcept { return _code && *_code != c.code; }
+        FST_NODISCARD inline constexpr bool operator==(status c) const noexcept { return _code && *_code == c.code; }
+        FST_NODISCARD inline constexpr bool operator!=(status c) const noexcept { return _code && *_code != c.code; }
+
+        ///
+        FST_NODISCARD inline constexpr const char* message() const noexcept { return status(code()).message(); }
+    };
+
     FST_NODISCARD inline constexpr bool status::operator==(error_result er) const noexcept
     {
         return code == er.code;
     }
+
     FST_NODISCARD inline constexpr bool status::operator!=(error_result er) const noexcept
     {
         return code != er.code;
@@ -307,6 +380,12 @@ FST_BEGIN_NAMESPACE
     inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::error_result er)
     {
         return stream << er.message();
+    }
+
+    template <class charT>
+    inline __fst::output_stream<charT>& operator<<(__fst::output_stream<charT>& stream, __fst::status_ref st)
+    {
+        return stream << st.message();
     }
 
 FST_END_NAMESPACE

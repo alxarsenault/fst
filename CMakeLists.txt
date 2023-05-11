@@ -35,6 +35,9 @@ option(FST_USE_SIMD_512 "Use simd 512" OFF)
 option(FST_USE_NEON "Use neon" OFF)
 option(FST_CLANG_FORMAT_TARGET "Generate clang-format targets" OFF)
 
+#
+option(FST_DEV_BUILD "Dev build" OFF)
+
 # No reason to set CMAKE_CONFIGURATION_TYPES if it's not a multiconfig generator.
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(IS_MULTI_CONFIG)

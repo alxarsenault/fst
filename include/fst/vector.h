@@ -862,7 +862,7 @@ FST_BEGIN_NAMESPACE
     //struct is_vector_range<__fst::vector_range<_T, _Alignment>> : __fst::true_t {};
     //// clang-format on
 
-    template <typename _T, size_t _Alignment = alignof(_T), class _MemoryZone = __fst::default_memory_zone, class _MemoryCategory = __fst::default_memory_category>
+    template <typename _T, size_t _Alignment = alignof(_T), class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
     class vector
     {
       public:
@@ -1409,8 +1409,8 @@ FST_BEGIN_NAMESPACE
     struct is_vector : __fst::false_t
     {};
 
-    template <class _T, size_t _Alignment, class _MemoryZone, class _MemoryCategory>
-    struct is_vector<__fst::vector<_T, _Alignment, _MemoryZone, _MemoryCategory>> : __fst::true_t
+    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
+    struct is_vector<__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>> : __fst::true_t
     {};
 
 FST_END_NAMESPACE

@@ -168,8 +168,6 @@ FST_END_NAMESPACE
 
 FST_NODISCARD inline void* operator new(size_t, void* memory, __fst::placement_new_tag) noexcept
 {
-    //fst::printf("klklkklk %d\n", int(jj));
-
     return memory;
 }
 inline void operator delete(void*, void*, __fst::placement_new_tag) noexcept {}

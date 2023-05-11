@@ -34,7 +34,7 @@ FST_BEGIN_SUB_NAMESPACE(os)
     {
       public:
         using value_type = char;
-        using string_type = __fst::basic_string<value_type, __fst::memory_zone_allocator<value_type, __fst::default_memory_zone, __fst::os_memory_category>>;
+        using string_type = __fst::basic_string<value_type, __fst::memory_zone_allocator<value_type, __fst::os_memory_category, __fst::default_memory_zone>>;
 
         path() noexcept = default;
         path(const path&) noexcept = default;

@@ -95,7 +95,7 @@ FST_BEGIN_NAMESPACE
             return scoped_trace{ section };
         }
 
-        using result_type = __fst::vector<result, alignof(result), __fst::profiler_memory_zone, __fst::profiler_memory_category>;
+        using result_type = __fst::vector<result, alignof(result), __fst::profiler_memory_category,  __fst::profiler_memory_zone>;
 
 #if FST_USE_PROFILER
 

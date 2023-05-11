@@ -11,7 +11,7 @@
 FST_BEGIN_SUB_NAMESPACE(os)
     namespace
     {
-        using wstring_type = __fst::basic_string<wchar_t, __fst::memory_zone_allocator<wchar_t, __fst::default_memory_zone, __fst::os_memory_category>>;
+        using wstring_type = __fst::basic_string<wchar_t, __fst::memory_zone_allocator<wchar_t, __fst::os_memory_category, __fst::default_memory_zone>>;
     }
 
     __fst::status copy_file(const __fst::os::path& old_name, const __fst::os::path& new_name, bool fail_if_exists) noexcept

@@ -693,8 +693,8 @@ FST_BEGIN_SUB_NAMESPACE(http)
     {
       public:
         using string_type = typename parameter::string_type;
-        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::default_memory_zone, __fst::web_memory_category>;
-        using data_vector = __fst::vector<char, alignof(char), __fst::default_memory_zone, __fst::web_memory_category>;
+        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::web_memory_category>;
+        using data_vector = __fst::vector<char, alignof(char), __fst::web_memory_category>;
 
         inline request(const http::url& u)
             : _url(u)
@@ -903,8 +903,8 @@ FST_BEGIN_SUB_NAMESPACE(http)
     class response
     {
       public:
-        using data_vector = __fst::vector<char, alignof(char), __fst::default_memory_zone, __fst::web_memory_category>;
-        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::default_memory_zone, __fst::web_memory_category>;
+        using data_vector = __fst::vector<char, alignof(char),  __fst::web_memory_category>;
+        using header_field_vector = __fst::vector<header_field, alignof(header_field), __fst::web_memory_category>;
 
         response() = default;
         response(const response&) = default;
