@@ -137,7 +137,7 @@ FST_BEGIN_NAMESPACE
 
     size_t simd_memory_zone::default_alignment() noexcept
     {
-        return __fst::simd::vector_type_alignment_v<float>;
+        return __fst::default_alignment;
     }
 
     void* simd_memory_zone::allocate(size_t size, FST_ATTRIBUTE_UNUSED __fst::memory_category_id mid) noexcept

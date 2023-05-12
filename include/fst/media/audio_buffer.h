@@ -278,7 +278,7 @@ FST_BEGIN_NAMESPACE
 
             for (size_t i = 0; i < channel_size; i++)
             {
-                void* channel_ptr = __fst::align(cache_size, channel_buffer_size, raw_ptr, sp);
+                void* channel_ptr = __fst::align_range(cache_size, channel_buffer_size, raw_ptr, sp);
 
                 fst_assert(channel_ptr != nullptr, "Can't align buffer with cache size.");
 

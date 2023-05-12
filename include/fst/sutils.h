@@ -414,6 +414,277 @@ FST_BEGIN_NAMESPACE
     };
 #endif // FST_HAS_CHAR8_T
 
+    namespace detail
+    {
+        
+    FST_INLINE_VAR constexpr char digits_0_to_99[201] = { "00010203040506070809"
+                                                          "10111213141516171819"
+                                                          "20212223242526272829"
+                                                          "30313233343536373839"
+                                                          "40414243444546474849"
+                                                          "50515253545556575859"
+                                                          "60616263646566676869"
+                                                          "70717273747576777879"
+                                                          "80818283848586878889"
+                                                          "90919293949596979899" };
+
+        FST_INLINE_VAR constexpr uint16_t digits_to_99[100] = { //
+            //  00,     01,     02,     03,     04,     05,     06,     07,     08,     09
+            0x3030, 0x3130, 0x3230, 0x3330, 0x3430, 0x3530, 0x3630, 0x3730, 0x3830, 0x3930, //
+            0x3031, 0x3131, 0x3231, 0x3331, 0x3431, 0x3531, 0x3631, 0x3731, 0x3831, 0x3931, //
+            0x3032, 0x3132, 0x3232, 0x3332, 0x3432, 0x3532, 0x3632, 0x3732, 0x3832, 0x3932, //
+            0x3033, 0x3133, 0x3233, 0x3333, 0x3433, 0x3533, 0x3633, 0x3733, 0x3833, 0x3933, //
+            0x3034, 0x3134, 0x3234, 0x3334, 0x3434, 0x3534, 0x3634, 0x3734, 0x3834, 0x3934, //
+            0x3035, 0x3135, 0x3235, 0x3335, 0x3435, 0x3535, 0x3635, 0x3735, 0x3835, 0x3935, //
+            0x3036, 0x3136, 0x3236, 0x3336, 0x3436, 0x3536, 0x3636, 0x3736, 0x3836, 0x3936, //
+            0x3037, 0x3137, 0x3237, 0x3337, 0x3437, 0x3537, 0x3637, 0x3737, 0x3837, 0x3937, //
+            0x3038, 0x3138, 0x3238, 0x3338, 0x3438, 0x3538, 0x3638, 0x3738, 0x3838, 0x3938, //
+            //  90,     91,     92,     93,     94,     95,     96,     97,     98,     99
+            0x3039, 0x3139, 0x3239, 0x3339, 0x3439, 0x3539, 0x3639, 0x3739, 0x3839, 0x3939
+        };
+    }
+
+    //FST_ALWAYS_INLINE void get_digit_pair(char* buffer, size_t index) noexcept
+    //{
+        //*(uint16_t*) (buffer) = detail::digits_to_99[index];
+    //}
+    
+    FST_ALWAYS_INLINE constexpr void get_digit_pair(char* buffer, size_t index) noexcept
+    {
+        const char* ptr = detail::digits_0_to_99 + index * 2;
+        *buffer++ = *ptr++;
+        *buffer = *ptr;
+    }
+
+    // Compilers should be able to optimize this into the ror instruction.
+    //FMT_CONSTEXPR inline uint32_t rotr(uint32_t n, uint32_t r) noexcept {
+    //  r &= 31;
+    //  return (n >> r) | (n << (32 - r));
+    //}
+    //FMT_CONSTEXPR inline uint64_t rotr(uint64_t n, uint32_t r) noexcept {
+    //  r &= 63;
+    //  return (n >> r) | (n << (64 - r));
+    //}
+    //    // Various fast log computations.
+    //inline int floor_log10_pow2_minus_log10_4_over_3(int e) noexcept {
+    //  FMT_ASSERT(e <= 2936 && e >= -2985, "too large exponent");
+    //  return (e * 631305 - 261663) >> 21;
+    //}
+    // Parses the range [begin, end) as an unsigned integer. This function assumes
+    // that the range is non-empty and the first character is a digit.
+    //template <typename Char>
+    //FMT_CONSTEXPR auto parse_nonnegative_int(const Char*& begin, const Char* end,
+    //                                         int error_value) noexcept -> int {
+    //  FMT_ASSERT(begin != end && '0' <= *begin && *begin <= '9', "");
+    //  unsigned value = 0, prev = 0;
+    //  auto p = begin;
+    //  do {
+    //    prev = value;
+    //    value = value * 10 + unsigned(*p - '0');
+    //    ++p;
+    //  } while (p != end && '0' <= *p && *p <= '9');
+    //  auto num_digits = p - begin;
+    //  begin = p;
+    //  if (num_digits <= std::numeric_limits<int>::digits10)
+    //    return static_cast<int>(value);
+    //  // Check for overflow.
+    //  const unsigned max = to_unsigned((std::numeric_limits<int>::max)());
+    //  return num_digits == std::numeric_limits<int>::digits10 + 1 &&
+    //                 prev * 10ull + unsigned(p[-1] - '0') <= max
+    //             ? static_cast<int>(value)
+    //             : error_value;
+    //}
+    // Returns the largest possible value for type T. Same as
+    // std::numeric_limits<T>::max() but shorter and not affected by the max macro.
+    //template <typename T> constexpr auto max_value() -> T {
+    //  return (std::numeric_limits<T>::max)();
+    //}
+    //template <typename T> constexpr auto num_bits() -> int {
+    //  return std::numeric_limits<T>::digits;
+    //}
+
+    //FMT_INLINE_VARIABLE constexpr struct {
+    //  uint32_t divisor;
+    //  int shift_amount;
+    //} div_small_pow10_infos[] = {{10, 16}, {100, 16}};
+    //
+    //// Replaces n by floor(n / pow(10, N)) returning true if and only if n is
+    //// divisible by pow(10, N).
+    //// Precondition: n <= pow(10, N + 1).
+    //template <int N>
+    //bool check_divisibility_and_divide_by_pow10(uint32_t& n) noexcept {
+    //  // The numbers below are chosen such that:
+    //  //   1. floor(n/d) = floor(nm / 2^k) where d=10 or d=100,
+    //  //   2. nm mod 2^k < m if and only if n is divisible by d,
+    //  // where m is magic_number, k is shift_amount
+    //  // and d is divisor.
+    //  //
+    //  // Item 1 is a common technique of replacing division by a constant with
+    //  // multiplication, see e.g. "Division by Invariant Integers Using
+    //  // Multiplication" by Granlund and Montgomery (1994). magic_number (m) is set
+    //  // to ceil(2^k/d) for large enough k.
+    //  // The idea for item 2 originates from Schubfach.
+    //  constexpr auto info = div_small_pow10_infos[N - 1];
+    //  FMT_ASSERT(n <= info.divisor * 10, "n is too large");
+    //  constexpr uint32_t magic_number =
+    //      (1u << info.shift_amount) / info.divisor + 1;
+    //  n *= magic_number;
+    //  const uint32_t comparison_mask = (1u << info.shift_amount) - 1;
+    //  bool result = (n & comparison_mask) < magic_number;
+    //  n >>= info.shift_amount;
+    //  return result;
+    //}
+    //
+    //// Computes floor(n / pow(10, N)) for small n and N.
+    //// Precondition: n <= pow(10, N + 1).
+    //template <int N> uint32_t small_division_by_pow10(uint32_t n) noexcept {
+    //  constexpr auto info = div_small_pow10_infos[N - 1];
+    //  FMT_ASSERT(n <= info.divisor * 10, "n is too large");
+    //  constexpr uint32_t magic_number =
+    //      (1u << info.shift_amount) / info.divisor + 1;
+    //  return (n * magic_number) >> info.shift_amount;
+    //}
+
+    //
+    //// Remove trailing zeros from n and return the number of zeros removed (float)
+    //FMT_INLINE int remove_trailing_zeros(uint32_t& n) noexcept {
+    //  FMT_ASSERT(n != 0, "");
+    //  // Modular inverse of 5 (mod 2^32): (mod_inv_5 * 5) mod 2^32 = 1.
+    //  // See https://github.com/fmtlib/fmt/issues/3163 for more details.
+    //  const uint32_t mod_inv_5 = 0xcccccccd;
+    //  // Casts are needed to workaround a bug in MSVC 19.22 and older.
+    //  const uint32_t mod_inv_25 =
+    //      static_cast<uint32_t>(uint64_t(mod_inv_5) * mod_inv_5);
+    //
+    //  int s = 0;
+    //  while (true) {
+    //    auto q = rotr(n * mod_inv_25, 2);
+    //    if (q > max_value<uint32_t>() / 100) break;
+    //    n = q;
+    //    s += 2;
+    //  }
+    //  auto q = rotr(n * mod_inv_5, 1);
+    //  if (q <= max_value<uint32_t>() / 10) {
+    //    n = q;
+    //    s |= 1;
+    //  }
+    //  return s;
+    //}
+    //
+    //// Removes trailing zeros and returns the number of zeros removed (double)
+    //FMT_INLINE int remove_trailing_zeros(uint64_t& n) noexcept {
+    //  FMT_ASSERT(n != 0, "");
+    //
+    //  // This magic number is ceil(2^90 / 10^8).
+    //  constexpr uint64_t magic_number = 12379400392853802749ull;
+    //  auto nm = umul128(n, magic_number);
+    //
+    //  // Is n is divisible by 10^8?
+    //  if ((nm.high() & ((1ull << (90 - 64)) - 1)) == 0 && nm.low() < magic_number) {
+    //    // If yes, work with the quotient.
+    //    auto n32 = static_cast<uint32_t>(nm.high() >> (90 - 64));
+    //
+    //    const uint32_t mod_inv_5 = 0xcccccccd;
+    //    const uint32_t mod_inv_25 = mod_inv_5 * mod_inv_5;
+    //
+    //    int s = 8;
+    //    while (true) {
+    //      auto q = rotr(n32 * mod_inv_25, 2);
+    //      if (q > max_value<uint32_t>() / 100) break;
+    //      n32 = q;
+    //      s += 2;
+    //    }
+    //    auto q = rotr(n32 * mod_inv_5, 1);
+    //    if (q <= max_value<uint32_t>() / 10) {
+    //      n32 = q;
+    //      s |= 1;
+    //    }
+    //
+    //    n = n32;
+    //    return s;
+    //  }
+    //
+    //  // If n is not divisible by 10^8, work with n itself.
+    //  const uint64_t mod_inv_5 = 0xcccccccccccccccd;
+    //  const uint64_t mod_inv_25 = mod_inv_5 * mod_inv_5;
+    //
+    //  int s = 0;
+    //  while (true) {
+    //    auto q = rotr(n * mod_inv_25, 2);
+    //    if (q > max_value<uint64_t>() / 100) break;
+    //    n = q;
+    //    s += 2;
+    //  }
+    //  auto q = rotr(n * mod_inv_5, 1);
+    //  if (q <= max_value<uint64_t>() / 10) {
+    //    n = q;
+    //    s |= 1;
+    //  }
+    //
+    //  return s;
+    //}
+    //
+    //// Computes floor(log10(pow(2, e))) for e in [-2620, 2620] using the method from
+    //// https://fmt.dev/papers/Dragonbox.pdf#page=28, section 6.1.
+    //inline int floor_log10_pow2(int e) noexcept {
+    //  FMT_ASSERT(e <= 2620 && e >= -2620, "too large exponent");
+    //  static_assert((-1 >> 1) == -1, "right shift is not arithmetic");
+    //  return (e * 315653) >> 20;
+    //}
+    //
+    //inline int floor_log2_pow10(int e) noexcept {
+    //  FMT_ASSERT(e <= 1233 && e >= -1233, "too large exponent");
+    //  return (e * 1741647) >> 19;
+    //}
+    //
+    //// Computes upper 64 bits of multiplication of two 64-bit unsigned integers.
+    //inline uint64_t umul128_upper64(uint64_t x, uint64_t y) noexcept {
+    //#if FMT_USE_INT128
+    //  auto p = static_cast<uint128_opt>(x) * static_cast<uint128_opt>(y);
+    //  return static_cast<uint64_t>(p >> 64);
+    //#elif defined(_MSC_VER) && defined(_M_X64)
+    //  return __umulh(x, y);
+    //#else
+    //  return umul128(x, y).high();
+    //#endif
+    //}
+    //template <typename T> constexpr auto num_bits() -> int {
+    //  return std::numeric_limits<T>::digits;
+    //}
+    //// std::numeric_limits<T>::digits may return 0 for 128-bit ints.
+    //template <> constexpr auto num_bits<int128_opt>() -> int { return 128; }
+    //template <> constexpr auto num_bits<uint128_t>() -> int { return 128; }
+    //
+    //// A heterogeneous bit_
+    //
+    //// Computes 128-bit result of multiplication of two 64-bit unsigned integers.
+    //inline uint128_fallback umul128(uint64_t x, uint64_t y) noexcept {
+    //#if FMT_USE_INT128
+    //  auto p = static_cast<uint128_opt>(x) * static_cast<uint128_opt>(y);
+    //  return {static_cast<uint64_t>(p >> 64), static_cast<uint64_t>(p)};
+    //#elif defined(_MSC_VER) && defined(_M_X64)
+    //  auto result = uint128_fallback();
+    //  result.lo_ = _umul128(x, y, &result.hi_);
+    //  return result;
+    //#else
+    //  const uint64_t mask = static_cast<uint64_t>(max_value<uint32_t>());
+    //
+    //  uint64_t a = x >> 32;
+    //  uint64_t b = x & mask;
+    //  uint64_t c = y >> 32;
+    //  uint64_t d = y & mask;
+    //
+    //  uint64_t ac = a * c;
+    //  uint64_t bc = b * c;
+    //  uint64_t ad = a * d;
+    //  uint64_t bd = b * d;
+    //
+    //  uint64_t intermediate = (bd >> 32) + (ad & mask) + (bc & mask);
+    //
+    //  return {ac + (intermediate >> 32) + (ad >> 32) + (bc >> 32),
+    //          (intermediate << 32) + (bd & mask)};
+    //#endif
+    //}
     namespace utf
     {
         inline constexpr const uint16_t k_lead_surrogate_min = 0xD800u;

@@ -170,7 +170,7 @@ FST_BEGIN_NAMESPACE
     class small_memory_pool
     {
       public:
-        static constexpr size_t minimum_alignment = 16;
+        static constexpr size_t minimum_alignment = __fst::default_alignment;
         static constexpr size_t minimum_alignment_bit_index = __fst::power_of_two_bit_index(minimum_alignment);
 
         static constexpr size_t maximum_alignment = 512;

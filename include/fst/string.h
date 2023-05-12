@@ -847,7 +847,7 @@ FST_BEGIN_NAMESPACE
 
         // private:
 
-        static constexpr size_t alignment = 16;
+        static constexpr size_t alignment = __fst::default_alignment;
 
         struct alignas(alignment) big
         {
@@ -1616,7 +1616,7 @@ FST_BEGIN_NAMESPACE
         }
         // private:
 
-        static constexpr size_t alignment = 16;
+        static constexpr size_t alignment = __fst::default_alignment;
 
         struct alignas(alignment) content
         {

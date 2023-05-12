@@ -98,7 +98,7 @@ FST_BEGIN_NAMESPACE
             using other = memory_zone_allocator<U, _MemoryCategory, _MemoryZone>;
         };
 
-        static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
+        static constexpr size_t alignment = __fst::default_alignof<T>;
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
         FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
@@ -180,7 +180,7 @@ FST_BEGIN_NAMESPACE
             using other = memory_zone_allocator<U,  _MemoryCategory, _MemoryZone>;
         };
 
-        static constexpr size_t alignment = 16 > alignof(T) ? 16 : alignof(T);
+        static constexpr size_t alignment = __fst::default_alignof<T>;
         static constexpr size_t max_count = static_cast<size_t>(-1) / sizeof(T);
 
         FST_NODISCARD inline constexpr T* address(T& t) const noexcept { return __fst::addressof(t); }
