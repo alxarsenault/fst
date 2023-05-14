@@ -147,6 +147,8 @@ FST_BEGIN_NAMESPACE
 
     using max_align_t = double; // most aligned type
 
+    using byte = uint8_t;
+
     struct placement_new_tag
     {};
 
@@ -182,201 +184,38 @@ FST_BEGIN_NAMESPACE
     }
 FST_END_NAMESPACE
 
+//
 #include "fst/detail/__assert.h"
+
+//
 #include "fst/detail/__container.h"
 
+//
 #include "fst/detail/__builtin_traits.h"
+
+//
 #include "fst/detail/__traits.h"
+
+//
 #include "fst/detail/__initializer_list.h"
 
+//
+#include "fst/detail/__alignment.h"
+
 FST_BEGIN_NAMESPACE
+    /// Endianness
+    struct little_endian_tag
+    {};
 
-    FST_INLINE_VAR constexpr size_t default_alignment = 16;
-    FST_INLINE_VAR constexpr size_t default_alignment_bit_index = 4;
-
-    FST_INLINE_VAR constexpr size_t default_vectorized_alignment = 32;
-    FST_INLINE_VAR constexpr size_t default_vectorized_bit_index = 5;
-    FST_INLINE_VAR constexpr size_t default_vectorized_size_threshold = 4096;
-
-    template <class _T>
-    FST_INLINE_VAR constexpr size_t default_alignof = alignof(_T) < __fst::default_alignment ? __fst::default_alignment : alignof(_T);
+    struct big_endian_tag
+    {};
 
     template <class _T>
-    FST_INLINE_VAR constexpr size_t default_vectorized_alignof = alignof(_T) < __fst::default_vectorized_alignment ? __fst::default_vectorized_alignment : alignof(_T);
+    struct is_endian_tag : __fst::bool_t<__fst::is_same_v<_T, little_endian_tag> || __fst::is_same_v<_T, big_endian_tag>>
+    {};
 
-    FST_ALWAYS_INLINE constexpr size_t clip_alignment(size_t alignment) noexcept
-    {
-        fst_assert(alignment && !(alignment & (alignment - 1)), "alignment must be a power of two");
-        if (alignment < default_alignment) { alignment = default_alignment; }
-        fst_assert(!(alignment & (sizeof(void*) - 1)), "alignment must be a multiple of sizeof(void*)");
-        return alignment;
-    }
-
-    FST_ALWAYS_INLINE constexpr size_t clip_vectorized_alignment(size_t alignment) noexcept
-    {
-        fst_assert(alignment && !(alignment & (alignment - 1)), "alignment must be a power of two");
-        if (alignment < default_vectorized_alignment) { alignment = default_vectorized_alignment; }
-        fst_assert(!(alignment & (sizeof(void*) - 1)), "alignment must be a multiple of sizeof(void*)");
-        return alignment;
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE bool is_aligned(const void* ptr, uintptr_t alignment) noexcept
-    {
-        return !(uintptr_t(ptr) & (alignment - 1));
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_aligned(uintptr_t addr, size_t alignment) noexcept
-    {
-        return !(addr & (alignment - 1));
-    }
-
-    ///
-    template <class T>
-    FST_NODISCARD FST_ALWAYS_INLINE bool is_type_aligned(const void* ptr) noexcept
-    {
-        return is_aligned(ptr, alignof(T));
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t align(uintptr_t ptr, size_t alignment) noexcept
-    {
-        return (ptr + (alignment - 1)) & ~(alignment - 1);
-    }
-
-    FST_NODISCARD FST_ALWAYS_INLINE char* align(char* ptr, size_t alignment) noexcept
-    {
-        return (char*) (align((uintptr_t) ptr, alignment));
-    }
-
-    FST_NODISCARD FST_ALWAYS_INLINE void* align(void* ptr, size_t alignment) noexcept
-    {
-        return (void*) (align((uintptr_t) ptr, alignment));
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE char* align_range(char* begin, char* end, size_t size, size_t alignment) noexcept
-    {
-        fst_assert(size_t(end - begin) >= size, "wrong size");
-
-        char* ptr = (char*) (align((uintptr_t) begin, alignment));
-        return ptr + size > end ? nullptr : ptr;
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE void* align_range(void* begin, void* end, size_t size, size_t alignment) noexcept
-    {
-        return align_range((char*) begin, (char*) end, size, alignment);
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE void* align_range(size_t alignment, size_t size, void*& ptr, size_t& avail_space) noexcept
-    {
-        fst_assert(avail_space >= size);
-
-        if (size_t offset = static_cast<size_t>(reinterpret_cast<uintptr_t>(ptr) & (alignment - 1)))
-        {
-            offset = alignment - offset;
-            if (avail_space < offset || avail_space - offset < size) { return nullptr; }
-
-            avail_space -= offset;
-            return ptr = static_cast<char*>(ptr) + offset;
-        }
-
-        return ptr = static_cast<char*>(ptr);
-    }
-
-    ///
-    FST_NODISCARD FST_ALWAYS_INLINE size_t required_aligned_size(size_t input_alignment, size_t size, size_t alignment, bool align_end) noexcept
-    {
-        const size_t sz = input_alignment >= alignment ? size : alignment - input_alignment + size;
-        return align_end ? align(sz, alignment) :sz;
-    }
-
-    FST_NODISCARD FST_ALWAYS_INLINE size_t required_aligned_size(size_t input_alignment, size_t size, size_t alignment, size_t count, bool align_end) noexcept
-    {
-        const size_t first = required_aligned_size(input_alignment, size, alignment, true);
-        const size_t asize = align(size, alignment) * count;
-        return align_end ? align(first + asize, alignment) : first + asize;
-    }
-
-    /*FST_NODISCARD void** allocate_audio_buffer(size_t channel_size, size_t buffer_size, size_t type_size) noexcept
-        {
-            fst_assert(buffer_size != 0 && channel_size != 0, "channel_size and buffer_size cannot be zero");
-            if (!buffer_size || !channel_size) { return nullptr; }
-
-            const size_t cache_size = __fst::mem_cache_size();
-
-            const size_t buffer_ptr_size = channel_size * sizeof(void*);
-            const size_t channel_buffer_size = buffer_size * type_size;
-
-            const size_t total_buffer_size = channel_size * channel_buffer_size + channel_size * (cache_size - 1);
-            const size_t total_size = buffer_ptr_size + total_buffer_size;
-
-            void* bytes = _MemoryZone::allocate(total_size, _MemoryCategory::id());
-
-            if (bytes == nullptr) { return nullptr; }
-
-            void** buffers = (void**) bytes;
-
-            void* raw_ptr = ((uint8_t*) bytes) + buffer_ptr_size;
-            const uint8_t* raw_ptr_end = static_cast<uint8_t*>(raw_ptr) + total_buffer_size;
-
-            size_t sp = total_buffer_size;
-
-            for (size_t i = 0; i < channel_size; i++)
-            {
-                void* channel_ptr = __fst::align_range(cache_size, channel_buffer_size, raw_ptr, sp);
-
-                fst_assert(channel_ptr != nullptr, "Can't align buffer with cache size.");
-
-                if (channel_ptr == nullptr)
-                {
-                    deallocate_audio_buffer(buffers);
-                    return nullptr;
-                }
-
-                buffers[i] = channel_ptr;
-
-                raw_ptr = static_cast<uint8_t*>(channel_ptr) + channel_buffer_size;
-                sp = (size_t)(raw_ptr_end - static_cast<uint8_t*>(static_cast<void*>(buffers[i])));
-            }
-
-            return buffers;
-        }*/
-    ///
-    FST_NODISCARD inline uint32_t get_alignment(const void* ptr) noexcept
-    {
-        const uintptr_t paddr = (uintptr_t) ptr;
-        uintptr_t exp = 64;
-        while (paddr & (exp - 1))
-        {
-            exp >>= 1;
-        }
-        return (uint32_t) exp;
-    }
-
-    /*template <class... Ts>
-    struct max_align_size_s;
-
-    template <class T>
-    struct max_align_size_s<T>
-    {
-        static constexpr size_t size = alignof(T);
-    };
-
-    template <class T, class... Ts>
-    struct max_align_size_s<T, Ts...>
-    {
-        static constexpr size_t size = __fst::maximum(alignof(T), max_align_size_s<Ts...>::size);
-    };
-
-    template <class... Ts>
-    FST_NODISCARD inline constexpr size_t max_align_size()
-    {
-        return max_align_size_s<Ts...>::size;
-    }*/
+    template <class _T>
+    FST_INLINE_VAR constexpr bool is_endian_tag_v = is_endian_tag<_T>::value;
 
     struct source_location
     {

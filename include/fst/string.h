@@ -441,7 +441,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
 
             for (size_type i = 0; i < count; i++)
             {
@@ -453,7 +455,7 @@ FST_BEGIN_NAMESPACE
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
 
             return *this;
@@ -482,7 +484,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
 
             __fst::memmove(new_data + _size, str, count * sizeof(value_type));
             new_data[new_size] = 0;
@@ -490,7 +494,7 @@ FST_BEGIN_NAMESPACE
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
 
             return *this;
@@ -598,14 +602,16 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             new_data[_size] = c;
             new_data[new_size] = 0;
 
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
         }
 
@@ -646,7 +652,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
             __fst::memfill(new_data + index, c, count);
             new_data[new_size] = 0;
@@ -654,7 +662,7 @@ FST_BEGIN_NAMESPACE
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
 
             return *this;
@@ -682,7 +690,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
             __fst::memmove(new_data + index, str.data(), count * sizeof(value_type));
             new_data[new_size] = 0;
@@ -690,7 +700,7 @@ FST_BEGIN_NAMESPACE
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
 
             return *this;
@@ -724,7 +734,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
             __fst::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
             new_data[new_size] = 0;
@@ -732,7 +744,7 @@ FST_BEGIN_NAMESPACE
             deallocate_if_big();
             big_data() = new_data;
             big_size() = new_size;
-            big_capacity() = new_size;
+            big_capacity() = new_capacity;
             set_big();
 
             return *this;
@@ -1213,7 +1225,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
 
             for (size_type i = 0; i < count; i++)
             {
@@ -1225,7 +1239,7 @@ FST_BEGIN_NAMESPACE
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
 
             return *this;
         }
@@ -1253,7 +1267,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
 
             __fst::memmove(new_data + _size, str, count * sizeof(value_type));
             new_data[new_size] = 0;
@@ -1261,7 +1277,7 @@ FST_BEGIN_NAMESPACE
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
 
             return *this;
         }
@@ -1377,14 +1393,16 @@ FST_BEGIN_NAMESPACE
                 return;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             new_data[_size] = c;
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
         }
 
         inline constexpr void pop_back() noexcept
@@ -1419,7 +1437,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
             __fst::memfill(new_data + index, c, count);
             new_data[new_size] = 0;
@@ -1427,7 +1447,7 @@ FST_BEGIN_NAMESPACE
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
 
             return *this;
         }
@@ -1454,7 +1474,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
             __fst::memmove(new_data + index, str.data(), count * sizeof(value_type));
             new_data[new_size] = 0;
@@ -1462,7 +1484,7 @@ FST_BEGIN_NAMESPACE
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
 
             return *this;
         }
@@ -1495,7 +1517,9 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            pointer new_data = grow_copy(new_size, _size, _data);
+            const size_type new_capacity = __fst::next_power_of_two(new_size);
+
+            pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + s_size), (const void*) (_data + index), delta * sizeof(value_type));
             __fst::memmove(new_data + index, str.data() + index_str, s_size * sizeof(value_type));
             new_data[new_size] = 0;
@@ -1503,7 +1527,7 @@ FST_BEGIN_NAMESPACE
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }
             _content.first().data = new_data;
             _content.first().size = new_size;
-            _content.first().capacity = new_size;
+            _content.first().capacity = new_capacity;
 
             return *this;
         }
@@ -1918,6 +1942,17 @@ FST_BEGIN_NAMESPACE
 #if FST_HAS_CHAR8_T
     using u8string = basic_string<char8_t, __fst::allocator<char8_t>>;
 #endif // FST_HAS_CHAR8_T
+
+    /// string_stream
+    template <class _CharT, class _Allocator = __fst::allocator<_CharT>>
+    inline __fst::output_stream<_CharT> string_stream(__fst::basic_string<_CharT, _Allocator> & s) noexcept
+    {
+        return __fst::output_stream<_CharT>{ &s, [](void* data, const char* str, size_t size, stream_modifier)
+            {
+                __fst::basic_string<_CharT, _Allocator>* str_ptr = (__fst::basic_string<_CharT, _Allocator>*) data;
+                str_ptr->append(str, size);
+            } };
+    }
 
 FST_END_NAMESPACE
 

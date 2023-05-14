@@ -28,7 +28,6 @@
 #include "fst/memory.h"
 #include "fst/string_view.h"
 #include "fst/tuple.h"
-
 #include "fst/utility.h"
 
 FST_BEGIN_NAMESPACE
@@ -37,22 +36,17 @@ FST_BEGIN_NAMESPACE
     {
         namespace stream_detail
         {
-            struct stream_space_t
-            {};
-            struct stream_endl_t
-            {};
-            struct tab_t
-            {};
-            struct dash_t
-            {};
-            struct comma_t
-            {};
-            struct equal_t
-            {};
-            struct sep_t
-            {};
-            struct sep_endl_t
-            {};
+            // clang-format off
+            struct stream_space_t {};
+            struct stream_endl_t {};
+            struct tab_t {};
+            struct dash_t {};
+            struct comma_t {};
+            struct equal_t {};
+            struct sep_t {};
+            struct sep_endl_t {};
+            struct empty_t {};
+            // clang-format on
 
             template <class _CharT, class _UIntT>
             inline _CharT* uint_to_buff(_CharT* ptr, _UIntT value)
@@ -199,42 +193,22 @@ FST_BEGIN_NAMESPACE
         normal
     };
 
-    template <class _T>
-    struct is_stream_modifier : __fst::false_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::term_color> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::stream_endl_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::stream_space_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::tab_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::comma_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::equal_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::sep_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::sep_endl_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::empty_t> : __fst::true_t
-    {};
-    template <>
-    struct is_stream_modifier<__fst::stream_detail::dash_t> : __fst::true_t
-    {};
+    // clang-format off
+    template <class _T> struct is_stream_modifier : __fst::false_t {};
+    template <> struct is_stream_modifier<__fst::term_color> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::stream_endl_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::stream_space_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::tab_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::comma_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::equal_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::sep_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::sep_endl_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::empty_t> : __fst::true_t {};
+    template <> struct is_stream_modifier<__fst::stream_detail::dash_t> : __fst::true_t {};
+    // clang-format on
 
     template <class _CharT>
-    class output_stream
+    class output_stream final
     {
       public:
         using write_fct = void (*)(void*, const _CharT*, size_t, stream_modifier);
@@ -258,7 +232,6 @@ FST_BEGIN_NAMESPACE
             else
                 write(f, 5, stream_modifier::normal);
 
-            //write(_Val ? t : f, (size_t) (5 - _Val, stream_modifier::normal));
             return *this;
         }
 
@@ -270,6 +243,7 @@ FST_BEGIN_NAMESPACE
             write(begin, size_t(&buffer[0] + 21 - &buffer[0]), stream_modifier::normal);
             return *this;
         }
+
         inline output_stream& operator<<(term_color c) noexcept
         {
             _CharT s[] = { '\033', '[', '0', '0', 'm' };
@@ -334,7 +308,7 @@ FST_BEGIN_NAMESPACE
             return *this;
         }
 
-        inline output_stream& operator<<(empty_t) noexcept { return *this; }
+        inline output_stream& operator<<(stream_detail::empty_t) noexcept { return *this; }
 
         inline output_stream& operator<<(const _CharT* str) noexcept
         {
@@ -403,7 +377,8 @@ FST_BEGIN_NAMESPACE
             {
                 if (value < 0)
                 {
-                    _CharT* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(0 - static_cast<__fst::make_unsigned_t<_T>>(value)));
+                    _CharT* begin
+                        = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(0 - static_cast<__fst::make_unsigned_t<_T>>(value)));
                     *--begin = (_CharT) '-';
                     write(begin, size_t(&buffer[0] + 21 - begin), stream_modifier::normal);
                 }
@@ -420,9 +395,7 @@ FST_BEGIN_NAMESPACE
         template <size_t I = 0, typename... _Ts>
         inline void print_tuple(const __fst::tuple<_Ts...>& t)
         {
-
             *this << t.template get<I>();
-
             if constexpr (I < sizeof...(_Ts) - 1) { print_tuple<I + 1, _Ts...>(*this << ", ", t); }
         }
 
@@ -459,7 +432,7 @@ FST_BEGIN_NAMESPACE
         }
     };
 
-    template <class _CharT>
+   /* template <class _CharT>
     class output_stream_imp
     {
       public:
@@ -487,7 +460,7 @@ FST_BEGIN_NAMESPACE
             }
             else { __fst::write_stdout(str, size); }
         }
-    };
+    };*/
 
     FST_INLINE_VAR output_stream<char> cout = { nullptr, [](void*, const char* str, size_t size, stream_modifier mod)
         {
@@ -777,5 +750,36 @@ FST_BEGIN_NAMESPACE
         FST_NAMESPACE::cout << __FUNCTION__ << ' '; \
     }                                               \
     FST_NAMESPACE::print(__VA_ARGS__)
+
+    template <class _CharT>
+    class output_stream_iterator
+    {
+      public:
+        using value_type = void;
+        using difference_type = ptrdiff_t;
+        using pointer = void;
+        using reference = void;
+        using char_type = _CharT;
+        using stream_type = __fst::output_stream<_CharT>;
+
+        inline output_stream_iterator(stream_type& stream) noexcept
+            : _stream(&stream)
+        {}
+
+        inline output_stream_iterator& operator=(const _CharT& _Val) noexcept
+        {
+            *_stream << _Val;
+            return *this;
+        }
+
+        FST_NODISCARD inline output_stream_iterator& operator*() noexcept { return *this; }
+
+        inline output_stream_iterator& operator++() noexcept { return *this; }
+
+        inline output_stream_iterator& operator++(int) noexcept { return *this; }
+
+      private:
+        __fst::output_stream<_CharT>* _stream;
+    };
 
 FST_END_NAMESPACE

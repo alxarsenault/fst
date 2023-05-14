@@ -84,12 +84,14 @@ FST_BEGIN_NAMESPACE
     // iterator_value_type
     template <class _T>
     using iterator_value_type = __fst::type_identity<typename __fst::iterator_traits<_T>::value_type>;
+    
     template <class _T>
     using iterator_value_type_t = typename __fst::iterator_value_type<_T>::type;
 
     // iterator_pointer_type
     template <class _T>
     using iterator_pointer_type = __fst::type_identity<typename __fst::iterator_traits<_T>::pointer>;
+    
     template <class _T>
     using iterator_pointer_type_t = typename __fst::iterator_pointer_type<_T>::type;
 
@@ -225,7 +227,7 @@ FST_BEGIN_NAMESPACE
 
     template <class _Container>
     class back_insert_iterator
-    { // wrap pushes to back of container as output iterator
+    {
       public:
         using iterator_category = output_iterator_tag;
         using value_type = void;
@@ -327,6 +329,7 @@ FST_BEGIN_NAMESPACE
         }
     }
 
+    ///
     template <class _IteratorType>
     class iterator
     {
@@ -403,6 +406,7 @@ FST_BEGIN_NAMESPACE
         iterator_type _it = nullptr;
     };
 
+    ///
     template <class _IndexIt, class _IteratorType>
     class index_iterator
     {
@@ -485,6 +489,30 @@ FST_BEGIN_NAMESPACE
         iterator_type _data = nullptr;
     };
 
+    ///
+    template <typename _Iterator>
+    class iterator_range
+    {
+        _Iterator _begin_iterator;
+        _Iterator _end_iterator;
+
+      public:
+        template <typename Container>
+        inline iterator_range(Container&& c) noexcept
+            : _begin_iterator(c.begin())
+            , _end_iterator(c.end())
+        {}
+
+        inline iterator_range(_Iterator begin_iterator, _Iterator end_iterator) noexcept
+            : _begin_iterator(__fst::move(begin_iterator))
+            , _end_iterator(__fst::move(end_iterator))
+        {}
+
+        inline _Iterator begin() const noexcept { return _begin_iterator; }
+        inline _Iterator end() const noexcept { return _end_iterator; }
+        inline bool empty() const noexcept { return _begin_iterator == _end_iterator; }
+    };
+
 FST_END_NAMESPACE
 
 template <typename T>
@@ -542,7 +570,8 @@ FST_NODISCARD inline __fst::iterator<Iterator> operator+(typename __fst::iterato
 }
 
 template <class _Iterator1, class _Iterator2>
-FST_NODISCARD inline typename __fst::iterator<_Iterator1>::difference_type operator-(const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
+FST_NODISCARD inline typename __fst::iterator<_Iterator1>::difference_type operator-(
+    const __fst::iterator<_Iterator1>& lhs, const __fst::iterator<_Iterator2>& rhs) noexcept
 {
     return lhs.base() - rhs.base();
 }

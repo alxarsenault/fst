@@ -8,6 +8,7 @@ namespace
     TEST_CASE("fst::memory", "[core]")
     {
         {
+            REQUIRE(fst::is_power_of_two(fst::platform_alignment));
             using vector_type = fst::vector<int>;
             vector_type vec;
             vec.resize(89);
@@ -17,7 +18,9 @@ namespace
             fst::array<int, 1024> buffer;
             fst::object_memory_pool<4, 4, fst::default_memory_category, fst::void_memory_zone> pool(
                 1024, fst::byte_range((uint8_t*) buffer.data(), buffer.size() * sizeof(int)));
+
             void* ptr = pool.aligned_allocate(4, 4);
+            fst::unused(ptr);
         }
         {
 

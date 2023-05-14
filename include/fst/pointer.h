@@ -27,14 +27,30 @@
 #include "fst/common.h"
 #include "fst/memory.h"
 #include "fst/traits.h"
+#include "fst/iterator.h"
 #include "fst/tuple.h"
 
 FST_BEGIN_NAMESPACE
+
 
     struct make_tag
     {};
 
     FST_INLINE_VAR constexpr make_tag make_t = {};
+
+    template <class _Iterator, __fst::enable_if_t<__fst::is_random_access_iterator<_Iterator>::value, int> = 0>
+    constexpr ptrdiff_t distance(_Iterator first, _Iterator last)
+    {
+        return last - first;
+    }
+
+    template <class _Iterator, __fst::enable_if_t<__fst::is_random_access_iterator<_Iterator>::value, int> = 0>
+    constexpr size_t pdistance(_Iterator first, _Iterator last)
+    {
+        ptrdiff_t diff = __fst::distance(first, last);
+        fst_assert(diff >= 0);
+        return static_cast<size_t>(diff);
+    }
 
 ///
 /// not_null

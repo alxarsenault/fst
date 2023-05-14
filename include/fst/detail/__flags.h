@@ -1,3 +1,6 @@
+///
+///
+///
 
 #define FST_DECLARE_ENUM_CLASS_OPERATORS(enum_class)                                                      \
     inline constexpr enum_class operator|(enum_class lhs, enum_class rhs) noexcept                        \

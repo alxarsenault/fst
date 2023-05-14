@@ -26,10 +26,53 @@
 
 #include "fst/common.h"
 #include "fst/iterator.h"
-
+#include "fst/pointer.h"
 #include "fst/utility.h"
 
+#include <string.h>
+#include <ctype.h>
+#include <wchar.h>
+
+#if __FST_MSVC__ && __FST_INTEL__
+#include <intrin.h>
+#endif
+
 FST_BEGIN_NAMESPACE
+
+    ///
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t strlen(const char* str) noexcept
+    {
+#if __FST_MSVC__ || __FST_CLANG__
+        return __builtin_strlen(str);
+#else
+        return ::strlen(str);
+#endif
+    }
+
+    ///
+    FST_NODISCARD FST_ALWAYS_INLINE int strncmp(const char* a, const char* b, size_t size) noexcept
+    {
+
+#if __FST_CLANG__
+        return __builtin_strncmp(a, b, size);
+#else
+        return ::strncmp(a, b, size);
+#endif
+    }
+
+    ///
+    FST_NODISCARD FST_ALWAYS_INLINE int strcmp(const char* a, const char* b) noexcept
+    {
+#if __FST_MSVC__ && __FST_INTEL__
+#pragma intrinsic(strcmp)
+#endif
+
+        return ::strcmp(a, b);
+
+#if __FST_MSVC__ && __FST_INTEL__
+#pragma function(strcmp)
+#endif
+    }
 
     template <typename _CharT>
     class basic_string_view;
@@ -416,17 +459,17 @@ FST_BEGIN_NAMESPACE
 
     namespace detail
     {
-        
-    FST_INLINE_VAR constexpr char digits_0_to_99[201] = { "00010203040506070809"
-                                                          "10111213141516171819"
-                                                          "20212223242526272829"
-                                                          "30313233343536373839"
-                                                          "40414243444546474849"
-                                                          "50515253545556575859"
-                                                          "60616263646566676869"
-                                                          "70717273747576777879"
-                                                          "80818283848586878889"
-                                                          "90919293949596979899" };
+
+        FST_INLINE_VAR constexpr char digits_0_to_99[201] = { "00010203040506070809"
+                                                              "10111213141516171819"
+                                                              "20212223242526272829"
+                                                              "30313233343536373839"
+                                                              "40414243444546474849"
+                                                              "50515253545556575859"
+                                                              "60616263646566676869"
+                                                              "70717273747576777879"
+                                                              "80818283848586878889"
+                                                              "90919293949596979899" };
 
         FST_INLINE_VAR constexpr uint16_t digits_to_99[100] = { //
             //  00,     01,     02,     03,     04,     05,     06,     07,     08,     09
@@ -442,13 +485,13 @@ FST_BEGIN_NAMESPACE
             //  90,     91,     92,     93,     94,     95,     96,     97,     98,     99
             0x3039, 0x3139, 0x3239, 0x3339, 0x3439, 0x3539, 0x3639, 0x3739, 0x3839, 0x3939
         };
-    }
+    } // namespace detail
 
     //FST_ALWAYS_INLINE void get_digit_pair(char* buffer, size_t index) noexcept
     //{
-        //*(uint16_t*) (buffer) = detail::digits_to_99[index];
+    //*(uint16_t*) (buffer) = detail::digits_to_99[index];
     //}
-    
+
     FST_ALWAYS_INLINE constexpr void get_digit_pair(char* buffer, size_t index) noexcept
     {
         const char* ptr = detail::digits_0_to_99 + index * 2;
@@ -1759,5 +1802,264 @@ FST_BEGIN_NAMESPACE
     template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container>, int> = 0>
     line_range(const _Container&) -> line_range<__fst::container_data_type_t<_Container>>;
     //
+//
+//    inline constexpr char distance_between_lower_and_upper_case() { return 'a' - 'A'; }
+//inline constexpr bool is_char(char c) { return c >= 0; }
+//inline constexpr bool is_null(char c) { return c == 0; }
+//inline constexpr bool is_space(char c) { return c == ' '; }
+//inline constexpr bool is_tab(char c) { return c == '\t'; }
+//inline constexpr bool is_space_or_tab(char c) { return is_space(c) || is_tab(c); }
+//inline constexpr bool is_digit(char c) { return c >= '0' && c <= '9'; }
+//inline constexpr bool is_letter(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
+//inline constexpr bool is_lower_case_letter(char c) { return c >= 'a' && c <= 'z'; }
+//inline constexpr bool is_upper_case_letter(char c) { return c >= 'A' && c <= 'Z'; }
+//inline constexpr bool is_alphanumeric(char c) { return is_digit(c) || is_letter(c); }
+//inline constexpr bool is_letter_or_underscore(char c) { return is_letter(c) || c == '_'; }
+//inline constexpr bool is_alphanumeric_or_underscore(char c) { return is_alphanumeric(c) || c == '_'; }
+//inline constexpr bool is_operator(char c) noexcept { return c == '<' || c == '>' || c == '='; }
+//inline constexpr bool is_dot(char c) noexcept { return c == '.'; }
+//inline constexpr bool is_logical_or(char c) noexcept { return c == '|'; }
+//inline constexpr bool is_hyphen(char c) noexcept { return c == '-'; }
+//inline constexpr bool is_hex(char c) { return is_digit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'); }
+//inline constexpr bool is_control(char c) { return (c >= 0 && c <= 31) || c == 127; }
+//inline constexpr bool is_end_of_line(char c) { return c == '\n' || c == '\r'; }
+//
+//constexpr inline unsigned char hex_to_char(char c) {
+//  if (is_digit(c)) {
+//    return c - '0';
+//  }
+//
+//  if (c >= 'a' && c <= 'f') {
+//    return 10 + c - 'a';
+//  }
+//
+//  if (c >= 'A' && c <= 'F') {
+//    return 10 + c - 'A';
+//  }
+//  return 0;
+//}
+//
+//inline constexpr bool is_special(char c) {
+//  // ! " # $ % & ' ( ) * + - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+//  return (c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+//}
+//
+//inline constexpr unsigned int to_digit(char c) { return c - '0'; }
+//
+//inline constexpr char to_upper_case(char c) {
+//  return is_lower_case_letter(c) ? (c - distance_between_lower_and_upper_case()) : c;
+//}
+//
+//inline constexpr char to_lower_case(char c) {
+//  return is_upper_case_letter(c) ? (c + distance_between_lower_and_upper_case()) : c;
+//}
+//
+//inline constexpr char to_lower(char c) noexcept { return to_lower_case(c); }
+//
+//inline constexpr char to_upper(char c) noexcept { return to_upper_case(c); }
+
+//
+//    std::string ltrim(const std::string& s) {
+//  std::string::size_type pos = s.find_first_not_of(" \n\t\r\v");
+//  return pos == std::string::npos ? std::string() : s.substr(pos);
+//}
+//
+//inline std::string_view ltrim(std::string_view s) {
+//  std::string_view::size_type pos = s.find_first_not_of(" \n\t\r\v");
+//  return pos == std::string_view::npos ? std::string_view() : s.substr(pos);
+//}
+//
+//std::string rtrim(const std::string& s) {
+//  std::string::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
+//  return pos == std::string::npos ? std::string() : s.substr(0, pos + 1);
+//}
+//
+//std::string_view rtrim(std::string_view s) {
+//  std::string_view::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
+//  return pos == std::string_view::npos ? std::string_view() : s.substr(0, pos + 1);
+//}
+//
+//std::string trim(const std::string& s) { return rtrim(ltrim(s)); }
+//
+//std::string_view trim(std::string_view s) { return rtrim(ltrim(s)); }
+    
+//inline constexpr bool is_upper_case(std::string_view s) {
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (fst::is_letter(s[i]) && !fst::is_upper_case_letter(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_lower_case(std::string_view s) {
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (fst::is_letter(s[i]) && !fst::is_lower_case_letter(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_alphanumeric(std::string_view s) {
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (!fst::is_alphanumeric(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_alphanumeric_with_spaces(std::string_view s) {
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (!(fst::is_alphanumeric(s[i]) || fst::is_space(s[i]))) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool has_leading_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s[0]); }
+//
+//inline constexpr bool has_trailing_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s.back()); }
+//
+//inline constexpr bool has_end_of_line(std::string_view s) {
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (fst::is_end_of_line(s[i])) {
+//      return true;
+//    }
+//  }
+//
+//  return false;
+//}
+//
+//inline constexpr std::string_view strip_leading_spaces(std::string_view s) {
+//  const std::size_t b = s.find_first_not_of(' ');
+//  if (b == std::string_view::npos) {
+//    return std::string_view();
+//  }
+//
+//  return s.substr(b);
+//}
+//
+//inline constexpr std::string_view strip_trailing_spaces(std::string_view s) {
+//  const std::size_t b = s.find_last_not_of(' ');
+//  if (b == std::string_view::npos) {
+//    return std::string_view();
+//  }
+//
+//  return s.substr(0, b + 1);
+//}
+//
+//inline constexpr std::string_view strip_leading_and_trailing_spaces(std::string_view s) {
+//  return strip_trailing_spaces(strip_leading_spaces(s));
+//}
+//
+//inline constexpr bool is_signed_integer(std::string_view s) {
+//  if (s.empty()) {
+//    return false;
+//  }
+//
+//  std::size_t start_index = 0;
+//
+//  if (s[0] == '-') {
+//    if (s.size() == 1) {
+//      return false;
+//    }
+//
+//    start_index = 1;
+//  }
+//
+//  for (std::size_t i = start_index; i < s.size(); i++) {
+//    if (!fst::is_digit(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_unsigned_integer(std::string_view s) {
+//  if (s.empty()) {
+//    return false;
+//  }
+//
+//  for (std::size_t i = 0; i < s.size(); i++) {
+//    if (!fst::is_digit(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_floating_point(std::string_view s) {
+//  if (s.empty()) {
+//    return false;
+//  }
+//
+//  std::size_t start_index = 0;
+//
+//  if (s[0] == '-') {
+//    if (s.size() == 1) {
+//      return false;
+//    }
+//
+//    start_index = 1;
+//  }
+//
+//  // Find point index.
+//  const std::size_t point_index = s.find_first_of('.');
+//
+//  if (point_index == std::string_view::npos) {
+//    for (std::size_t i = start_index; i < s.size(); i++) {
+//      if (!fst::is_digit(s[i])) {
+//        return false;
+//      }
+//    }
+//
+//    return true;
+//  }
+//
+//  // Point exist.
+//
+//  // Check if point is at the beginning or at the end.
+//  if ((start_index == point_index) || (point_index == s.size() - 1)) {
+//    return false;
+//  }
+//
+//  // Check left side.
+//  for (std::size_t i = start_index; i < point_index; i++) {
+//    if (!fst::is_digit(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  // Check right side.
+//  for (std::size_t i = point_index + 1; i < s.size(); i++) {
+//    if (!fst::is_digit(s[i])) {
+//      return false;
+//    }
+//  }
+//
+//  return true;
+//}
+//
+//inline constexpr bool is_convertible_to_signed_integer(std::string_view s) {
+//  return is_signed_integer(strip_leading_and_trailing_spaces(s));
+//}
+//
+//inline constexpr bool is_convertible_to_unsigned_integer(std::string_view s) {
+//  return is_unsigned_integer(strip_leading_and_trailing_spaces(s));
+//}
+//
+//inline constexpr bool is_convertible_to_floating_point(std::string_view s) {
+//  return is_floating_point(strip_leading_and_trailing_spaces(s));
+//}
+
 
 FST_END_NAMESPACE

@@ -1,0 +1,4164 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<tagfile doxygen_version="1.8.20" doxygen_gitid="f246dd2f1c58eea39ea3f50c108019e4d4137bd5">
+  <compound kind="file">
+    <name>memory.h</name>
+    <path>C:/Code/Alex/fst/include/fst/</path>
+    <filename>memory_8h.html</filename>
+    <includes id="memory__utils_8h" name="memory_utils.h" local="yes" imported="no">fst/memory_utils.h</includes>
+    <class kind="struct">memory::category_base</class>
+    <class kind="struct">memory::zone_base</class>
+    <class kind="struct">memory_category</class>
+    <class kind="struct">default_memory_category</class>
+    <class kind="struct">memory_zone_proxy</class>
+    <class kind="struct">is_memory_zone_proxy</class>
+    <class kind="struct">is_memory_zone_proxy&lt; fst::memory_zone_proxy &gt;</class>
+    <class kind="struct">is_memory_category</class>
+    <class kind="struct">is_memory_zone</class>
+    <class kind="struct">is_static_memory_zone</class>
+    <class kind="struct">memory_zone</class>
+    <class kind="struct">void_memory_zone</class>
+    <class kind="struct">default_memory_zone</class>
+    <class kind="struct">simd_memory_zone</class>
+    <class kind="struct">profiler_memory_zone</class>
+    <class kind="struct">pool_memory_zone</class>
+  </compound>
+  <compound kind="file">
+    <name>memory_utils.h</name>
+    <path>C:/Code/Alex/fst/include/fst/</path>
+    <filename>memory__utils_8h.html</filename>
+    <class kind="struct">max_align_size_s&lt; T &gt;</class>
+    <class kind="struct">max_align_size_s&lt; T, Ts... &gt;</class>
+    <member kind="function">
+      <type>constexpr _T *</type>
+      <name>assume_aligned</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a49a40d0c77be9b7c51c7f558309afbe6</anchor>
+      <arglist>(_T *ptr) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void *</type>
+      <name>align_range</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a2f9e3989ba1461572d3cfad755239bb5</anchor>
+      <arglist>(size_t alignment, size_t size, void *&amp;ptr, size_t &amp;avail_space) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>required_aligned_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a334e8e0335a97410f0fb38a4feda321c</anchor>
+      <arglist>(size_t input_alignment, size_t size, size_t alignment, bool align_end) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>required_aligned_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a5348a776bd78028bf7159df4a9ec4b39</anchor>
+      <arglist>(size_t input_alignment, size_t size, size_t alignment, size_t count, bool align_end) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>memcpy</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>afe5f28911119b24a0b88325553f505e8</anchor>
+      <arglist>(void *dst, const void *src, size_t size) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>memmove</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a92651d3c6c93b4b53534448ea1729b75</anchor>
+      <arglist>(void *dst, const void *src, size_t size) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>mem_cache_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a19b6d043f81b61ffb74be00a226e8104</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>mem_page_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a41fb6b6672e8aa57ddb1085836f07d43</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>mem_cache_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a19b6d043f81b61ffb74be00a226e8104</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>mem_page_size</name>
+      <anchorfile>memory__utils_8h.html</anchorfile>
+      <anchor>a41fb6b6672e8aa57ddb1085836f07d43</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>_Conditionally_enabled_hash</name>
+    <filename>struct___conditionally__enabled__hash.html</filename>
+    <templarg></templarg>
+    <templarg>_Enabled</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>_Conditionally_enabled_hash&lt; _Kty, false &gt;</name>
+    <filename>struct___conditionally__enabled__hash_3_01___kty_00_01false_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>_Refwrap_has_ctor_from</name>
+    <filename>struct___refwrap__has__ctor__from.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>_Refwrap_has_ctor_from&lt; _Ty, _Uty, fst::void_t&lt; decltype(_Refwrap_ctor_fun&lt; _Ty &gt;(fst::declval&lt; _Uty &gt;()))&gt; &gt;</name>
+    <filename>struct___refwrap__has__ctor__from_3_01___ty_00_01___uty_00_01fst_1_1void__t_3_01decltype_07___re29fa000ce9b0efae13ddb128a970522e.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_const</name>
+    <filename>structadd__const.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_lvalue_reference</name>
+    <filename>structadd__lvalue__reference.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_lvalue_reference&lt; _T, fst::void_t&lt; _T &amp; &gt; &gt;</name>
+    <filename>structadd__lvalue__reference_3_01___t_00_01fst_1_1void__t_3_01___t_01_6_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_pointer</name>
+    <filename>structadd__pointer.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_pointer&lt; _Ty, void_t&lt; fst::remove_reference_t&lt; _Ty &gt; * &gt; &gt;</name>
+    <filename>structadd__pointer_3_01___ty_00_01void__t_3_01fst_1_1remove__reference__t_3_01___ty_01_4_01_5_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_rvalue_reference</name>
+    <filename>structadd__rvalue__reference.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>add_rvalue_reference&lt; _T, fst::void_t&lt; _T &amp; &gt; &gt;</name>
+    <filename>structadd__rvalue__reference_3_01___t_00_01fst_1_1void__t_3_01___t_01_6_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>aiff_common_chunk</name>
+    <filename>structaiff__common__chunk.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>aiff_sound_data_chunk</name>
+    <filename>structaiff__sound__data__chunk.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>Alex</name>
+    <filename>class_alex.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>John</name>
+      <anchorfile>class_alex.html</anchorfile>
+      <anchor>a018f3b503a6706de56a3e13ac7979574</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>aligned_storage</name>
+    <filename>structaligned__storage.html</filename>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>aligned_type_storage</name>
+    <filename>structaligned__type__storage.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>allocator_proxy</name>
+    <filename>classallocator__proxy.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>are_same_decay</name>
+    <filename>structare__same__decay.html</filename>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R(_Args...)&gt;::argument</name>
+    <filename>structfunction__traits_3_01_r_07___args_8_8_8_08_4_1_1argument.html</filename>
+    <templarg>N</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits::argument</name>
+    <filename>structfunction__traits_1_1argument.html</filename>
+    <templarg>N</templarg>
+  </compound>
+  <compound kind="class">
+    <name>atomic</name>
+    <filename>classatomic.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type>T</type>
+      <name>operator++</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>a3a078de01506a70020b014c9594b6deb</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>T</type>
+      <name>operator--</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>a3039074315218de30e75c22e066ae6d9</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>compare_exchange</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>aec51cbfddc78343d15b9dc8ac9034915</anchor>
+      <arglist>(T &amp;expected_val, T new_val) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>store</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>a24fb28e442b5ae35f68e861d0db4bf52</anchor>
+      <arglist>(T new_val) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>T</type>
+      <name>load</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>af42c545b70400179a25a5f59b2c29df8</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>T</type>
+      <name>exchange</name>
+      <anchorfile>classatomic.html</anchorfile>
+      <anchor>aa6f5972131f094f5282edbcb49063192</anchor>
+      <arglist>(T new_val) noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>audio_buffer</name>
+    <filename>classaudio__buffer.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="function">
+      <type>size_type</type>
+      <name>channel_size</name>
+      <anchorfile>classaudio__buffer.html</anchorfile>
+      <anchor>a6f57f25954026678bbe04932fd7429f8</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>buffer_pointer</type>
+      <name>data</name>
+      <anchorfile>classaudio__buffer.html</anchorfile>
+      <anchor>a43c425779151e5145a27d7baa88f0572</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>channel_pointer</type>
+      <name>channel</name>
+      <anchorfile>classaudio__buffer.html</anchorfile>
+      <anchor>aedb158d1e0edc3b3b441e2068d9dde00</anchor>
+      <arglist>(size_type index) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>channel_pointer</type>
+      <name>operator[]</name>
+      <anchorfile>classaudio__buffer.html</anchorfile>
+      <anchor>af36c19414962844d769d44be185059f1</anchor>
+      <arglist>(size_type index) noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>audio_bus</name>
+    <filename>classaudio__bus.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter</name>
+    <filename>structdetail_1_1audio__format__converter.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, fst::is_floating_point&lt; DstType &gt;::value &amp;&amp;IsSigned&lt; SrcType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_2d9e00a38811d9e113036648fb749a17.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, fst::is_floating_point&lt; DstType &gt;::value &amp;&amp;IsUnsigned&lt; SrcType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_41dad80daf61737fc6d2deccb2477b1f.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, fst::is_floating_point&lt; SrcType &gt;::value &amp;&amp;IsSigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_37bedbd97729e12e0be9743437a31114.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, fst::is_floating_point&lt; SrcType &gt;::value &amp;&amp;IsUnsigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_fbc9e3dc7d55f165060ccc33e99fcf02.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, IsSigned&lt; SrcType &gt;::value &amp;&amp;IsSigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_122adabfadcd5e57c61f68ca65e1e20e.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, IsSigned&lt; SrcType &gt;::value &amp;&amp;IsUnsigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_c4d4aa0e5a8a4a81bec94983aed5284f.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, IsUnsigned&lt; SrcType &gt;::value &amp;&amp;IsSigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_5cc0cbe0ca8c832efcd604351d013b4f.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; SrcType, DstType, EnableIfDiff&lt; SrcType, DstType, IsUnsigned&lt; SrcType &gt;::value &amp;&amp;IsUnsigned&lt; DstType &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_src_type_00_01_dst_type_00_01_enable_if_diff_3_01_23ee85b6d70309c11bffc0752e6c6b19.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_converter&lt; T, T &gt;</name>
+    <filename>structdetail_1_1audio__format__converter_3_01_t_00_01_t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_data_type_base</name>
+    <filename>structdetail_1_1audio__format__data__type__base.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_data_type_base&lt; int24_t &gt;</name>
+    <filename>structdetail_1_1audio__format__data__type__base_3_01int24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_data_type_base&lt; uint24_t &gt;</name>
+    <filename>structdetail_1_1audio__format__data__type__base_3_01uint24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_range</name>
+    <filename>structdetail_1_1audio__format__range.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_range&lt; int24_t &gt;</name>
+    <filename>structdetail_1_1audio__format__range_3_01int24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_range&lt; T, fst::enable_if_t&lt; fst::is_floating_point&lt; T &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1audio__format__range_3_01_t_00_01fst_1_1enable__if__t_3_01fst_1_1is__floating__p352595d186a03e1e46dafeb5de8f16c0.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::audio_format_range&lt; uint24_t &gt;</name>
+    <filename>structdetail_1_1audio__format__range_3_01uint24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type</name>
+    <filename>structaudio__format__to__type.html</filename>
+    <templarg>Type</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::ieee_32 &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1ieee__32_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::ieee_32_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1ieee__32__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::ieee_64 &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1ieee__64_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::ieee_64_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1ieee__64__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_16s &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__16s_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_16s_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__16s__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_16u &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__16u_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_16u_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__16u__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_24s &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__24s_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_24s_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__24s__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_24u &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__24u_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_24u_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__24u__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_32s &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__32s_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_32s_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__32s__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_32u &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__32u_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_32u_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__32u__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_8s &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__8s_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_8s_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__8s__be_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_8u &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__8u_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>audio_format_to_type&lt; audio_format_type::pcm_8u_be &gt;</name>
+    <filename>structaudio__format__to__type_3_01audio__format__type_1_1pcm__8u__be_01_4.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>back_insert_iterator</name>
+    <filename>classback__insert__iterator.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::base_iterator</name>
+    <filename>structdetail_1_1base__iterator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::base_iterator&lt; InputCharT, OutputCharT, fst::enable_if_t&lt; fst::utf_encoding_of&lt; InputCharT &gt;::value !=utf_encoding_of&lt; OutputCharT &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1base__iterator_3_01_input_char_t_00_01_output_char_t_00_01fst_1_1enable__if__t_39169afc4525da3a622726043e38ac4e0.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::base_iterator&lt; InputCharT, OutputCharT, fst::enable_if_t&lt; fst::utf_encoding_of&lt; InputCharT &gt;::value==fst::utf_encoding_of&lt; OutputCharT &gt;::value &gt; &gt;</name>
+    <filename>structdetail_1_1base__iterator_3_01_input_char_t_00_01_output_char_t_00_01fst_1_1enable__if__t_3178db356348aa3493a60fdcad748a9af.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::basic_array</name>
+    <filename>structdetail_1_1basic__array.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::basic_array&lt; _T, fst::dynamic_size, _Alignment &gt;</name>
+    <filename>structdetail_1_1basic__array_3_01___t_00_01fst_1_1dynamic__size_00_01___alignment_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="class">
+    <name>detail::basic_array_range</name>
+    <filename>classdetail_1_1basic__array__range.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="class">
+    <name>detail::basic_array_range&lt; _T, fst::dynamic_size, _Alignment &gt;</name>
+    <filename>classdetail_1_1basic__array__range_3_01___t_00_01fst_1_1dynamic__size_00_01___alignment_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="class">
+    <name>detail::basic_heap_array</name>
+    <filename>classdetail_1_1basic__heap__array.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>detail::basic_heap_array&lt; _T, fst::dynamic_size, _Alignment, _MemoryZone, _MemoryCategory &gt;</name>
+    <filename>classdetail_1_1basic__heap__array_3_01___t_00_01fst_1_1dynamic__size_00_01___alignment_00_01___m5cf191750e7dc2c683be895211a21bc5.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>basic_iterator</name>
+    <filename>classbasic__iterator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>basic_small_string</name>
+    <filename>classbasic__small__string.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+  </compound>
+  <compound kind="class">
+    <name>basic_string</name>
+    <filename>classbasic__string.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <class kind="struct">basic_string::big</class>
+  </compound>
+  <compound kind="class">
+    <name>basic_string&lt; _CharT, _Allocator, fst::enable_if_t&lt;(sizeof(_CharT) &gt; sizeof(char))&gt; &gt;</name>
+    <filename>classbasic__string_3_01___char_t_00_01___allocator_00_01fst_1_1enable__if__t_3_07sizeof_07___chae5677d9794b21f1361ccf26fe12d1c7c.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <class kind="struct">basic_string&lt; _CharT, _Allocator, fst::enable_if_t&lt;(sizeof(_CharT) &gt; sizeof(char))&gt; &gt;::content</class>
+  </compound>
+  <compound kind="class">
+    <name>basic_string_view</name>
+    <filename>classbasic__string__view.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_attribute</name>
+    <filename>classbasic__xml__attribute.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>basic_xml_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a6d01d4532b0f83e39ec0c847e10d140c</anchor>
+      <arglist>() noexcept=default</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_attribute&lt; Ch &gt; *</type>
+      <name>previous_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a6ed5c90170f7a83ea1a0686fbf56272f</anchor>
+      <arglist>(const Ch *name=0, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_attribute&lt; Ch &gt; *</type>
+      <name>next_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a30ae22d32e2e20bab2a83012932e6c34</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_attribute&lt; char_type &gt;</name>
+    <filename>classbasic__xml__attribute.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>basic_xml_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a6d01d4532b0f83e39ec0c847e10d140c</anchor>
+      <arglist>() noexcept=default</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_attribute&lt; char_type &gt; *</type>
+      <name>previous_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a6ed5c90170f7a83ea1a0686fbf56272f</anchor>
+      <arglist>(const char_type *name=0, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_attribute&lt; char_type &gt; *</type>
+      <name>next_attribute</name>
+      <anchorfile>classbasic__xml__attribute.html</anchorfile>
+      <anchor>a30ae22d32e2e20bab2a83012932e6c34</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_base</name>
+    <filename>classbasic__xml__base.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type>view_type</type>
+      <name>name</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>ac2d00fde03811b2003b27a9bd9e2229e</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>name_size</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a8db5d49ace66e83cfcf4ba375b2b8cc6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>view_type</type>
+      <name>value</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a20d1cfb9e7d139c81d0110dc24ffe668</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>value_size</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>ab176b63eb4f29390998fb75bcb5f75ab</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>name</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a31eef840a61a496eeba5c4b3d1b40a90</anchor>
+      <arglist>(const char_type *name, size_t size) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>name</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a35c4de89eb05e911ba0812cf4bbee680</anchor>
+      <arglist>(const char_type *name) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>value</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a3c0749da9d375370d280b6b378254bfb</anchor>
+      <arglist>(const char_type *value, size_t size) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>value</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>a34d9218304fb140c5f3124afdea8ef32</anchor>
+      <arglist>(const char_type *value) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_node&lt; char_type &gt; *</type>
+      <name>parent</name>
+      <anchorfile>classbasic__xml__base.html</anchorfile>
+      <anchor>ad7edc81ff7340b3b1cb7c999b614d353</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_document</name>
+    <filename>classbasic__xml__document.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>basic_xml_document</name>
+      <anchorfile>classbasic__xml__document.html</anchorfile>
+      <anchor>a708ce665448a86adc19d1e81a622a2c0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::error_result</type>
+      <name>parse</name>
+      <anchorfile>classbasic__xml__document.html</anchorfile>
+      <anchor>a186d4c4f05930bb0993011bdddcbc8e7</anchor>
+      <arglist>(const Ch *text)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classbasic__xml__document.html</anchorfile>
+      <anchor>a37c0e952c27ebe7574cc86c477a98275</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_node</name>
+    <filename>classbasic__xml__node.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>basic_xml_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>aaea1938b7df58a6438311aac4ae75dc9</anchor>
+      <arglist>(node_type type) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_type</type>
+      <name>type</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a06b2ba3f026cfeabef0757eb6ce1ef34</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>first_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ade9684d49ae5bb1d410d90bbdaacc461</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>last_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a93389b568b04cf08dd8335dee02c53d7</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>previous_sibling</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a7bbcf09fb817ad2ff7d91c16ba495100</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>next_sibling</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ab36d8a304116bf8f2265a3d3d33f4216</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>attribute_pointer</type>
+      <name>first_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a00d088482575994463a0dc9be317d620</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>attribute_pointer</type>
+      <name>last_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a83a5e58954b04bcf8b40bbd0acd2fc07</anchor>
+      <arglist>(const Ch *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>type</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>af62b8580d3b25ba304a7b9ac03dced15</anchor>
+      <arglist>(node_type type) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepend_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a0d685dcfe36e528ae4d953a602e31aab</anchor>
+      <arglist>(node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>append_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ac7ff71dff001ca77e6df63a82b3e2e39</anchor>
+      <arglist>(node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>insert_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>aceb94a3d6d6c8bf02548701283a7baf8</anchor>
+      <arglist>(node_pointer where, node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_first_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a1016a09040bcb47f4cf33f61ca96184d</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_last_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a7ce45740058421f99694145f1ef7b7d8</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a2ba3da7fbeca2822942814cde89c51f4</anchor>
+      <arglist>(node_pointer where) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_all_nodes</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a0c12ede2f2bd24c51226af1d018b8bcb</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepend_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>abae8f642964a1ff88e798a127b7bdf02</anchor>
+      <arglist>(attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>append_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a3928345a2811b77c1c1d69122cd29af7</anchor>
+      <arglist>(attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>insert_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ad3bafb23daa47cbc7dfb6bd85a760360</anchor>
+      <arglist>(attribute_pointer where, attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_first_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a07c6d2463b8adfb1b28e93ab8747b745</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_last_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a9f6614f88194fef3f23e79dc5d5dd1df</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a5bc0bc2b63e40e496f92570a0d465213</anchor>
+      <arglist>(attribute_pointer where) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_all_attributes</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ac18713e893afaca1aadbb70576664f73</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>basic_xml_node&lt; char_type &gt;</name>
+    <filename>classbasic__xml__node.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>basic_xml_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>aaea1938b7df58a6438311aac4ae75dc9</anchor>
+      <arglist>(node_type type) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_type</type>
+      <name>type</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a06b2ba3f026cfeabef0757eb6ce1ef34</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>type</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>af62b8580d3b25ba304a7b9ac03dced15</anchor>
+      <arglist>(node_type type) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>first_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ade9684d49ae5bb1d410d90bbdaacc461</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>last_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a93389b568b04cf08dd8335dee02c53d7</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>previous_sibling</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a7bbcf09fb817ad2ff7d91c16ba495100</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>node_pointer</type>
+      <name>next_sibling</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ab36d8a304116bf8f2265a3d3d33f4216</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>attribute_pointer</type>
+      <name>first_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a00d088482575994463a0dc9be317d620</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>attribute_pointer</type>
+      <name>last_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a83a5e58954b04bcf8b40bbd0acd2fc07</anchor>
+      <arglist>(const char_type *name, size_t name_size=0) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepend_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a0d685dcfe36e528ae4d953a602e31aab</anchor>
+      <arglist>(node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>append_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ac7ff71dff001ca77e6df63a82b3e2e39</anchor>
+      <arglist>(node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>insert_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>aceb94a3d6d6c8bf02548701283a7baf8</anchor>
+      <arglist>(node_pointer where, node_pointer child) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_first_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a1016a09040bcb47f4cf33f61ca96184d</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_last_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a7ce45740058421f99694145f1ef7b7d8</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_node</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a2ba3da7fbeca2822942814cde89c51f4</anchor>
+      <arglist>(node_pointer where) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_all_nodes</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a0c12ede2f2bd24c51226af1d018b8bcb</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepend_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>abae8f642964a1ff88e798a127b7bdf02</anchor>
+      <arglist>(attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>append_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a3928345a2811b77c1c1d69122cd29af7</anchor>
+      <arglist>(attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>insert_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ad3bafb23daa47cbc7dfb6bd85a760360</anchor>
+      <arglist>(attribute_pointer where, attribute_pointer attribute) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_first_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a07c6d2463b8adfb1b28e93ab8747b745</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_last_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a9f6614f88194fef3f23e79dc5d5dd1df</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_attribute</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>a5bc0bc2b63e40e496f92570a0d465213</anchor>
+      <arglist>(attribute_pointer where) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>remove_all_attributes</name>
+      <anchorfile>classbasic__xml__node.html</anchorfile>
+      <anchor>ac18713e893afaca1aadbb70576664f73</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>bidirectional_iterator_tag</name>
+    <filename>structbidirectional__iterator__tag.html</filename>
+    <base>forward_iterator_tag</base>
+  </compound>
+  <compound kind="struct">
+    <name>basic_string::big</name>
+    <filename>structbasic__string_1_1big.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>big_endian_tag</name>
+    <filename>structbig__endian__tag.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>bitpack</name>
+    <filename>classbitpack.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>bitpack_t</name>
+    <filename>structbitpack__t.html</filename>
+    <templarg></templarg>
+    <templarg>_Len</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>memory::category_base</name>
+    <filename>structmemory_1_1category__base.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>char_traits</name>
+    <filename>structchar__traits.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>char_traits&lt; char16_t &gt;</name>
+    <filename>structchar__traits_3_01char16__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>char_traits&lt; char32_t &gt;</name>
+    <filename>structchar__traits_3_01char32__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>char_traits&lt; wchar_t &gt;</name>
+    <filename>structchar__traits_3_01wchar__t_01_4.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>color</name>
+    <filename>classcolor.html</filename>
+    <class kind="struct">color::float_grey_alpha</class>
+    <class kind="struct">color::float_rgb</class>
+    <class kind="struct">color::float_rgba</class>
+    <member kind="function">
+      <type>constexpr color</type>
+      <name>operator*</name>
+      <anchorfile>classcolor.html</anchorfile>
+      <anchor>a59b667d13c8b636b5043f0abd80e2917</anchor>
+      <arglist>(float mu) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>common_type</name>
+    <filename>structcommon__type.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>common_type&lt; common_type_t&lt; T1, T2 &gt;, R... &gt;</name>
+    <filename>structcommon__type.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>common_type&lt; T &gt;</name>
+    <filename>structcommon__type_3_01_t_01_4.html</filename>
+    <templarg></templarg>
+    <base>common_type&lt; T, T &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>common_type&lt; T, T &gt;</name>
+    <filename>structcommon__type.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>common_type&lt; T1, T2 &gt;</name>
+    <filename>structcommon__type_3_01_t1_00_01_t2_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>common_type&lt; T1, T2, R... &gt;</name>
+    <filename>structcommon__type_3_01_t1_00_01_t2_00_01_r_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>R</templarg>
+    <base>common_type_multi_impl&lt; void, T1, T2, R... &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::common_type_2_impl</name>
+    <filename>structdetail_1_1common__type__2__impl.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <base>decay_conditional_result</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::common_type_2_impl&lt; T1, T2, void_cond_res&lt; T1, T2 &gt; &gt;</name>
+    <filename>structdetail_1_1common__type__2__impl_3_01_t1_00_01_t2_00_01void__cond__res_3_01_t1_00_01_t2_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <base>decay_conditional_result</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::common_type_multi_impl</name>
+    <filename>structdetail_1_1common__type__multi__impl.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>R</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::common_type_multi_impl&lt; fst::void_t&lt; common_type_t&lt; T1, T2 &gt; &gt;, T1, T2, R... &gt;</name>
+    <filename>structdetail_1_1common__type__multi__impl_3_01fst_1_1void__t_3_01common__type__t_3_01_t1_00_01_t923081ecd4d0d2ea3c03e7643e09e208.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>R</templarg>
+    <base>common_type&lt; common_type_t&lt; T1, T2 &gt;, R... &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>common_type_multi_impl&lt; void, T1, T2, R... &gt;</name>
+    <filename>structdetail_1_1common__type__multi__impl.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>conditional</name>
+    <filename>structconditional.html</filename>
+    <templarg>_Test</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="variable">
+      <type>typedef</type>
+      <name>type</name>
+      <anchorfile>structconditional.html</anchorfile>
+      <anchor>afb9fc6572c16c9ac127163b06c707bc3</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>detail::conjunction</name>
+    <filename>structdetail_1_1conjunction.html</filename>
+    <templarg>_Value</templarg>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>conjunction</name>
+    <filename>structconjunction.html</filename>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>conjunction&lt; _T, _Ts... &gt;</name>
+    <filename>structconjunction_3_01___t_00_01___ts_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::conjunction&lt; true, _True, _T, _Ts... &gt;</name>
+    <filename>structdetail_1_1conjunction_3_01true_00_01___true_00_01___t_00_01___ts_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>container_iterator_type</name>
+    <filename>structcontainer__iterator__type.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>container_iterator_type&lt; _Container, fst::enable_if_t&lt; fst::is_iterable_v&lt; _Container &gt; &gt; &gt;</name>
+    <filename>structcontainer__iterator__type_3_01___container_00_01fst_1_1enable__if__t_3_01fst_1_1is__iterab087850d0e121d237c4e784736bda1c02.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>basic_string&lt; _CharT, _Allocator, fst::enable_if_t&lt;(sizeof(_CharT) &gt; sizeof(char))&gt; &gt;::content</name>
+    <filename>structbasic__string_3_01___char_t_00_01___allocator_00_01fst_1_1enable__if__t_3_07sizeof_07___chd4b46d796638124c0c21508fb839cf2f.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>contiguous_iterator_tag</name>
+    <filename>structcontiguous__iterator__tag.html</filename>
+    <base>random_access_iterator_tag</base>
+  </compound>
+  <compound kind="struct">
+    <name>debug</name>
+    <filename>structdebug.html</filename>
+    <templarg>_Flags</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>decay</name>
+    <filename>structdecay.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>decay_conditional_result</name>
+    <filename>structdecay__conditional__result.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>decay_conditional_result&lt; T1, T2, fst::void_t&lt; conditional_result_t&lt; T1, T2 &gt; &gt; &gt;</name>
+    <filename>structdecay__conditional__result_3_01_t1_00_01_t2_00_01fst_1_1void__t_3_01conditional__result__t756b7ddcb4d6deab4da9a01d033d9987.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>default_construct_t</name>
+    <filename>structdefault__construct__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>default_memory_category</name>
+    <filename>structdefault__memory__category.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>default_memory_zone</name>
+    <filename>structdefault__memory__zone.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>window::delegate</name>
+    <filename>classwindow_1_1delegate.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::disjunction</name>
+    <filename>structdetail_1_1disjunction.html</filename>
+    <templarg>_Value</templarg>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>disjunction</name>
+    <filename>structdisjunction.html</filename>
+    <templarg>_Traits</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>disjunction&lt; _T, _Ts... &gt;</name>
+    <filename>structdisjunction_3_01___t_00_01___ts_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::disjunction&lt; false, _False, _T, _Ts... &gt;</name>
+    <filename>structdetail_1_1disjunction_3_01false_00_01___false_00_01___t_00_01___ts_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>drop_first</name>
+    <filename>structdrop__first.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>drop_first&lt; fst::type_list&lt; T, _Args... &gt; &gt;</name>
+    <filename>structdrop__first_3_01fst_1_1type__list_3_01_t_00_01___args_8_8_8_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>drop_first&lt; T, _Args... &gt;</name>
+    <filename>structdrop__first_3_01_t_00_01___args_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::drop_first_n_imp</name>
+    <filename>structvargs__detail_1_1drop__first__n__imp.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::drop_first_n_imp&lt; N, I, K, Args... &gt;</name>
+    <filename>structvargs__detail_1_1drop__first__n__imp_3_01_n_00_01_i_00_01_k_00_01_args_8_8_8_01_4.html</filename>
+    <templarg>N</templarg>
+    <templarg>I</templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>empty_t</name>
+    <filename>structempty__t.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>enable_if</name>
+    <filename>structenable__if.html</filename>
+    <templarg>_Test</templarg>
+    <templarg></templarg>
+    <member kind="variable">
+      <type>typedef</type>
+      <name>type</name>
+      <anchorfile>structenable__if.html</anchorfile>
+      <anchor>a750424eff087d0adea7fba09d3a55cb5</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>error_result</name>
+    <filename>structerror__result.html</filename>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>operator bool</name>
+      <anchorfile>structerror__result.html</anchorfile>
+      <anchor>aec92c101c433db2bbfb331e929cfbe46</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>extent</name>
+    <filename>structextent.html</filename>
+    <templarg></templarg>
+    <templarg>_Ix</templarg>
+  </compound>
+  <compound kind="class">
+    <name>file</name>
+    <filename>classfile.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>file_view</name>
+    <filename>classfile__view.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>final_action</name>
+    <filename>classfinal__action.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>color::float_grey_alpha</name>
+    <filename>structcolor_1_1float__grey__alpha.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>color::float_rgb</name>
+    <filename>structcolor_1_1float__rgb.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>color::float_rgba</name>
+    <filename>structcolor_1_1float__rgba.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>forward_iterator_tag</name>
+    <filename>structforward__iterator__tag.html</filename>
+    <base>input_iterator_tag</base>
+  </compound>
+  <compound kind="struct">
+    <name>fspace_padding</name>
+    <filename>structfspace__padding.html</filename>
+    <templarg>_Size</templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>fspace_padding_right</name>
+    <filename>structfspace__padding__right.html</filename>
+    <templarg>_Size</templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits</name>
+    <filename>structdetail_1_1ftraits.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; F &amp; &gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_f_01_6_01_4.html</filename>
+    <templarg></templarg>
+    <base>detail::ftraits</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; F &amp;&amp; &gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_f_01_6_6_01_4.html</filename>
+    <templarg></templarg>
+    <base>detail::ftraits</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R C::* &gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_01_c_1_1_5_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <base>ftraits&lt; R(C &amp;)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(*)(_Args...)&gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07_5_08_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>detail::ftraits&lt; R(_Args...)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(_Args...)&gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <class kind="struct">detail::ftraits&lt; R(_Args...)&gt;::function_base</class>
+    <class kind="struct">detail::ftraits&lt; R(_Args...)&gt;::vfunction</class>
+    <class kind="struct">detail::ftraits&lt; R(_Args...)&gt;::vfunction&lt; _FctChild, fst::enable_if_t&lt; fst::is_member_function_pointer_v&lt; _FctChild &gt; &gt; &gt;</class>
+    <class kind="struct">detail::ftraits&lt; R(_Args...)&gt;::vfunction_base</class>
+  </compound>
+  <compound kind="class">
+    <name>ftraits&lt; R(C &amp;)&gt;</name>
+    <filename>structdetail_1_1ftraits.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>ftraits&lt; R(C &amp;, _Args...)&gt;</name>
+    <filename>structdetail_1_1ftraits.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(C::*)(_Args...) const &gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07_c_1_1_5_08_07___args_8_8_8_08_01const_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>ftraits&lt; R(C &amp;, _Args...)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(C::*)(_Args...)&gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07_c_1_1_5_08_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>ftraits&lt; R(C &amp;, _Args...)&gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>function</name>
+    <filename>classfunction.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_args</name>
+    <filename>structfunction__args.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_args&lt; Ret(*)(Args...)&gt;</name>
+    <filename>structfunction__args_3_01_ret_07_5_08_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_args&lt; Ret(Args...)&gt;</name>
+    <filename>structfunction__args_3_01_ret_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_args&lt; Ret(T::*)(Args...) const &gt;</name>
+    <filename>structfunction__args_3_01_ret_07_t_1_1_5_08_07_args_8_8_8_08_01const_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_args&lt; Ret(T::*)(Args...)&gt;</name>
+    <filename>structfunction__args_3_01_ret_07_t_1_1_5_08_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(_Args...)&gt;::function_base</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07___args_8_8_8_08_4_1_1function__base.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>function_return</name>
+    <filename>structfunction__return.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_return&lt; Ret(*)(Args...)&gt;</name>
+    <filename>structfunction__return_3_01_ret_07_5_08_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_return&lt; Ret(Args...)&gt;</name>
+    <filename>structfunction__return_3_01_ret_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_return&lt; Ret(T::*)(Args...) const &gt;</name>
+    <filename>structfunction__return_3_01_ret_07_t_1_1_5_08_07_args_8_8_8_08_01const_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_return&lt; Ret(T::*)(Args...)&gt;</name>
+    <filename>structfunction__return_3_01_ret_07_t_1_1_5_08_07_args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits</name>
+    <filename>structfunction__traits.html</filename>
+    <templarg></templarg>
+    <class kind="struct">function_traits::argument</class>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; F &amp; &gt;</name>
+    <filename>structfunction__traits_3_01_f_01_6_01_4.html</filename>
+    <templarg></templarg>
+    <base>function_traits</base>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; F &amp;&amp; &gt;</name>
+    <filename>structfunction__traits_3_01_f_01_6_6_01_4.html</filename>
+    <templarg></templarg>
+    <base>function_traits</base>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R C::* &gt;</name>
+    <filename>structfunction__traits_3_01_r_01_c_1_1_5_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <base>function_traits&lt; R(C &amp;)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R(*)(_Args...)&gt;</name>
+    <filename>structfunction__traits_3_01_r_07_5_08_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>function_traits&lt; R(_Args...)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R(_Args...)&gt;</name>
+    <filename>structfunction__traits_3_01_r_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <class kind="struct">function_traits&lt; R(_Args...)&gt;::argument</class>
+  </compound>
+  <compound kind="class">
+    <name>function_traits&lt; R(C &amp;)&gt;</name>
+    <filename>structfunction__traits.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>function_traits&lt; R(C &amp;, _Args...)&gt;</name>
+    <filename>structfunction__traits.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R(C::*)(_Args...) const &gt;</name>
+    <filename>structfunction__traits_3_01_r_07_c_1_1_5_08_07___args_8_8_8_08_01const_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>function_traits&lt; R(C &amp;, _Args...)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>function_traits&lt; R(C::*)(_Args...)&gt;</name>
+    <filename>structfunction__traits_3_01_r_07_c_1_1_5_08_07___args_8_8_8_08_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>function_traits&lt; R(C &amp;, _Args...)&gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::get_type_at_index_imp</name>
+    <filename>structvargs__detail_1_1get__type__at__index__imp.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::get_type_at_index_imp&lt; N, I &gt;</name>
+    <filename>structvargs__detail_1_1get__type__at__index__imp_3_01_n_00_01_i_01_4.html</filename>
+    <templarg>N</templarg>
+    <templarg>I</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::get_type_at_index_imp&lt; N, I, T, Args... &gt;</name>
+    <filename>structvargs__detail_1_1get__type__at__index__imp_3_01_n_00_01_i_00_01_t_00_01_args_8_8_8_01_4.html</filename>
+    <templarg>N</templarg>
+    <templarg>I</templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::has_global_stream_operator</name>
+    <filename>structdetail_1_1has__global__stream__operator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::has_global_stream_operator&lt; _Stream, decltype(operator&lt;&lt;(fst::declval&lt; _Stream &amp; &gt;(), fst::declval&lt; const Args &amp; &gt;()...)), Args... &gt;</name>
+    <filename>structdetail_1_1has__global__stream__operator_3_01___stream_00_01decltype_07operator_3_3_07fst_1d689a265434592bd21c5752e7ecf3c43.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::has_stream_operator</name>
+    <filename>structdetail_1_1has__stream__operator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::has_stream_operator&lt; _Stream, fst::void_t&lt; decltype(fst::declval&lt; _Stream &gt;().operator&lt;&lt;(fst::declval&lt; Args &gt;()...))&gt;, Args... &gt;</name>
+    <filename>structdetail_1_1has__stream__operator_3_01___stream_00_01fst_1_1void__t_3_01decltype_07fst_1_1de1a42aa23e6faa6149da99c85a18c2470.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>hash</name>
+    <filename>structhash.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>hash&lt; double &gt;</name>
+    <filename>structhash_3_01double_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>hash&lt; float &gt;</name>
+    <filename>structhash_3_01float_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>hash&lt; fst::nullptr_t &gt;</name>
+    <filename>structhash_3_01fst_1_1nullptr__t_01_4.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>heap_vector_base</name>
+    <filename>classheap__vector__base.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="union">
+    <name>iff_four_cc</name>
+    <filename>unioniff__four__cc.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>iff_header</name>
+    <filename>structiff__header.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>iff_header_info</name>
+    <filename>structiff__header__info.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>iff_header_list</name>
+    <filename>structiff__header__list.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>index_iterator</name>
+    <filename>classindex__iterator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>indexed_type</name>
+    <filename>structindexed__type.html</filename>
+    <templarg></templarg>
+    <templarg>_Index</templarg>
+  </compound>
+  <compound kind="class">
+    <name>indexed_type&lt; T, sizeof...(_Args)&gt;</name>
+    <filename>structindexed__type.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>indexed_value</name>
+    <filename>structindexed__value.html</filename>
+    <templarg></templarg>
+    <templarg>_Index</templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>indexed_value&lt; T, 0 &gt;</name>
+    <filename>structindexed__value.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>indexed_value&lt; T, _Index, fst::enable_if_t&lt; fst::is_empty_v&lt; T &gt; &gt; &gt;</name>
+    <filename>structindexed__value_3_01_t_00_01___index_00_01fst_1_1enable__if__t_3_01fst_1_1is__empty__v_3_01_t_01_4_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Index</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>indexed_value&lt; T, _Index, fst::enable_if_t&lt;!fst::is_empty_v&lt; T &gt; &gt; &gt;</name>
+    <filename>structindexed__value_3_01_t_00_01___index_00_01fst_1_1enable__if__t_3_9fst_1_1is__empty__v_3_01_t_01_4_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Index</templarg>
+  </compound>
+  <compound kind="class">
+    <name>indexed_value&lt; T, sizeof...(_Args)&gt;</name>
+    <filename>structindexed__value.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>input_iterator_tag</name>
+    <filename>structinput__iterator__tag.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>insert_iterator</name>
+    <filename>classinsert__iterator.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>int24_t</name>
+    <filename>classint24__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>integer_sequence</name>
+    <filename>structinteger__sequence.html</filename>
+    <templarg></templarg>
+    <templarg>_Values</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>integral_constant</name>
+    <filename>structintegral__constant.html</filename>
+    <templarg></templarg>
+    <templarg>_Value</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::invoke_impl</name>
+    <filename>structdetail_1_1invoke__impl.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::invoke_impl&lt; MT B::* &gt;</name>
+    <filename>structdetail_1_1invoke__impl_3_01_m_t_01_b_1_1_5_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::invoke_result</name>
+    <filename>structdetail_1_1invoke__result.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>invoke_result</name>
+    <filename>structinvoke__result.html</filename>
+    <templarg></templarg>
+    <templarg>ArgTypes</templarg>
+    <base>invoke_result&lt; void, F, ArgTypes... &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::invoke_result&lt; decltype(void(INVOKE(fst::declval&lt; F &gt;(), fst::declval&lt; Args &gt;()...))), F, Args... &gt;</name>
+    <filename>structdetail_1_1invoke__result_3_01decltype_07void_07_i_n_v_o_k_e_07fst_1_1declval_3_01_f_01_4_0c1e9133a1b7d50c26ad22449ec27a673.html</filename>
+    <templarg></templarg>
+    <templarg>Args</templarg>
+  </compound>
+  <compound kind="class">
+    <name>invoke_result&lt; void, F, ArgTypes... &gt;</name>
+    <filename>structdetail_1_1invoke__result.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_abstract</name>
+    <filename>structis__abstract.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_all_same</name>
+    <filename>structis__all__same.html</filename>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_allocator</name>
+    <filename>structis__allocator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_allocator&lt; _T, fst::void_t&lt; typename _T::value_type, decltype(fst::declval&lt; _T &amp; &gt;().deallocate(fst::declval&lt; _T &amp; &gt;().allocate(size_t{ 1 }), size_t{ 1 }))&gt; &gt;</name>
+    <filename>structis__allocator_3_01___t_00_01fst_1_1void__t_3_01typename_01___t_1_1value__type_00_01decltyp6485042ee236fc57e3d3b27a55e19a11.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_any_of</name>
+    <filename>structis__any__of.html</filename>
+    <templarg></templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_arithmetic</name>
+    <filename>structis__arithmetic.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_array</name>
+    <filename>structis__array.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_array&lt; fst::array&lt; _T, _Size, _Alignment &gt; &gt;</name>
+    <filename>structis__array_3_01fst_1_1array_3_01___t_00_01___size_00_01___alignment_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_array_range</name>
+    <filename>structis__array__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_array_range&lt; fst::detail::basic_array_range&lt; _T, fst::dynamic_size, _Alignment &gt; &gt;</name>
+    <filename>structis__array__range_3_01fst_1_1detail_1_1basic__array__range_3_01___t_00_01fst_1_1dynamic__size_00_01___alignment_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_assignable</name>
+    <filename>structis__assignable.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_base_of</name>
+    <filename>structis__base__of.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_array_range</name>
+    <filename>structis__basic__array__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_array_range&lt; fst::detail::basic_array_range&lt; _T, _Size, _Alignment &gt; &gt;</name>
+    <filename>structis__basic__array__range_3_01fst_1_1detail_1_1basic__array__range_3_01___t_00_01___size_00_01___alignment_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_heap_array</name>
+    <filename>structis__basic__heap__array.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_heap_array&lt; fst::detail::basic_heap_array&lt; _T, _Size, _Alignment, _MemoryZone, _MemoryCategory &gt; &gt;</name>
+    <filename>structis__basic__heap__array_3_01fst_1_1detail_1_1basic__heap__array_3_01___t_00_01___size_00_01841eef055dd4f3754c1ea31d56d5affb.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_string_view_constructible</name>
+    <filename>structis__basic__string__view__constructible.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_string_view_convertible</name>
+    <filename>structis__basic__string__view__convertible.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_basic_string_view_convertible_not_char_buffer</name>
+    <filename>structis__basic__string__view__convertible__not__char__buffer.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_c_array</name>
+    <filename>structis__c__array.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_class</name>
+    <filename>structis__class.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_const</name>
+    <filename>structis__const.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_constructible</name>
+    <filename>structis__constructible.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_convertible</name>
+    <filename>structis__convertible.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_copy_assignable</name>
+    <filename>structis__copy__assignable.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_copy_constructible</name>
+    <filename>structis__copy__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_default_constructible</name>
+    <filename>structis__default__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_different</name>
+    <filename>structis__different.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_empty</name>
+    <filename>structis__empty.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_endian_tag</name>
+    <filename>structis__endian__tag.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_enum</name>
+    <filename>structis__enum.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_final</name>
+    <filename>structis__final.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_fixed_array_range</name>
+    <filename>structis__fixed__array__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_fixed_array_range&lt; fst::detail::basic_array_range&lt; _T, _Size, _Alignment &gt; &gt;</name>
+    <filename>structis__fixed__array__range_3_01fst_1_1detail_1_1basic__array__range_3_01___t_00_01___size_00_01___alignment_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_fixed_heap_array</name>
+    <filename>structis__fixed__heap__array.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_fixed_heap_array&lt; fst::detail::basic_heap_array&lt; _T, _Size, _Alignment, _MemoryZone, _MemoryCategory &gt; &gt;</name>
+    <filename>structis__fixed__heap__array_3_01fst_1_1detail_1_1basic__heap__array_3_01___t_00_01___size_00_01608c6147f6095a45b98810c4d65f94eb.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_floating_point</name>
+    <filename>structis__floating__point.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_function</name>
+    <filename>structis__function.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_function_pointer</name>
+    <filename>structis__function__pointer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_function_pointer&lt; T * &gt;</name>
+    <filename>structis__function__pointer_3_01_t_01_5_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_fundamental</name>
+    <filename>structis__fundamental.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_heap_array</name>
+    <filename>structis__heap__array.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_heap_array&lt; fst::detail::basic_heap_array&lt; _T, fst::dynamic_size, _Alignment, _MemoryZone, _MemoryCategory &gt; &gt;</name>
+    <filename>structis__heap__array_3_01fst_1_1detail_1_1basic__heap__array_3_01___t_00_01fst_1_1dynamic__sizeaa664b7ba80b13af772543a0ebe9c350.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_integral</name>
+    <filename>structis__integral.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_invocable</name>
+    <filename>structis__invocable.html</filename>
+    <templarg></templarg>
+    <templarg>ArgTypes</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_invocable_r</name>
+    <filename>structdetail_1_1is__invocable__r.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>ArgTypes</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_invocable_r</name>
+    <filename>structis__invocable__r.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>ArgTypes</templarg>
+    <base>is_invocable_r&lt; fst::is_invocable_v&lt; F, ArgTypes... &gt;, R, F, ArgTypes... &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>is_invocable_r&lt; fst::is_invocable_v&lt; F, ArgTypes... &gt;, R, F, ArgTypes... &gt;</name>
+    <filename>structdetail_1_1is__invocable__r.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_invocable_r&lt; true, R, F, ArgTypes... &gt;</name>
+    <filename>structdetail_1_1is__invocable__r_3_01true_00_01_r_00_01_f_00_01_arg_types_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>ArgTypes</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_invoke_convertible</name>
+    <filename>structis__invoke__convertible.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_invoke_convertible&lt; _From, _To, fst::void_t&lt; decltype(fst::implicitly_convert_to&lt; _To &gt;(fst::returns_exactly&lt; _From &gt;()))&gt; &gt;</name>
+    <filename>structis__invoke__convertible_3_01___from_00_01___to_00_01fst_1_1void__t_3_01decltype_07fst_1_1i4e20015621d99d6fbcca0f13c2b3482d.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_lvalue_reference</name>
+    <filename>structis__lvalue__reference.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_category</name>
+    <filename>structis__memory__category.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_range</name>
+    <filename>structis__memory__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_range&lt; fst::memory_range&lt; T, _Size &gt; &gt;</name>
+    <filename>structis__memory__range_3_01fst_1_1memory__range_3_01_t_00_01___size_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_memory_range_compatible_container</name>
+    <filename>structdetail_1_1is__memory__range__compatible__container.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_memory_range_compatible_container&lt; _Tp, _ElementType, fst::void_t&lt; fst::enable_if_t&lt;!fst::is_memory_range&lt; _Tp &gt;::value, fst::nullptr_t &gt;, fst::enable_if_t&lt;!fst::is_array&lt; _Tp &gt;::value, fst::nullptr_t &gt;, fst::enable_if_t&lt;!fst::is_c_array_v&lt; _Tp &gt;, fst::nullptr_t &gt;, decltype(fst::container_data(fst::declval&lt; _Tp &gt;())), decltype(fst::container_size(fst::declval&lt; _Tp &gt;())), fst::enable_if_t&lt; fst::is_convertible_v&lt; fst::container_data_type_t&lt; _Tp &gt;(*)[], _ElementType(*)[]&gt;, fst::nullptr_t &gt; &gt; &gt;</name>
+    <filename>structdetail_1_1is__memory__range__compatible__container_3_01___tp_00_01___element_type_00_01fst046bfc4cd2a8da6b31779f1f015dc910.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_zone</name>
+    <filename>structis__memory__zone.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_zone_proxy</name>
+    <filename>structis__memory__zone__proxy.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_memory_zone_proxy&lt; fst::memory_zone_proxy &gt;</name>
+    <filename>structis__memory__zone__proxy_3_01fst_1_1memory__zone__proxy_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_move_assignable</name>
+    <filename>structis__move__assignable.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_move_constructible</name>
+    <filename>structis__move__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_nonbool_integral</name>
+    <filename>structis__nonbool__integral.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_null_pointer</name>
+    <filename>structis__null__pointer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_object</name>
+    <filename>structis__object.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_pair</name>
+    <filename>structis__pair.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_pair&lt; fst::pair&lt; T1, T2 &gt; &gt;</name>
+    <filename>structis__pair_3_01fst_1_1pair_3_01_t1_00_01_t2_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_point_XY_impl</name>
+    <filename>structdetail_1_1is__point___x_y__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_point_xy_impl</name>
+    <filename>structdetail_1_1is__point__xy__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_point_xy_impl&lt; PointType, true &gt;</name>
+    <filename>structdetail_1_1is__point__xy__impl_3_01_point_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_point_XY_impl&lt; PointType, true &gt;</name>
+    <filename>structdetail_1_1is__point___x_y__impl_3_01_point_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_pointer</name>
+    <filename>structis__pointer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_rect</name>
+    <filename>structis__rect.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_rect&lt; fst::rect&lt; T &gt; &gt;</name>
+    <filename>structis__rect_3_01fst_1_1rect_3_01_t_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_ltrb_impl</name>
+    <filename>structdetail_1_1is__rect__ltrb__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_ltrb_impl&lt; fst::rect&lt; T &gt;, true &gt;</name>
+    <filename>structdetail_1_1is__rect__ltrb__impl_3_01fst_1_1rect_3_01_t_01_4_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_ltrb_impl&lt; RectType, true &gt;</name>
+    <filename>structdetail_1_1is__rect__ltrb__impl_3_01_rect_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_os_impl</name>
+    <filename>structdetail_1_1is__rect__os__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_os_impl&lt; RectType, true &gt;</name>
+    <filename>structdetail_1_1is__rect__os__impl_3_01_rect_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_xywh_impl</name>
+    <filename>structdetail_1_1is__rect__xywh__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_XYWH_impl</name>
+    <filename>structdetail_1_1is__rect___x_y_w_h__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_XYWH_impl&lt; RectType, true &gt;</name>
+    <filename>structdetail_1_1is__rect___x_y_w_h__impl_3_01_rect_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_rect_xywh_impl&lt; RectType, true &gt;</name>
+    <filename>structdetail_1_1is__rect__xywh__impl_3_01_rect_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_reference</name>
+    <filename>structis__reference.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_rvalue_reference</name>
+    <filename>structis__rvalue__reference.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_same</name>
+    <filename>structis__same.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_same_decay</name>
+    <filename>structis__same__decay.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_signed</name>
+    <filename>structis__signed.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_size_WH_impl</name>
+    <filename>structdetail_1_1is__size___w_h__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_size_wh_impl</name>
+    <filename>structdetail_1_1is__size__wh__impl.html</filename>
+    <templarg></templarg>
+    <templarg>hasMember</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_size_WH_impl&lt; SizeType, true &gt;</name>
+    <filename>structdetail_1_1is__size___w_h__impl_3_01_size_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::is_size_wh_impl&lt; SizeType, true &gt;</name>
+    <filename>structdetail_1_1is__size__wh__impl_3_01_size_type_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_small_vector</name>
+    <filename>structis__small__vector.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_small_vector&lt; fst::small_vector&lt; _T, _Size, _Alignment, _MemoryZone, _MemoryCategory &gt; &gt;</name>
+    <filename>structis__small__vector_3_01fst_1_1small__vector_3_01___t_00_01___size_00_01___alignment_00_01__d48a9c2b2e39f08d9fe035e9efc1b09b.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_stack_vector</name>
+    <filename>structis__stack__vector.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_stack_vector&lt; fst::stack_vector&lt; _T, _Size, _Alignment &gt; &gt;</name>
+    <filename>structis__stack__vector_3_01fst_1_1stack__vector_3_01___t_00_01___size_00_01___alignment_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_standard_layout</name>
+    <filename>structis__standard__layout.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_static_memory_zone</name>
+    <filename>structis__static__memory__zone.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier</name>
+    <filename>structis__stream__modifier.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::comma_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1comma__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::dash_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1dash__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::empty_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1empty__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::equal_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1equal__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::sep_endl_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1sep__endl__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::sep_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1sep__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::stream_endl_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1stream__endl__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::stream_space_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1stream__space__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::stream_detail::tab_t &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1stream__detail_1_1tab__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_stream_modifier&lt; fst::term_color &gt;</name>
+    <filename>structis__stream__modifier_3_01fst_1_1term__color_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>is_string_view_convertible</name>
+    <filename>structis__string__view__convertible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_string_view_convertible_not_char_buffer</name>
+    <filename>structis__string__view__convertible__not__char__buffer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivial</name>
+    <filename>structis__trivial.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivially_copy_constructible</name>
+    <filename>structis__trivially__copy__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivially_copyable</name>
+    <filename>structis__trivially__copyable.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivially_default_constructible</name>
+    <filename>structis__trivially__default__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivially_destructible</name>
+    <filename>structis__trivially__destructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_trivially_move_constructible</name>
+    <filename>structis__trivially__move__constructible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_tuple</name>
+    <filename>structis__tuple.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_tuple&lt; fst::tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structis__tuple_3_01fst_1_1tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_u16string_view_convertible</name>
+    <filename>structis__u16string__view__convertible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_u16string_view_convertible_not_char_buffer</name>
+    <filename>structis__u16string__view__convertible__not__char__buffer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_u32string_view_convertible</name>
+    <filename>structis__u32string__view__convertible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_u32string_view_convertible_not_char_buffer</name>
+    <filename>structis__u32string__view__convertible__not__char__buffer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_unsigned</name>
+    <filename>structis__unsigned.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_utf_basic_string_type</name>
+    <filename>structis__utf__basic__string__type.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_utf_char_size</name>
+    <filename>structis__utf__char__size.html</filename>
+    <templarg>_CSize</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_utf_char_type</name>
+    <filename>structis__utf__char__type.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_utf_string_type</name>
+    <filename>structis__utf__string__type.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_vector</name>
+    <filename>structis__vector.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_vector&lt; fst::vector&lt; _T, _Alignment, _MemoryCategory, _MemoryZone &gt; &gt;</name>
+    <filename>structis__vector_3_01fst_1_1vector_3_01___t_00_01___alignment_00_01___memory_category_00_01___memory_zone_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_void</name>
+    <filename>structis__void.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_volatile</name>
+    <filename>structis__volatile.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_wstring_view_convertible</name>
+    <filename>structis__wstring__view__convertible.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>is_wstring_view_convertible_not_char_buffer</name>
+    <filename>structis__wstring__view__convertible__not__char__buffer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>iterator</name>
+    <filename>classiterator.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>detail::iterator_range</name>
+    <filename>classdetail_1_1iterator__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>iterator_range</name>
+    <filename>classiterator__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::iterator_sequence_length</name>
+    <filename>structdetail_1_1iterator__sequence__length.html</filename>
+    <templarg>Encoding</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::iterator_sequence_length&lt; char_encoding::utf16 &gt;</name>
+    <filename>structdetail_1_1iterator__sequence__length_3_01char__encoding_1_1utf16_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::iterator_sequence_length&lt; char_encoding::utf32 &gt;</name>
+    <filename>structdetail_1_1iterator__sequence__length_3_01char__encoding_1_1utf32_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>iterator_t</name>
+    <filename>structiterator__t.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>iterator_traits</name>
+    <filename>structiterator__traits.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>iterator_traits&lt; _T * &gt;</name>
+    <filename>structiterator__traits_3_01___t_01_5_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>iterator_traits&lt; const _T * &gt;</name>
+    <filename>structiterator__traits_3_01const_01___t_01_5_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::keep_first_n_imp</name>
+    <filename>structvargs__detail_1_1keep__first__n__imp.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>vargs_detail::keep_first_n_imp&lt; fst::type_list&lt; Args..., RArgs... &gt;, fst::type_list&lt; RArgs... &gt; &gt;</name>
+    <filename>structvargs__detail_1_1keep__first__n__imp_3_01fst_1_1type__list_3_01_args_8_8_8_00_01_r_args_8_b532c2f1a6f1e64aa79434c9c22d6528.html</filename>
+    <templarg>Args</templarg>
+    <templarg>RArgs</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>less</name>
+    <filename>structless.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>less&lt; void &gt;</name>
+    <filename>structless_3_01void_01_4.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>line_iterator</name>
+    <filename>classline__iterator.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>line_range</name>
+    <filename>structline__range.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>little_endian_tag</name>
+    <filename>structlittle__endian__tag.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed</name>
+    <filename>structmake__signed.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed&lt; unsigned char &gt;</name>
+    <filename>structmake__signed_3_01unsigned_01char_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed&lt; unsigned int &gt;</name>
+    <filename>structmake__signed_3_01unsigned_01int_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed&lt; unsigned long &gt;</name>
+    <filename>structmake__signed_3_01unsigned_01long_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed&lt; unsigned long long &gt;</name>
+    <filename>structmake__signed_3_01unsigned_01long_01long_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_signed&lt; unsigned short &gt;</name>
+    <filename>structmake__signed_3_01unsigned_01short_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_tag</name>
+    <filename>structmake__tag.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned</name>
+    <filename>structmake__unsigned.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; char &gt;</name>
+    <filename>structmake__unsigned_3_01char_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; int &gt;</name>
+    <filename>structmake__unsigned_3_01int_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; int8_t &gt;</name>
+    <filename>structmake__unsigned_3_01int8__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; long &gt;</name>
+    <filename>structmake__unsigned_3_01long_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; long long &gt;</name>
+    <filename>structmake__unsigned_3_01long_01long_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>make_unsigned&lt; short &gt;</name>
+    <filename>structmake__unsigned_3_01short_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>max_align_size_s</name>
+    <filename>structmax__align__size__s.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>max_align_size_s&lt; T &gt;</name>
+    <filename>structmax__align__size__s_3_01_t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>max_align_size_s&lt; T, Ts... &gt;</name>
+    <filename>structmax__align__size__s_3_01_t_00_01_ts_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::member_func_ptr</name>
+    <filename>structdetail_1_1member__func__ptr.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>member_func_ptr</name>
+    <filename>structmember__func__ptr.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::member_func_ptr&lt; Ret, _T, true, Rest... &gt;</name>
+    <filename>structdetail_1_1member__func__ptr_3_01_ret_00_01___t_00_01true_00_01_rest_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Rest</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>member_func_ptr&lt; Ret, T *, Rest... &gt;</name>
+    <filename>structmember__func__ptr_3_01_ret_00_01_t_01_5_00_01_rest_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>Rest</templarg>
+    <base>member_func_ptr&lt; Ret, T, fst::is_class&lt; T &gt;::value, Rest... &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>member_func_ptr&lt; Ret, T, fst::is_class&lt; T &gt;::value, Rest... &gt;</name>
+    <filename>structdetail_1_1member__func__ptr.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>memory_category</name>
+    <filename>structmemory__category.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>memory_range</name>
+    <filename>classmemory__range.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+  </compound>
+  <compound kind="class">
+    <name>memory_range&lt; _Tp, dynamic_size &gt;</name>
+    <filename>classmemory__range_3_01___tp_00_01dynamic__size_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>memory_zone</name>
+    <filename>structmemory__zone.html</filename>
+    <templarg></templarg>
+    <member kind="function" static="yes">
+      <type>static fst::memory_zone_proxy</type>
+      <name>proxy</name>
+      <anchorfile>structmemory__zone.html</anchorfile>
+      <anchor>a931bae0e4c13d08be2cc79afa78ae75c</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>memory_zone_allocator</name>
+    <filename>classmemory__zone__allocator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt; fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;</name>
+    <filename>classmemory__zone__allocator_3_01_t_00_01___memory_category_00_01___memory_zone_00_01fst_1_1enab4b20de3a4dfc6b5613bd6aff38df1b15.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <class kind="struct">memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt; fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;::rebind</class>
+  </compound>
+  <compound kind="class">
+    <name>memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt;!fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;</name>
+    <filename>classmemory__zone__allocator_3_01_t_00_01___memory_category_00_01___memory_zone_00_01fst_1_1enabeb3a54b08f2249c48b72b14baa37210b.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <class kind="struct">memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt;!fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;::rebind</class>
+  </compound>
+  <compound kind="struct">
+    <name>memory_zone_proxy</name>
+    <filename>structmemory__zone__proxy.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>merged_tuple</name>
+    <filename>structmerged__tuple.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>merged_tuple&lt; tuple&lt; Args1... &gt;, tuple&lt; Args2... &gt; &gt;</name>
+    <filename>structmerged__tuple_3_01tuple_3_01_args1_8_8_8_01_4_00_01tuple_3_01_args2_8_8_8_01_4_01_4.html</filename>
+    <templarg>Args1</templarg>
+    <templarg>Args2</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>merged_tuple&lt; tuple&lt; Args1... &gt;, tuple&lt; Args2... &gt;, Tail... &gt;</name>
+    <filename>structmerged__tuple_3_01tuple_3_01_args1_8_8_8_01_4_00_01tuple_3_01_args2_8_8_8_01_4_00_01_tail_8_8_8_01_4.html</filename>
+    <templarg>Args1</templarg>
+    <templarg>Args2</templarg>
+    <templarg>Tail</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>mouse_event</name>
+    <filename>structmouse__event.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>negation</name>
+    <filename>structnegation.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>nonesuch</name>
+    <filename>structnonesuch.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>numeric_limits</name>
+    <filename>structnumeric__limits.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>numeric_limits&lt; const _T &gt;</name>
+    <filename>structnumeric__limits_3_01const_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>numeric_limits&lt; const volatile _T &gt;</name>
+    <filename>structnumeric__limits_3_01const_01volatile_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>numeric_limits&lt; volatile _T &gt;</name>
+    <filename>structnumeric__limits_3_01volatile_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>object_memory_pool</name>
+    <filename>classobject__memory__pool.html</filename>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>object_wrapper</name>
+    <filename>structobject__wrapper.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>object_wrapper&lt; T, fst::enable_if_t&lt; fst::is_empty_v&lt; T &gt; &gt; &gt;</name>
+    <filename>structobject__wrapper_3_01_t_00_01fst_1_1enable__if__t_3_01fst_1_1is__empty__v_3_01_t_01_4_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>object_wrapper&lt; T, fst::enable_if_t&lt;!fst::is_empty_v&lt; T &gt; &gt; &gt;</name>
+    <filename>structobject__wrapper_3_01_t_00_01fst_1_1enable__if__t_3_9fst_1_1is__empty__v_3_01_t_01_4_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>optional_ptr</name>
+    <filename>classoptional__ptr.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="function">
+      <type>bool</type>
+      <name>owned</name>
+      <anchorfile>classoptional__ptr.html</anchorfile>
+      <anchor>a6e24f16c632c498ed553062c0660ce66</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>output_iterator_tag</name>
+    <filename>structoutput__iterator__tag.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>output_iterator_traits</name>
+    <filename>structoutput__iterator__traits.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>output_iterator_traits&lt; fst::back_insert_iterator&lt; Container &gt; &gt;</name>
+    <filename>structoutput__iterator__traits_3_01fst_1_1back__insert__iterator_3_01_container_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>output_iterator_traits&lt; fst::insert_iterator&lt; Container &gt; &gt;</name>
+    <filename>structoutput__iterator__traits_3_01fst_1_1insert__iterator_3_01_container_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>output_iterator_traits&lt; fst::raw_storage_iterator&lt; OutputIt, T &gt; &gt;</name>
+    <filename>structoutput__iterator__traits_3_01fst_1_1raw__storage__iterator_3_01_output_it_00_01_t_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>output_stream</name>
+    <filename>classoutput__stream.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>output_stream_imp</name>
+    <filename>classoutput__stream__imp.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>packed_pointer</name>
+    <filename>classpacked__pointer.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>padding</name>
+    <filename>structpadding.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>pair</name>
+    <filename>structpair.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>path</name>
+    <filename>classpath.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>placement_new_tag</name>
+    <filename>structplacement__new__tag.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>point</name>
+    <filename>structpoint.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>point</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>a9ec46cf945fb190d4bae471f4302884d</anchor>
+      <arglist>(const PointType &amp;point) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>point</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>a9ec46cf945fb190d4bae471f4302884d</anchor>
+      <arglist>(const PointType &amp;point) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>PointType</type>
+      <name>convert</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>ab2a57da7349c4583cfb7429720abec8d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>PointType</type>
+      <name>convert</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>ab2a57da7349c4583cfb7429720abec8d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator PointType</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>affc949a6532e5de3cba5406b006f9d39</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator PointType</name>
+      <anchorfile>structpoint.html</anchorfile>
+      <anchor>affc949a6532e5de3cba5406b006f9d39</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>detail::pool_bucket</name>
+    <filename>structdetail_1_1pool__bucket.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>pool_memory_zone</name>
+    <filename>structpool__memory__zone.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>profiler</name>
+    <filename>classprofiler.html</filename>
+    <class kind="struct">profiler::result</class>
+    <class kind="struct">profiler::scoped_trace</class>
+  </compound>
+  <compound kind="struct">
+    <name>profiler_memory_zone</name>
+    <filename>structprofiler__memory__zone.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>quad</name>
+    <filename>classquad.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>random_access_iterator_tag</name>
+    <filename>structrandom__access__iterator__tag.html</filename>
+    <base>bidirectional_iterator_tag</base>
+  </compound>
+  <compound kind="struct">
+    <name>range</name>
+    <filename>structrange.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>range</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a4c350c5d872df6f8a25f907c29d56849</anchor>
+      <arglist>() noexcept=default</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>range</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>ac49ad64e079adf2430e7cda5c7873de0</anchor>
+      <arglist>(value_type _start, value_type _end) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_start</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a139a07d5efcfd68425e2450e4e4c0070</anchor>
+      <arglist>(value_type s) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_end</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a7ad9b9a106008da71aef496aba1c73e5</anchor>
+      <arglist>(value_type e) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_shifted_start</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a909c9b5a9478af25d283209a80487edb</anchor>
+      <arglist>(value_type delta) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_shifted_end</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a1a07f9362a9d0e8ef3164f049ea97455</anchor>
+      <arglist>(value_type delta) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_length</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>ac39ae4f34279d64e4655d1d3191dbb86</anchor>
+      <arglist>(value_type len) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_shift</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>ab0795f67f0f7022d3ed6f70410238313</anchor>
+      <arglist>(value_type delta) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range</type>
+      <name>with_move</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a0ff251e52bd65f36668030a95d809eaa</anchor>
+      <arglist>(value_type s) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>set_start</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>aba86b754b57b9bfcd7022a91825eca44</anchor>
+      <arglist>(value_type s) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>set_end</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>af87bcd302d3942c0c74959554c702bc1</anchor>
+      <arglist>(value_type e) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>move_to</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>afa408c90b8982a910a2e0173af80c637</anchor>
+      <arglist>(value_type s) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>shift</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a84edc57ac3031088f6fb5bf4f07f7db6</anchor>
+      <arglist>(value_type delta) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>shift_start</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a6b477e2c82ada7e368b047bdbc08e33e</anchor>
+      <arglist>(value_type delta) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>shift_end</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>adf46cd1a6931198ac9e4c56efb3fd646</anchor>
+      <arglist>(value_type delta) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>set_length</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>ac2562d774415cce84031c43d572a7b5c</anchor>
+      <arglist>(value_type len) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr value_type</type>
+      <name>length</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>af025902ee642695250c928bf83df4453</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr value_type</type>
+      <name>middle</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a1c0104ffe9b25001eb0b89d7f5fc7f75</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>is_sorted</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>aadaf8cf429d6ef4c307925e7d4498f99</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>is_symmetric</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a54e3bde1d9cd36fd54597ad8982e1e7e</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a658e3995dc59dcdd60d6ff7a2237f4ff</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains_closed</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a1e1529f8dbdac787d62c306769869aee</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains_opened</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a608fba2981a8c1dd650f9412a9b7ee62</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains_left_opened</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>abc36a9636d315e00e712f96405fb87c1</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains_right_opened</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>acc437f4a27b6339daf000ef5a6c721e4</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr bool</type>
+      <name>contains</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>aed0f183e9ed358fc66c5da011dcd0bf4</anchor>
+      <arglist>(const range &amp;r) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr value_type</type>
+      <name>clipped_value</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a71429faf8a9e450a4c58ac1dce185d48</anchor>
+      <arglist>(value_type x) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr range &amp;</type>
+      <name>sort</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>aee2c5e9ce58b842776459adbd2366d33</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static constexpr range</type>
+      <name>with_length</name>
+      <anchorfile>structrange.html</anchorfile>
+      <anchor>a939774e5d3e0c9f9fe00b7a78c97693d</anchor>
+      <arglist>(value_type start, value_type len) noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>raw_storage_iterator</name>
+    <filename>classraw__storage__iterator.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt;!fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;::rebind</name>
+    <filename>structmemory__zone__allocator_3_01_t_00_01___memory_category_00_01___memory_zone_00_01fst_1_1enab529e3ed7b8685bca8b7cba61501655f.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>memory_zone_allocator&lt; T, _MemoryCategory, _MemoryZone, fst::enable_if_t&lt; fst::is_static_memory_zone&lt; _MemoryZone &gt;::value &amp;&amp;fst::is_memory_category&lt; _MemoryCategory &gt;::value &gt; &gt;::rebind</name>
+    <filename>structmemory__zone__allocator_3_01_t_00_01___memory_category_00_01___memory_zone_00_01fst_1_1enac72f36601aee425753872d0ca0e1fd3a.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>rect</name>
+    <filename>structrect.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>reference_wrapper</name>
+    <filename>classreference__wrapper.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_all_extents</name>
+    <filename>structremove__all__extents.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_all_extents&lt; _Ty[]&gt;</name>
+    <filename>structremove__all__extents_3_01___ty_0f_0e_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_all_extents&lt; _Ty[_Ix]&gt;</name>
+    <filename>structremove__all__extents_3_01___ty_0f___ix_0e_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Ix</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_const</name>
+    <filename>structremove__const.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_const&lt; const _T &gt;</name>
+    <filename>structremove__const_3_01const_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_cv</name>
+    <filename>structremove__cv.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_cv&lt; const _T &gt;</name>
+    <filename>structremove__cv_3_01const_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_cv&lt; const volatile _T &gt;</name>
+    <filename>structremove__cv_3_01const_01volatile_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_cv&lt; volatile _T &gt;</name>
+    <filename>structremove__cv_3_01volatile_01___t_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_extent</name>
+    <filename>structremove__extent.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_extent&lt; _Ty[]&gt;</name>
+    <filename>structremove__extent_3_01___ty_0f_0e_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_extent&lt; _Ty[_Ix]&gt;</name>
+    <filename>structremove__extent_3_01___ty_0f___ix_0e_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Ix</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_pointer</name>
+    <filename>structremove__pointer.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_pointer&lt; _T * &gt;</name>
+    <filename>structremove__pointer_3_01___t_01_5_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_pointer&lt; _T *const &gt;</name>
+    <filename>structremove__pointer_3_01___t_01_5const_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_pointer&lt; _T *const volatile &gt;</name>
+    <filename>structremove__pointer_3_01___t_01_5const_01volatile_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_pointer&lt; _T *volatile &gt;</name>
+    <filename>structremove__pointer_3_01___t_01_5volatile_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_reference</name>
+    <filename>structremove__reference.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_reference&lt; _T &amp; &gt;</name>
+    <filename>structremove__reference_3_01___t_01_6_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>remove_reference&lt; _T &amp;&amp; &gt;</name>
+    <filename>structremove__reference_3_01___t_01_6_6_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>profiler::result</name>
+    <filename>structprofiler_1_1result.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>riff_header</name>
+    <filename>structriff__header.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>riff_header_info</name>
+    <filename>structriff__header__info.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>riff_header_list</name>
+    <filename>structriff__header__list.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>profiler::scoped_trace</name>
+    <filename>structprofiler_1_1scoped__trace.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>select</name>
+    <filename>structselect.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>select&lt; false &gt;</name>
+    <filename>structselect_3_01false_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>simd_memory_zone</name>
+    <filename>structsimd__memory__zone.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>size</name>
+    <filename>structsize.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>small_memory_pool</name>
+    <filename>classsmall__memory__pool.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>small_unordered_map</name>
+    <filename>classsmall__unordered__map.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>small_vector</name>
+    <filename>classsmall__vector.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>source_location</name>
+    <filename>structsource__location.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>space_padding</name>
+    <filename>structspace__padding.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>stack_vector</name>
+    <filename>classstack__vector.html</filename>
+    <templarg></templarg>
+    <templarg>_Size</templarg>
+    <templarg>_Alignment</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>static_capacity</name>
+    <filename>structstatic__capacity.html</filename>
+    <templarg></templarg>
+    <templarg>_HasStaticSize</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>static_capacity&lt; _T, true &gt;</name>
+    <filename>structstatic__capacity_3_01___t_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>static_size</name>
+    <filename>structstatic__size.html</filename>
+    <templarg></templarg>
+    <templarg>_HasStaticSize</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>static_size&lt; _T, true &gt;</name>
+    <filename>structstatic__size_3_01___t_00_01true_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>status</name>
+    <filename>structstatus.html</filename>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>operator bool</name>
+      <anchorfile>structstatus.html</anchorfile>
+      <anchor>a26907aac39e126cc0b436b9df399a150</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>status_ref</name>
+    <filename>classstatus__ref.html</filename>
+    <member kind="function">
+      <type>constexpr</type>
+      <name>operator bool</name>
+      <anchorfile>classstatus__ref.html</anchorfile>
+      <anchor>a309f6e5d7da658618cb82a05a7ed0f34</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>string_char_type</name>
+    <filename>structstring__char__type.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>string_char_type&lt; SType, enable_if_string_view_ctor_t&lt; SType, char &gt; &gt;</name>
+    <filename>structstring__char__type_3_01_s_type_00_01enable__if__string__view__ctor__t_3_01_s_type_00_01char_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>string_char_type&lt; SType, enable_if_string_view_ctor_t&lt; SType, char16_t &gt; &gt;</name>
+    <filename>structstring__char__type_3_01_s_type_00_01enable__if__string__view__ctor__t_3_01_s_type_00_01char16__t_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>string_char_type&lt; SType, enable_if_string_view_ctor_t&lt; SType, char32_t &gt; &gt;</name>
+    <filename>structstring__char__type_3_01_s_type_00_01enable__if__string__view__ctor__t_3_01_s_type_00_01char32__t_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>string_char_type&lt; SType, enable_if_string_view_ctor_t&lt; SType, wchar_t &gt; &gt;</name>
+    <filename>structstring__char__type_3_01_s_type_00_01enable__if__string__view__ctor__t_3_01_s_type_00_01wchar__t_01_4_01_4.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>system_clock</name>
+    <filename>structsystem__clock.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>time_point</name>
+    <filename>classtime__point.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format</name>
+    <filename>structto__audio__format.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; double &gt;</name>
+    <filename>structto__audio__format_3_01double_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; float &gt;</name>
+    <filename>structto__audio__format_3_01float_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; fst::int24_t &gt;</name>
+    <filename>structto__audio__format_3_01fst_1_1int24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; fst::uint24_t &gt;</name>
+    <filename>structto__audio__format_3_01fst_1_1uint24__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; int16_t &gt;</name>
+    <filename>structto__audio__format_3_01int16__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; int32_t &gt;</name>
+    <filename>structto__audio__format_3_01int32__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; int8_t &gt;</name>
+    <filename>structto__audio__format_3_01int8__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; uint16_t &gt;</name>
+    <filename>structto__audio__format_3_01uint16__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; uint32_t &gt;</name>
+    <filename>structto__audio__format_3_01uint32__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_audio_format&lt; uint8_t &gt;</name>
+    <filename>structto__audio__format_3_01uint8__t_01_4.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>to_tuple</name>
+    <filename>structto__tuple.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_tuple&lt; tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structto__tuple_3_01tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_tuple&lt; type_tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structto__tuple_3_01type__tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_type_tuple</name>
+    <filename>structto__type__tuple.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_type_tuple&lt; tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structto__type__tuple_3_01tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>to_type_tuple&lt; type_tuple&lt; Ts... &gt; &gt;</name>
+    <filename>structto__type__tuple_3_01type__tuple_3_01_ts_8_8_8_01_4_01_4.html</filename>
+    <templarg>Ts</templarg>
+  </compound>
+  <compound kind="class">
+    <name>transform</name>
+    <filename>classtransform.html</filename>
+    <templarg></templarg>
+    <member kind="function" static="yes">
+      <type>static constexpr transform</type>
+      <name>translation</name>
+      <anchorfile>classtransform.html</anchorfile>
+      <anchor>a9144f46a88f7960cf03560a087521f4a</anchor>
+      <arglist>(const fst::point&lt; value_type &gt; &amp;p) noexcept</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static transform</type>
+      <name>rotation</name>
+      <anchorfile>classtransform.html</anchorfile>
+      <anchor>af1f368d03e0a6c3c1b0ba7d3a765f4e4</anchor>
+      <arglist>(value_type angle) noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tuple</name>
+    <filename>structtuple.html</filename>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_element</name>
+    <filename>structtuple__element.html</filename>
+    <templarg>I</templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_element&lt; 0, tuple&lt; Head, Tail... &gt; &gt;</name>
+    <filename>structtuple__element_3_010_00_01tuple_3_01_head_00_01_tail_8_8_8_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>Tail</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_element&lt; 0, type_tuple&lt; Head, Tail... &gt; &gt;</name>
+    <filename>structtuple__element_3_010_00_01type__tuple_3_01_head_00_01_tail_8_8_8_01_4_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>Tail</templarg>
+  </compound>
+  <compound kind="class">
+    <name>tuple_element&lt; I - 1, tuple&lt; Tail... &gt; &gt;</name>
+    <filename>structtuple__element.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>tuple_element&lt; I - 1, type_tuple&lt; Tail... &gt; &gt;</name>
+    <filename>structtuple__element.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_element&lt; I, tuple&lt; Head, Tail... &gt; &gt;</name>
+    <filename>structtuple__element_3_01_i_00_01tuple_3_01_head_00_01_tail_8_8_8_01_4_01_4.html</filename>
+    <templarg>I</templarg>
+    <templarg></templarg>
+    <templarg>Tail</templarg>
+    <base>tuple_element&lt; I - 1, tuple&lt; Tail... &gt; &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_element&lt; I, type_tuple&lt; Head, Tail... &gt; &gt;</name>
+    <filename>structtuple__element_3_01_i_00_01type__tuple_3_01_head_00_01_tail_8_8_8_01_4_01_4.html</filename>
+    <templarg>I</templarg>
+    <templarg></templarg>
+    <templarg>Tail</templarg>
+    <base>tuple_element&lt; I - 1, type_tuple&lt; Tail... &gt; &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::tuple_imp</name>
+    <filename>structdetail_1_1tuple__imp.html</filename>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="class">
+    <name>tuple_imp&lt; _Args... &gt;</name>
+    <filename>structdetail_1_1tuple__imp.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>detail::tuple_imp&lt; T &gt;</name>
+    <filename>structdetail_1_1tuple__imp_3_01_t_01_4.html</filename>
+    <templarg></templarg>
+    <base>indexed_value&lt; T, 0 &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::tuple_imp&lt; T, _Args... &gt;</name>
+    <filename>structdetail_1_1tuple__imp_3_01_t_00_01___args_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>indexed_value&lt; T, sizeof...(_Args)&gt;</base>
+    <base>tuple_imp&lt; _Args... &gt;</base>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_size</name>
+    <filename>structtuple__size.html</filename>
+    <templarg>Types</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_size&lt; tuple&lt; Types... &gt; &gt;</name>
+    <filename>structtuple__size_3_01tuple_3_01_types_8_8_8_01_4_01_4.html</filename>
+    <templarg>Types</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tuple_size&lt; type_tuple&lt; Types... &gt; &gt;</name>
+    <filename>structtuple__size_3_01type__tuple_3_01_types_8_8_8_01_4_01_4.html</filename>
+    <templarg>Types</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>type_identity</name>
+    <filename>structtype__identity.html</filename>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>type_list</name>
+    <filename>structtype__list.html</filename>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>type_pair</name>
+    <filename>structtype__pair.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>type_tuple</name>
+    <filename>structtype__tuple.html</filename>
+    <templarg>_Args</templarg>
+  </compound>
+  <compound kind="class">
+    <name>type_tuple&lt; _Args... &gt;</name>
+    <filename>structtype__tuple.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>type_tuple&lt; T, _Args... &gt;</name>
+    <filename>structtype__tuple_3_01_t_00_01___args_8_8_8_01_4.html</filename>
+    <templarg></templarg>
+    <templarg>_Args</templarg>
+    <base>indexed_type&lt; T, sizeof...(_Args)&gt;</base>
+    <base>type_tuple&lt; _Args... &gt;</base>
+  </compound>
+  <compound kind="class">
+    <name>uint24_t</name>
+    <filename>classuint24__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>underlying_type</name>
+    <filename>structunderlying__type.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>unique_ptr</name>
+    <filename>classunique__ptr.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="class">
+    <name>unordered_map</name>
+    <filename>classunordered__map.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller</name>
+    <filename>structunroller.html</filename>
+    <templarg>N</templarg>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 1, _Mul &gt;</name>
+    <filename>structunroller_3_011_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 128, _Mul &gt;</name>
+    <filename>structunroller_3_01128_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 16, _Mul &gt;</name>
+    <filename>structunroller_3_0116_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 2, _Mul &gt;</name>
+    <filename>structunroller_3_012_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 256, _Mul &gt;</name>
+    <filename>structunroller_3_01256_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 32, _Mul &gt;</name>
+    <filename>structunroller_3_0132_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 4, _Mul &gt;</name>
+    <filename>structunroller_3_014_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 64, _Mul &gt;</name>
+    <filename>structunroller_3_0164_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>unroller&lt; 8, _Mul &gt;</name>
+    <filename>structunroller_3_018_00_01___mul_01_4.html</filename>
+    <templarg>_Mul</templarg>
+  </compound>
+  <compound kind="class">
+    <name>utf_cvt</name>
+    <filename>classutf__cvt.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>utf_encoding_of</name>
+    <filename>structutf__encoding__of.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>utf_encoding_size</name>
+    <filename>structutf__encoding__size.html</filename>
+    <templarg>Encoding</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>utf_encoding_to_max_char_count</name>
+    <filename>structutf__encoding__to__max__char__count.html</filename>
+    <templarg>Encoding</templarg>
+  </compound>
+  <compound kind="class">
+    <name>utf_string_view</name>
+    <filename>classutf__string__view.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>utf_string_view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>af31f0276f7c890338fe89391e4420d2f</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>utf_string_view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a728243dcc2dcc5cbb3693fd1cb6fa29d</anchor>
+      <arglist>(T &amp;&amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>null_terminated</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ab438da9a68cd042bcf05d83dea5a0c71</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>empty</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>abcd92ed1b267a3bd4803ec5a4bdd88a6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>size</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a7b0b702555fb65040da5539136374fca</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>char_size</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>aef1f856932a0b5f920b2e4c4df69a8a0</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>size_bytes</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ace2dd56d690af1dcf8b37cf13fd27b57</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>count</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ae24f41ddb1cf99db510702bc836fd873</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>enum char_encoding</type>
+      <name>encoding</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>aa1b2d0c8ba5699f793b36fa9c252ab5e</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const CharT *</type>
+      <name>c_str</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ac2ed613fb2fb1d3f8f6029199beaf6c5</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char *</type>
+      <name>u8cstr</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a2810a4c598682163ee71003f76f664cc</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char16_t *</type>
+      <name>u16cstr</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a03be5814d95977894e9a13fc41e984d9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char32_t *</type>
+      <name>u32cstr</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a0089f402ff73eaf192a496b331c00c95</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const wchar_t *</type>
+      <name>wcstr</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ae97cc98368b5f6d480a76973648327cc</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const CharT *</type>
+      <name>data</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a9eaf83059fd702c9ba2ac6e3cac187f9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char *</type>
+      <name>u8data</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a70d25b1a273966576a221e78d806493d</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char16_t *</type>
+      <name>u16data</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ac58f1b0c5db1a3caf8b6238338f6c054</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const char32_t *</type>
+      <name>u32data</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>aba22d8771c7bc1e8a7f2d9f0ef071364</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>const wchar_t *</type>
+      <name>wdata</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ada36a23bf635643fc19c5de18d12390f</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string&lt; CharT, fst::default_allocator&lt; CharT &gt; &gt;</type>
+      <name>str</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>aa4e686df209c5c9482c59d49696b5d91</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::string</type>
+      <name>u8str</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a26309dab48370c2e1714b246a89b5840</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string&lt; char16_t &gt;</type>
+      <name>u16str</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a109023bd4eeaface034f4814f1c53c3c</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string&lt; char32_t &gt;</type>
+      <name>u32str</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ab8b4b4b56ab6cc1dbc63482953a177f1</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::wstring</type>
+      <name>wstr</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a541805115bcd52d571418d5e67667599</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string_view&lt; CharT &gt;</type>
+      <name>view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a299d878a2f6d1e62dd20c4390d2ef24b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::string_view</type>
+      <name>u8view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ae50096757317938835d6bd6ddd0b59f3</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string_view&lt; char16_t &gt;</type>
+      <name>u16view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a6328c23a2826e117e9216154d042be87</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::basic_string_view&lt; char32_t &gt;</type>
+      <name>u32view</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a8b14ed6552d6a7ff7a830a2893075334</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::wstring_view</type>
+      <name>wview</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ae96e068d320e16918de0b94ea863a627</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::string</type>
+      <name>to_utf8</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>abb82c541c78c3910ebbcef75790adc16</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::u16string</type>
+      <name>to_utf16</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>ae468f5eb08bc38a9e83b590045d2cccb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::u32string</type>
+      <name>to_utf32</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>a1e2b03a76b383e09d937053fadf814eb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>fst::wstring</type>
+      <name>to_wide</name>
+      <anchorfile>classutf__string__view.html</anchorfile>
+      <anchor>aa91ac6ba7c9eb11a022d6ab37a3d6abc</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>variadic_arg</name>
+    <filename>structvariadic__arg.html</filename>
+    <templarg>_Index</templarg>
+    <templarg>_Ts</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>variadic_first_separator_t</name>
+    <filename>structvariadic__first__separator__t.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>variadic_separator_t</name>
+    <filename>structvariadic__separator__t.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>vector</name>
+    <filename>classvector.html</filename>
+    <templarg></templarg>
+    <templarg>_Alignment</templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(_Args...)&gt;::vfunction</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07___args_8_8_8_08_4_1_1vfunction.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <base>detail::ftraits&lt; R(_Args...)&gt;::vfunction_base</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(_Args...)&gt;::vfunction&lt; _FctChild, fst::enable_if_t&lt; fst::is_member_function_pointer_v&lt; _FctChild &gt; &gt; &gt;</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07___args_8_8_8_08_4_1_1vfunction_3_01___fct_child_00_01fst_1_1en18e396e649cb2b620e04aaecb997e068.html</filename>
+    <templarg></templarg>
+    <base>detail::ftraits&lt; R(_Args...)&gt;::vfunction_base</base>
+  </compound>
+  <compound kind="struct">
+    <name>detail::ftraits&lt; R(_Args...)&gt;::vfunction_base</name>
+    <filename>structdetail_1_1ftraits_3_01_r_07___args_8_8_8_08_4_1_1vfunction__base.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>void_memory_zone</name>
+    <filename>structvoid__memory__zone.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>wav_format_header</name>
+    <filename>structwav__format__header.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>window</name>
+    <filename>classwindow.html</filename>
+    <class kind="class">window::delegate</class>
+  </compound>
+  <compound kind="class">
+    <name>xml_memory_pool</name>
+    <filename>classxml__memory__pool.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>xml_memory_pool</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>ab5f53d4f23dc0f96105360843f0bd8c7</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~xml_memory_pool</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>ad61f8ef38cf355f799de44995d260625</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_node&lt; Ch &gt; *</type>
+      <name>allocate_node</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>a71c852ca34d3c2b6a0efcf787b40b8f5</anchor>
+      <arglist>(node_type type, const Ch *name=0, const Ch *value=0, size_t name_size=0, size_t value_size=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_attribute&lt; Ch &gt; *</type>
+      <name>allocate_attribute</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>af4077b692c974e05d1fd9010f44118eb</anchor>
+      <arglist>(const Ch *name=0, const Ch *value=0, size_t name_size=0, size_t value_size=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>Ch *</type>
+      <name>allocate_string</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>a039188bc4b3736d1876a3576d6682400</anchor>
+      <arglist>(const Ch *source=0, size_t size=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>basic_xml_node&lt; Ch &gt; *</type>
+      <name>clone_node</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>a1b5fe381c0a4f103b44b8f5a2beb1f63</anchor>
+      <arglist>(const basic_xml_node&lt; Ch &gt; *source, basic_xml_node&lt; Ch &gt; *result=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classxml__memory__pool.html</anchorfile>
+      <anchor>a86b1f4c8a598040d7cc129e998bbc46e</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>memory::zone_base</name>
+    <filename>structmemory_1_1zone__base.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>core</name>
+    <title>Core</title>
+    <filename>group__core.html</filename>
+    <class kind="struct">bitpack_t</class>
+    <class kind="class">bitpack</class>
+  </compound>
+</tagfile>

@@ -27,330 +27,129 @@
 #include "fst/common.h"
 #include "fst/traits.h"
 #include "fst/iterator.h"
-
 #include "fst/math.h"
-#include <string.h>
-#include <ctype.h>
-#include <wchar.h>
-
-#if __FST_MSVC__ && __FST_INTEL__
-#include <intrin.h>
-#endif
 
 FST_BEGIN_NAMESPACE
 
-    template <typename T>
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr T clamp(T d, T min, T max) noexcept
+    /// Clamps a value between a pair of boundary values.
+    ///
+    /// @param v the value to clamp
+    /// @param min the left boundary to clamp v to
+    /// @param max the right boundary to clamp v to
+    ///
+    /// @return If v compares less than min, returns min, otherwise if max compares less than v,
+    ///         returns max, otherwise returns v.
+    ///
+    /// @note The behavior is undefined if the value of min is greater than max.
+    ///
+    /// @note As opposed to std::clamp, all parameters and return type are not passed as reference.
+    template <typename _T>
+    FST_ALWAYS_INLINE constexpr _T clamp(_T v, _T min, _T max) noexcept
     {
-        const T t = d < min ? min : d;
+        const _T t = v < min ? min : v;
         return t > max ? max : t;
+    }
+
+    /// Clamps a value (inplace) between a pair of boundary values.
+    ///
+    /// @param v the value to clamp
+    /// @param min the left boundary to clamp v to
+    /// @param max the right boundary to clamp v to
+    ///
+    /// @note The behavior is undefined if the value of min is greater than max.
+    template <typename _T>
+    FST_ALWAYS_INLINE constexpr void clamp_inplace(_T & v, _T min, _T max) noexcept
+    {
+        v = __fst::clamp(v, min, max);
+    }
+
+    ///
+    template <typename _T>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool clamp_inplace_r(_T & v, _T min, _T max) noexcept
+    {
+        _T old_v = v;
+        const _T t = v < min ? min : v;
+        return old_v != (v = (t > max ? max : t));
+    }
+
+    ///
+    template <typename _T>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr _T clamp_to(_T v, _T in_min, _T in_max, _T min_if_below_min, _T max_if_above_max) noexcept
+    {
+        const _T t = v < in_min ? min_if_below_min : v;
+        return t > in_max ? max_if_above_max : t;
     }
 
     /// Get the maximum of n values.
     /// @code
     ///   int a = fst::maximum(1, 2, 3, 4, 5);
     /// @endcode
-    template <typename T0, typename T1, typename... Ts>
-    inline constexpr __fst::common_type_t<T0, T1, Ts...> maximum(T0 && v1, T1 && v2, Ts && ... vs)
+    template <typename _T0, typename _T1, typename... _Ts>
+    inline constexpr __fst::common_type_t<_T0, _T1, _Ts...> maximum(_T0 && v1, _T1 && v2, _Ts && ... vs) noexcept
     {
-        if constexpr (sizeof...(Ts) == 0) { return v2 > v1 ? v2 : v1; }
-        else { return v2 > v1 ? maximum(__fst::forward<T1>(v2), __fst::forward<Ts>(vs)...) : maximum(__fst::forward<T0>(v1), __fst::forward<Ts>(vs)...); }
-    }
-
-    template <typename T0, typename T1, typename... Ts>
-    inline constexpr __fst::common_type_t<T0, T1, Ts...> minimum(T0 && v1, T1 && v2, Ts && ... vs)
-    {
-        if constexpr (sizeof...(Ts) == 0) { return v2 < v1 ? v2 : v1; }
-        else { return v2 < v1 ? minimum(__fst::forward<T1>(v2), __fst::forward<Ts>(vs)...) : minimum(__fst::forward<T0>(v1), __fst::forward<Ts>(vs)...); }
-    }
-
-    template <typename T, typename T1>
-    FST_NODISCARD inline constexpr bool is_one_of(T t, T1 t1) noexcept
-    {
-        return t == t1;
-    }
-
-    template <typename T, typename T1, typename... Ts>
-    FST_NODISCARD inline constexpr bool is_one_of(T t, T1 t1, Ts... ts) noexcept
-    {
-        return (t == t1) || __fst::is_one_of(t, ts...);
-    }
-
-    // Endianness
-    struct little_endian_tag
-    {};
-    struct big_endian_tag
-    {};
-
-    template <class T>
-    struct is_endian_tag : __fst::bool_t<__fst::is_same_v<T, little_endian_tag> || __fst::is_same_v<T, big_endian_tag>>
-    {};
-
-    template <class T>
-    FST_INLINE_VAR constexpr bool is_endian_tag_v = is_endian_tag<T>::value;
-
-    ///
-    FST_ALWAYS_INLINE void memcpy(void* dst, const void* src, size_t size) noexcept
-    {
-#if __FST_CLANG__
-        __builtin_memcpy(dst, src, size);
-#else
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma intrinsic(memcpy)
-#endif
-
-        ::memcpy(dst, src, size);
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma function(memcpy)
-#endif
-
-#endif
-    }
-
-    template <class T>
-    FST_ALWAYS_INLINE void mem_copy(T * dst, const T* src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy(dst, src, size * sizeof(T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                dst[i] = src[i];
-            }
-        }
-    }
-
-    template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void mem_copy(T * dst, const T* src, size_t size) noexcept
-    {
-        fst_assert(__fst::is_aligned(dst, _Alignment));
-        fst_assert(__fst::is_aligned(src, _Alignment));
-
-        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy(dst, src, size * sizeof(T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                dst[i] = src[i];
-            }
-        }
+        if constexpr (sizeof...(_Ts) == 0) { return v2 > v1 ? v2 : v1; }
+        else { return v2 > v1 ? maximum(__fst::forward<_T1>(v2), __fst::forward<_Ts>(vs)...) : maximum(__fst::forward<_T0>(v1), __fst::forward<_Ts>(vs)...); }
     }
 
     ///
-
-    FST_ALWAYS_INLINE void memmove(void* dst, const void* src, size_t size) noexcept
+    template <typename _T0, typename _T1, typename... _Ts>
+    inline constexpr __fst::common_type_t<_T0, _T1, _Ts...> minimum(_T0 && v1, _T1 && v2, _Ts && ... vs) noexcept
     {
-#if __FST_CLANG__
-        __builtin_memmove(dst, src, size);
-#else
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma intrinsic(memmove)
-#endif
-
-        ::memmove(dst, src, size);
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma function(memmove)
-#endif
-#endif
+        if constexpr (sizeof...(_Ts) == 0) { return v2 < v1 ? v2 : v1; }
+        else { return v2 < v1 ? minimum(__fst::forward<_T1>(v2), __fst::forward<_Ts>(vs)...) : minimum(__fst::forward<_T0>(v1), __fst::forward<_Ts>(vs)...); }
     }
 
     ///
-    FST_NODISCARD FST_ALWAYS_INLINE int memcmp(const void* lhs, const void* rhs, size_t size) noexcept
+    template <typename _T, typename _T1, typename... _Ts>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_one_of(_T t, _T1 t1, _Ts... ts) noexcept
     {
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma intrinsic(memcmp)
-#endif
-
-        return ::memcmp(lhs, rhs, size);
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma function(memcmp)
-#endif
+        if constexpr (sizeof...(_Ts) == 0) { return t == t1; }
+        else { return (t == t1) || __fst::is_one_of(t, ts...); }
     }
 
     ///
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t strlen(const char* str) noexcept
+    template <typename _T, typename _T1, typename... _Ts>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool all_equals(_T t, _T1 t1, _Ts... ts) noexcept
     {
-#if __FST_MSVC__ || __FST_CLANG__
-        return __builtin_strlen(str);
-#else
-        return ::strlen(str);
-#endif
+        if constexpr (sizeof...(_Ts) == 0) { return t == t1; }
+        else { return (t == t1) && __fst::all_equals(t, ts...); }
+    }
+
+    /// Boolean only one true.
+    template <class... _Ts>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_only_one_true(_Ts... ts) noexcept
+    {
+        return (ts ^ ...);
+    }
+
+    /// Boolean only one false.
+    template <class... _Ts>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_only_one_false(_Ts... ts) noexcept
+    {
+        return (!ts ^ ...);
     }
 
     ///
-    FST_NODISCARD FST_ALWAYS_INLINE int strncmp(const char* a, const char* b, size_t size) noexcept
+    template <typename _T>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_in_range(_T x, _T left, _T right) noexcept
     {
-
-#if __FST_CLANG__
-        return __builtin_strncmp(a, b, size);
-#else
-        return ::strncmp(a, b, size);
-#endif
+        return x >= left && x <= right;
     }
 
     ///
-    FST_NODISCARD FST_ALWAYS_INLINE int strcmp(const char* a, const char* b) noexcept
+    template <typename _T>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_out_of_range(_T x, _T left, _T right) noexcept
     {
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma intrinsic(strcmp)
-#endif
-
-        return ::strcmp(a, b);
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma function(strcmp)
-#endif
-    }
-
-    ///
-    FST_ALWAYS_INLINE void memset(void* dst, int value, size_t size) noexcept
-    {
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma intrinsic(memset)
-#endif
-
-        ::memset(dst, value, size);
-
-#if __FST_MSVC__ && __FST_INTEL__
-#pragma function(memset)
-#endif
-    }
-
-    template <class T>
-    FST_ALWAYS_INLINE void memfill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
-    {
-        for (size_t i = 0; i < size; i++)
-        {
-            dst[i] = value;
-        }
-    }
-
-    template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void memfill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
-    {
-        fst_assert(__fst::is_aligned(dst, _Alignment));
-        for (size_t i = 0; i < size; i++)
-        {
-            dst[i] = value;
-        }
-    }
-
-    FST_ALWAYS_INLINE void memzero(void* dst, size_t size) noexcept
-    {
-        __fst::memset(dst, 0, size);
-    }
-
-    template <class T>
-    FST_ALWAYS_INLINE void mem_zero(T * dst, size_t size) noexcept
-    {
-        __fst::memset(dst, 0, size * sizeof(T));
-    }
-
-    template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void mem_zero(T * dst, size_t size) noexcept
-    {
-        fst_assert(__fst::is_aligned(dst, _Alignment));
-        __fst::memset(dst, 0, size * sizeof(T));
-    }
-
-    template <class _T>
-    FST_ALWAYS_INLINE void copy_element(_T & dst, __fst::cref_t<_T> src) noexcept
-    {
-        if constexpr (__fst::is_trivial_cref_v<_T>) { dst = src; }
-        else { __fst::mem_copy(&dst, &src, 1); }
-    }
-
-    template <class _T>
-    FST_ALWAYS_INLINE void move_element(_T & dst, _T && src) noexcept
-    {
-        if constexpr (__fst::is_trivial_cref_v<_T>) { dst = src; }
-        else { __fst::mem_copy(&dst, &src, 1); }
-    }
-
-    ////
-    //template <class T>
-    //inline constexpr __fst::pair<const T&, const T&> minmax(const T& a, const T& b)
-    //{
-    //    return (b < a) ? __fst::pair<const T&, const T&>(b, a) : __fst::pair<const T&, const T&>(a, b);
-    //}
-
-    template <class _Iterator, __fst::enable_if_t<__fst::is_random_access_iterator<_Iterator>::value, int> = 0>
-    constexpr ptrdiff_t distance(_Iterator first, _Iterator last)
-    {
-        return last - first;
-    }
-
-    template <class _Iterator, __fst::enable_if_t<__fst::is_random_access_iterator<_Iterator>::value, int> = 0>
-    constexpr size_t pdistance(_Iterator first, _Iterator last)
-    {
-        ptrdiff_t diff = __fst::distance(first, last);
-        fst_assert(diff >= 0);
-        return static_cast<size_t>(diff);
-    }
-
-    template <class _SrcIterator, class _DstIterator>
-    inline constexpr _DstIterator swap_ranges(const _SrcIterator src_first, const _SrcIterator src_last, _DstIterator dst)
-    {
-        const size_t size = src_last - src_first;
-        for (size_t i = 0; i < size; i++)
-        {
-            __fst::memswap(dst[i], src_first[i]);
-        }
-
-        return dst;
-    }
-
-    template <class _SrcIterator, class _DstIterator,
-        __fst::enable_if_t<__fst::is_contiguous_iterator<_DstIterator>::value && __fst::is_contiguous_iterator<_SrcIterator>::value, int> = 0>
-    _DstIterator copy_backward(_SrcIterator first, _SrcIterator last, _DstIterator d_last)
-    {
-        while (first != last)
-            *(--d_last) = *(--last);
-
-        return d_last;
-    }
-
-    template <class _SrcIterator, class _DstIterator,
-        __fst::enable_if_t<__fst::is_contiguous_iterator<_DstIterator>::value && __fst::is_contiguous_iterator<_SrcIterator>::value, int> = 0>
-    _DstIterator move_backward(_SrcIterator first, _SrcIterator last, _DstIterator d_last)
-    {
-        while (first != last)
-            *(--d_last) = __fst::move(*(--last));
-
-        return d_last;
-    }
-
-    template <class _SrcIterator, class _DstIterator,
-        __fst::enable_if_t<__fst::is_contiguous_iterator<_DstIterator>::value && __fst::is_contiguous_iterator<_SrcIterator>::value, int> = 0>
-    inline constexpr _DstIterator copy(_SrcIterator first, _SrcIterator last, _DstIterator dst_first) noexcept
-    {
-        for (; first != last; (void) ++first, (void) ++dst_first)
-            *dst_first = *first;
-
-        return dst_first;
-    }
-
-    template <class _SrcIterator, class _DstIterator,
-        __fst::enable_if_t<__fst::is_contiguous_iterator<_DstIterator>::value && __fst::is_contiguous_iterator<_SrcIterator>::value, int> = 0>
-    _DstIterator move(_SrcIterator first, _SrcIterator last, _DstIterator dst_first)
-    {
-        for (; first != last; ++dst_first, ++first)
-            *dst_first = __fst::move(*first);
-
-        return dst_first;
+        return __fst::is_in_range(x, left, right);
     }
 
     template <class _It1, class _It2>
-    constexpr bool equal(_It1 first1, _It1 last1, _It2 first2)
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_equal_range(_It1 first1, _It1 last1, _It2 first2)
     {
         for (; first1 != last1; ++first1, ++first2)
-            if (!(*first1 == *first2)) return false;
+        {
+            if (!(*first1 == *first2)) { return false; }
+        }
 
         return true;
     }
@@ -367,106 +166,6 @@ FST_BEGIN_NAMESPACE
         return (first1 == last1) && (first2 != last2);
     }
 
-    template <class _T>
-    inline void relocate(_T * dst, _T * src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::memcpy(dst, src, size * sizeof(_T)); }
-        else if constexpr (__fst::is_trivially_destructible_v<_T>)
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T(__fst::move(src[i]));
-            }
-        }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T(__fst::move(src[i]));
-                src[i].~_T();
-            }
-        }
-    }
-
-    template <class _T>
-    inline void default_construct_range(_T * dst, size_t size) noexcept
-    {
-        if constexpr (!__fst::is_trivially_default_constructible_v<_T>)
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T();
-            }
-        }
-        else { __fst::unused(dst, size); }
-    }
-
-    template <class _T>
-    inline void copy_construct_range(_T * dst, const _T* src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::memcpy(dst, src, size * sizeof(_T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T(src[i]);
-            }
-        }
-    }
-
-    template <class _T>
-    inline void copy_range(_T * dst, const _T* src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::memcpy(dst, src, size * sizeof(_T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                dst[i] = src[i];
-            }
-        }
-    }
-
-    template <class _T>
-    inline void move_construct_range(_T * dst, _T * src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::memcpy(dst, src, size * sizeof(_T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T(__fst::move(src[i]));
-            }
-        }
-    }
-
-    template <class _T>
-    inline void move_range(_T * dst, _T * src, size_t size) noexcept
-    {
-        if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::memcpy(dst, src, size * sizeof(_T)); }
-        else
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                fst_placement_new(dst + i) _T(__fst::move(src[i]));
-            }
-        }
-    }
-
-    template <class _T>
-    FST_ALWAYS_INLINE void destruct_range(FST_ATTRIBUTE_UNUSED _T * dst, FST_ATTRIBUTE_UNUSED size_t size) noexcept
-    {
-        if constexpr (!__fst::is_trivially_destructible_v<_T>)
-        {
-            for (size_t i = 0; i < size; i++)
-            {
-                dst[i].~_T();
-            }
-        }
-
-        else { __fst::unused(dst, size); }
-    }
-
     template <typename T1, typename T2, __fst::enable_if_t<__fst::is_floating_point_v<__fst::common_type_t<T1, T2>>, int> = 0>
     FST_NODISCARD inline constexpr bool fcompare(T1 a, T2 b) noexcept
     {
@@ -479,22 +178,6 @@ FST_BEGIN_NAMESPACE
 
         //  using T = __fst::common_type_t<T1, T2>;
         //  return __fst::abs(static_cast<T>(a) - static_cast<T>(b)) <= __fst::numeric_limits<T>::epsilon();
-    }
-
-    ///
-    template <class T>
-    FST_NODISCARD inline constexpr T byte_swap(T value) noexcept
-    {
-        static_assert(__fst::is_trivially_copyable_v<T>, "fst::byte_swap T must be trivially copyable");
-
-        constexpr size_t end_offset = sizeof(T) - 1;
-        uint8_t* data = (uint8_t*) &value;
-        for (uint8_t *begin = data, *end = data + end_offset; begin < end;)
-        {
-            __fst::memswap(*begin++, *end--);
-        }
-
-        return *(T*) data;
     }
 
     template <class _T = void>
@@ -562,6 +245,10 @@ FST_BEGIN_NAMESPACE
         __fst::sort(range.data(), range.size(), cmp);
     }*/
 
+    //
+    // unroll
+    //
+
     template <size_t N, size_t _Mul = 1>
     struct unroller;
 
@@ -577,6 +264,7 @@ FST_BEGIN_NAMESPACE
     FOP(7);    \
     FOP(8);    \
     FOP(9)
+
 #define FOPB(B, N) fct.template operator()<_Mul * FST_CONCAT(B, N)>()
 #define FOPL(B) \
     FOPB(B, 0); \
@@ -798,6 +486,10 @@ FST_BEGIN_NAMESPACE
         unroller<N, _Mul>::unroll(__fst::forward<_Fct>(fct));
     }
 
+    //
+    // Hash
+    //
+
 // These FNV-1a utility functions are extremely performance sensitive,
 // check examples like that in VSO-653642 before making changes.
 #if defined(_WIN64)
@@ -904,11 +596,10 @@ FST_BEGIN_NAMESPACE
     {
       public:
         using function_type = _Fct;
-        static_assert(!__fst::is_reference<function_type>::value && !__fst::is_const<function_type>::value && !__fst::is_volatile<function_type>::value, "final_action "
-                                                                                                                                                         "should store "
-                                                                                                                                                         "its "
-                                                                                                                                                         "callable by "
-                                                                                                                                                         "value");
+        static_assert(!__fst::is_reference<function_type>::value //
+                          && !__fst::is_const<function_type>::value //
+                          && !__fst::is_volatile<function_type>::value, //
+            "final_action should store its callable by value");
 
         inline final_action(function_type&& f) noexcept
             : _fct(__fst::move(f))
@@ -961,28 +652,5 @@ FST_BEGIN_NAMESPACE
                     begin = line_end;
                 }
             }*/
-
-    template <typename IteratorT>
-    class iterator_range
-    {
-        IteratorT _begin_iterator;
-        IteratorT _end_iterator;
-
-      public:
-        template <typename Container>
-        inline iterator_range(Container&& c)
-            : _begin_iterator(c.begin())
-            , _end_iterator(c.end())
-        {}
-
-        inline iterator_range(IteratorT begin_iterator, IteratorT end_iterator)
-            : _begin_iterator(__fst::move(begin_iterator))
-            , _end_iterator(__fst::move(end_iterator))
-        {}
-
-        inline IteratorT begin() const { return _begin_iterator; }
-        inline IteratorT end() const { return _end_iterator; }
-        inline bool empty() const { return _begin_iterator == _end_iterator; }
-    };
 
 FST_END_NAMESPACE

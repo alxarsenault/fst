@@ -1,8 +1,10 @@
-
+///
+///
+///
 
 FST_BEGIN_NAMESPACE
 
-    //
+    ///
     FST_INLINE_VAR constexpr size_t dynamic_size = (__fst::numeric_limits<size_t>::max)();
 
 FST_END_NAMESPACE

@@ -29,6 +29,7 @@
 #include "fst/string.h"
 #include "fst/utility.h"
 #include "fst/stream.h"
+
 FST_BEGIN_NAMESPACE
 
     // Forward declared.

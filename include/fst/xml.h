@@ -30,14 +30,13 @@
 #include "fst/memory.h"
 #include "fst/status_code.h"
 #include "fst/string_view.h"
+#include "fst/stream.h"
 #include "fst/utility.h"
 
 // On MSVC, disable "conditional expression is constant" warning (level 4).
 // This warning is almost impossible to avoid with certain types of templated code
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4127) // Conditional expression is constant
-#endif
+FST_PRAGMA_PUSH()
+FST_PRAGMA_DISABLE_WARNING_MSVC(4127)
 
 ///////////////////////////////////////////////////////////////////////////
 // RAPIDXML_PARSE_ERROR
@@ -65,7 +64,7 @@ FST_BEGIN_NAMESPACE
     /// </pre>
     /// @param what Human readable description of the error.
     /// @param where Pointer to character data where error was detected.
-    void parse_error_handler(const char* what, const void* where) {}
+    void parse_error_handler(const char*, const void*) {}
 FST_END_NAMESPACE
 
 ///////////////////////////////////////////////////////////////////////////
@@ -121,15 +120,15 @@ FST_BEGIN_NAMESPACE
 
     /// Enumeration listing all node types produced by the parser.
     /// Use basic_xml_node::type() function to query node type.
-    enum node_type {
-        node_document, /// A document node. Name and value are empty.
-        node_element, /// An element node. Name contains element name. Value contains text of first data node.
-        node_data, /// A data node. Name is empty. Value contains data text.
-        node_cdata, /// A CDATA node. Name is empty. Value contains data text.
-        node_comment, /// A comment node. Name is empty. Value contains comment text.
-        node_declaration, /// A declaration node. Name and value are empty. Declaration parameters (version, encoding and standalone) are in node attributes.
-        node_doctype, /// A DOCTYPE node. Name is empty. Value contains DOCTYPE text.
-        node_pi /// A PI node. Name contains target. Value contains instructions.
+    enum class xml_node_type {
+        document, /// A document node. Name and value are empty.
+        element, /// An element node. Name contains element name. Value contains text of first data node.
+        data, /// A data node. Name is empty. Value contains data text.
+        cdata, /// A CDATA node. Name is empty. Value contains data text.
+        comment, /// A comment node. Name is empty. Value contains comment text.
+        declaration, /// A declaration node. Name and value are empty. Declaration parameters (version, encoding and standalone) are in node attributes.
+        doctype, /// A DOCTYPE node. Name is empty. Value contains DOCTYPE text.
+        pi /// A PI node. Name contains target. Value contains instructions.
     };
 
     ///////////////////////////////////////////////////////////////////////
@@ -209,10 +208,7 @@ FST_BEGIN_NAMESPACE
     {
       public:
         /// Constructs empty pool with default allocator functions.
-        xml_memory_pool()
-        {
-            init();
-        }
+        xml_memory_pool() { init(); }
 
         /// Destroys pool and frees all the memory.
         /// This causes memory occupied by nodes allocated by the pool to be freed.
@@ -229,11 +225,11 @@ FST_BEGIN_NAMESPACE
         /// @param name_size Size of name to assign, or 0 to automatically calculate size from name string.
         /// @param value_size Size of value to assign, or 0 to automatically calculate size from value string.
         /// @return Pointer to allocated node. This pointer will never be NULL.
-        basic_xml_node<Ch>* allocate_node(node_type type, const Ch* name = 0, const Ch* value = 0, size_t name_size = 0, size_t value_size = 0)
+        basic_xml_node<Ch>* allocate_node(xml_node_type type, const Ch* name = 0, const Ch* value = 0, size_t name_size = 0, size_t value_size = 0)
         {
             void* memory = allocate_aligned(sizeof(basic_xml_node<Ch>));
 
-            basic_xml_node<Ch>* node = new (memory) basic_xml_node<Ch>(type);
+            basic_xml_node<Ch>* node = fst_placement_new(memory) basic_xml_node<Ch>(type);
             if (name)
             {
                 if (name_size > 0) { node->name(name, name_size); }
@@ -261,7 +257,7 @@ FST_BEGIN_NAMESPACE
         basic_xml_attribute<Ch>* allocate_attribute(const Ch* name = 0, const Ch* value = 0, size_t name_size = 0, size_t value_size = 0)
         {
             void* memory = allocate_aligned(sizeof(basic_xml_attribute<Ch>));
-            basic_xml_attribute<Ch>* attribute = new (memory) basic_xml_attribute<Ch>;
+            basic_xml_attribute<Ch>* attribute = fst_placement_new(memory) basic_xml_attribute<Ch>;
 
             if (name)
             {
@@ -351,7 +347,7 @@ FST_BEGIN_NAMESPACE
                 char* previous_begin = reinterpret_cast<header*>(align(m_begin))->previous_begin;
 
                 _MemoryZone::aligned_deallocate(m_begin, _MemoryCategory::id());
-                //delete[] m_begin; 
+                //delete[] m_begin;
 
                 m_begin = previous_begin;
             }
@@ -380,8 +376,8 @@ FST_BEGIN_NAMESPACE
 
         char* allocate_raw(size_t size)
         {
-                // TODO:
-               void* memory = _MemoryZone::aligned_allocate(size, RAPIDXML_ALIGNMENT, _MemoryCategory::id());
+            // TODO:
+            void* memory = _MemoryZone::aligned_allocate(size, RAPIDXML_ALIGNMENT, _MemoryCategory::id());
             return static_cast<char*>(memory);
         }
 
@@ -509,7 +505,7 @@ FST_BEGIN_NAMESPACE
         /// Size of value must be specified separately, because it does not have to be zero terminated.
         /// Use value(const Ch *) function to have the length automatically calculated (string must be zero terminated).
         /// <br><br>
-        /// If an element has a child node of type node_data, it will take precedence over element value when printing.
+        /// If an element has a child node of type data, it will take precedence over element value when printing.
         /// If you want to manipulate data of elements using values, use parser flag rapidxml::parse_no_data_nodes to prevent creation of data nodes by the parser.
         ///
         /// @param value value of node to set. Does not have to be zero terminated.
@@ -582,7 +578,7 @@ FST_BEGIN_NAMESPACE
                 {
                     node = node->parent();
                 }
-                return node->type() == node_document ? static_cast<basic_xml_document<Ch>*>(node) : nullptr;
+                return node->type() == document ? static_cast<basic_xml_document<Ch>*>(node) : nullptr;
             }
             return nullptr;
         }*/
@@ -664,7 +660,7 @@ FST_BEGIN_NAMESPACE
         /// Constructs an empty node with the specified type.
         /// Consider using xml_memory_pool of appropriate document to allocate nodes manually.
         /// @param type Type of node to construct.
-        basic_xml_node(node_type type) noexcept
+        basic_xml_node(xml_node_type type) noexcept
             : m_type(type)
             , m_first_node(nullptr)
             , m_first_attribute(nullptr)
@@ -679,7 +675,7 @@ FST_BEGIN_NAMESPACE
 
         /// Gets type of node.
         /// @return Type of node.
-        FST_NODISCARD FST_ALWAYS_INLINE node_type type() const noexcept { return m_type; }
+        FST_NODISCARD FST_ALWAYS_INLINE xml_node_type type() const noexcept { return m_type; }
 
         ///////////////////////////////////////////////////////////////////////////
         // Related nodes access
@@ -694,7 +690,7 @@ FST_BEGIN_NAMESPACE
                 node = node->parent();
             }
 
-            return node->type() == node_document ? static_cast<basic_xml_document<Ch>*>(node) : nullptr;
+            return node->type() == document ? static_cast<basic_xml_document<Ch>*>(node) : nullptr;
         }*/
 
         /// Gets first child node, optionally matching node name.
@@ -864,7 +860,7 @@ FST_BEGIN_NAMESPACE
 
         /// Sets type of node.
         /// @param type Type of node to set.
-        FST_ALWAYS_INLINE void type(node_type type) noexcept { m_type = type; }
+        FST_ALWAYS_INLINE void type(xml_node_type type) noexcept { m_type = type; }
 
         ///////////////////////////////////////////////////////////////////////////
         // Node manipulation
@@ -874,7 +870,7 @@ FST_BEGIN_NAMESPACE
         /// @param child Node to prepend.
         void prepend_node(node_pointer child) noexcept
         {
-            fst_assert(child && !child->parent() && child->type() != node_document);
+            fst_assert(child && !child->parent() && child->type() != xml_node_type::document);
 
             if (first_node())
             {
@@ -897,9 +893,9 @@ FST_BEGIN_NAMESPACE
         /// @param child Node to append.
         void append_node(node_pointer child) noexcept
         {
-            fst_assert(child && !child->parent() && child->type() != node_document);
+            fst_assert(child && !child->parent() && child->type() != xml_node_type::document);
 
-            if (first_node())
+            if (m_first_node)
             {
                 child->m_prev_sibling = m_last_node;
                 m_last_node->m_next_sibling = child;
@@ -922,7 +918,7 @@ FST_BEGIN_NAMESPACE
         void insert_node(node_pointer where, node_pointer child) noexcept
         {
             fst_assert(!where || where->parent() == this);
-            fst_assert(child && !child->parent() && child->type() != node_document);
+            fst_assert(child && !child->parent() && child->type() != xml_node_type::document);
 
             if (where == m_first_node) { prepend_node(child); }
             else if (where == nullptr) { append_node(child); }
@@ -1026,7 +1022,7 @@ FST_BEGIN_NAMESPACE
         {
             fst_assert(attribute && !attribute->parent());
 
-            if (first_attribute())
+            if (m_first_attribute)
             {
                 attribute->m_prev_attribute = m_last_attribute;
                 m_last_attribute->m_next_attribute = attribute;
@@ -1133,7 +1129,7 @@ FST_BEGIN_NAMESPACE
         // 2. last_node and last_attribute are valid only if node has at least one child/attribute respectively, otherwise they contain garbage
         // 3. prev_sibling and next_sibling are valid only if node has a parent, otherwise they contain garbage
 
-        node_type m_type; // Type of node; always valid
+        xml_node_type m_type; // Type of node; always valid
         node_pointer m_first_node; // Pointer to first child node, or 0 if none; always valid
         node_pointer m_last_node; // Pointer to last child node, or 0 if none; this value is only valid if m_first_node is non-zero
         attribute_pointer m_first_attribute; // Pointer to first attribute of node, or 0 if none; always valid
@@ -1161,7 +1157,7 @@ FST_BEGIN_NAMESPACE
       public:
         /// Constructs empty XML document
         basic_xml_document()
-            : basic_xml_node<Ch>(node_document)
+            : basic_xml_node<Ch>(xml_node_type::document)
         {}
 
         /// Parses zero-terminated XML string according to given flags.
@@ -1219,6 +1215,126 @@ FST_BEGIN_NAMESPACE
             this->remove_all_nodes();
             this->remove_all_attributes();
             xml_memory_pool<Ch>::clear();
+        }
+
+        ///
+        FST_NODISCARD inline basic_xml_node<Ch>* create_declaration_node() noexcept
+        {
+            fst::xml_node* decl_node = this->allocate_node(fst::xml_node_type::declaration);
+            decl_node->append_attribute(this->allocate_attribute("version", "1.0", 7, 3));
+            decl_node->append_attribute(this->allocate_attribute("encoding", "UTF-8", 8, 5));
+            return decl_node;
+        }
+
+        ///
+        FST_NODISCARD inline basic_xml_node<Ch>* create_node(__fst::basic_string_view<Ch> name) noexcept
+        {
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+            return this->allocate_node(xml_node_type::element, name_str, nullptr, name.size(), 0);
+        }
+
+        ///
+        template <class _T, __fst::enable_if_t<__fst::is_integral_v<_T>, int> = 0>
+        FST_NODISCARD inline basic_xml_node<Ch>* create_node(__fst::basic_string_view<Ch> name, _T value) noexcept
+        {
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+
+            if constexpr (__fst::is_unsigned_v<_T>)
+            {
+                Ch buffer[21];
+                const Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, value);
+                Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                return this->allocate_node(xml_node_type::element, name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+            }
+            else
+            {
+                if (value < 0)
+                {
+                    Ch buffer[21];
+                    Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(0 - static_cast<__fst::make_unsigned_t<_T>>(value)));
+                    *--begin = (Ch) '-';
+                    Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                    return this->allocate_node(xml_node_type::element, name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+                }
+                else
+                {
+                    Ch buffer[21];
+                    Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(value));
+                    Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                    return this->allocate_node(xml_node_type::element, name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+                }
+            }
+        }
+
+        template <class _T, __fst::enable_if_t<__fst::is_floating_point_v<_T>, int> = 0>
+        FST_NODISCARD inline basic_xml_node<Ch>* create_node(__fst::basic_string_view<Ch> name, _T value) noexcept
+        {
+            Ch buffer[33];
+            int len = __fst::snprintf(&buffer[0], 32, "%g", (double) value);
+            if (len <= 0) { return nullptr; }
+
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+            Ch* value_str = this->allocate_string(&buffer[0], (size_t) len);
+            return this->allocate_node(xml_node_type::element, name_str, value_str, name.size(), (size_t) len);
+        }
+
+        FST_NODISCARD inline basic_xml_node<Ch>* create_node(__fst::basic_string_view<Ch> name, __fst::basic_string_view<Ch> value) noexcept
+        {
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+            Ch* value_str = this->allocate_string(value.data(), value.size());
+            return this->allocate_node(xml_node_type::element, name_str, value_str, name.size(), value.size());
+        }
+
+        ///
+        template <class _T, __fst::enable_if_t<__fst::is_integral_v<_T>, int> = 0>
+        FST_NODISCARD inline basic_xml_attribute<Ch>* create_attribute(__fst::basic_string_view<Ch> name, _T value) noexcept
+        {
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+
+            if constexpr (__fst::is_unsigned_v<_T>)
+            {
+                Ch buffer[21];
+                const Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, value);
+                Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                return this->allocate_attribute(name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+            }
+            else
+            {
+                if (value < 0)
+                {
+                    Ch buffer[21];
+                    Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(0 - static_cast<__fst::make_unsigned_t<_T>>(value)));
+                    *--begin = (Ch) '-';
+                    Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                    return this->allocate_attribute(name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+                }
+                else
+                {
+                    Ch buffer[21];
+                    Ch* begin = stream_detail::uint_to_buff(&buffer[0] + 21, static_cast<__fst::make_unsigned_t<_T>>(value));
+                    Ch* value_str = this->allocate_string(begin, size_t(&buffer[0] + 21 - begin));
+                    return this->allocate_attribute(name_str, value_str, name.size(), size_t(&buffer[0] + 21 - begin));
+                }
+            }
+        }
+
+        template <class _T, __fst::enable_if_t<__fst::is_floating_point_v<_T>, int> = 0>
+        FST_NODISCARD inline basic_xml_attribute<Ch>* create_attribute(__fst::basic_string_view<Ch> name, _T value) noexcept
+        {
+            Ch buffer[33];
+            int len = __fst::snprintf(&buffer[0], 32, "%g", (double) value);
+            if (len <= 0) { return nullptr; }
+
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+            Ch* value_str = this->allocate_string(&buffer[0], (size_t) len);
+            return this->allocate_attribute(name_str, value_str, name.size(), (size_t) len);
+        }
+
+        FST_NODISCARD inline basic_xml_attribute<Ch>* create_attribute(__fst::basic_string_view<Ch> name, __fst::basic_string_view<Ch> value) noexcept
+        {
+            Ch* name_str = this->allocate_string(name.data(), name.size());
+            Ch* value_str = this->allocate_string(value.data(), value.size());
+            return this->allocate_attribute(name_str, value_str, name.size(), value.size());
         }
 
       private:
@@ -1546,7 +1662,7 @@ FST_BEGIN_NAMESPACE
             }
 
             //// Create declaration
-            //basic_xml_node<Ch>* declaration = this->allocate_node(node_declaration);
+            //basic_xml_node<Ch>* declaration = this->allocate_node(declaration);
 
             //// Skip whitespace before attributes or ?>
             //skip<whitespace_pred>(text);
@@ -1591,7 +1707,7 @@ FST_BEGIN_NAMESPACE
         basic_xml_node<Ch>* parse_doctype(const Ch*& text, __fst::error_result& er)
         {
             // Remember value start
-            const Ch* value = text;
+            //const Ch* value = text;
 
             // Skip to >
             while (*text != Ch('>'))
@@ -1638,7 +1754,7 @@ FST_BEGIN_NAMESPACE
             //if constexpr (Flags & parse_doctype_node)
             //{
             //    // Create a new doctype node
-            //    basic_xml_node<Ch>* doctype = this->allocate_node(node_doctype);
+            //    basic_xml_node<Ch>* doctype = this->allocate_node(doctype);
             //    doctype->value(value, text - value);
 
             //    text += 1; // skip '>'
@@ -1658,7 +1774,7 @@ FST_BEGIN_NAMESPACE
             //if constexpr (Flags & parse_pi_nodes)
             {
                 // Create pi node
-                basic_xml_node<Ch>* pi = this->allocate_node(node_pi);
+                basic_xml_node<Ch>* ppi = this->allocate_node(xml_node_type::pi);
 
                 // Extract PI target name
                 const Ch* name = text;
@@ -1669,7 +1785,7 @@ FST_BEGIN_NAMESPACE
                     er = __fst::status_code::unknown;
                     return nullptr;
                 }
-                pi->name(name, text - name);
+                ppi->name(name, (size_t) (text - name));
 
                 // Skip whitespace between pi target and pi
                 skip<whitespace_pred>(text);
@@ -1690,10 +1806,10 @@ FST_BEGIN_NAMESPACE
                 }
 
                 // Set pi value (verbatim, no entity expansion or whitespace normalization)
-                pi->value(value, text - value);
+                ppi->value(value, (size_t) (text - value));
 
                 text += 2; // Skip '?>'
-                return pi;
+                return ppi;
             }
             //else
             //{
@@ -1753,15 +1869,15 @@ FST_BEGIN_NAMESPACE
             // Create new data node
             //if constexpr (!(Flags & parse_no_data_nodes))
             {
-                basic_xml_node<Ch>* data = this->allocate_node(node_data);
-                data->value(value, end - value);
+                basic_xml_node<Ch>* data = this->allocate_node(xml_node_type::data);
+                data->value(value, (size_t) (end - value));
                 node->append_node(data);
             }
 
             // Add data to parent node if no data exists yet
             //if constexpr (!(Flags & parse_no_element_values))
             {
-                if (*node->value().data() == Ch('\0')) { node->value(value, end - value); }
+                if (*node->value().data() == Ch('\0')) { node->value(value, (size_t) (end - value)); }
             }
 
             // Return character that ends data
@@ -1803,8 +1919,8 @@ FST_BEGIN_NAMESPACE
             }
 
             // Create new cdata node
-            basic_xml_node<Ch>* cdata = this->allocate_node(node_cdata);
-            cdata->value(value, text - value);
+            basic_xml_node<Ch>* cdata = this->allocate_node(xml_node_type::cdata);
+            cdata->value(value, (size_t) (text - value));
 
             text += 3; // Skip ]]>
             return cdata;
@@ -1814,7 +1930,7 @@ FST_BEGIN_NAMESPACE
         basic_xml_node<Ch>* parse_element(const Ch*& text, __fst::error_result& er)
         {
             // Create element node
-            basic_xml_node<Ch>* element = this->allocate_node(node_element);
+            basic_xml_node<Ch>* element = this->allocate_node(xml_node_type::element);
 
             // Extract element name
             const Ch* name = text;
@@ -1825,7 +1941,7 @@ FST_BEGIN_NAMESPACE
                 er = __fst::status_code::unknown;
                 return nullptr;
             }
-            element->name(name, text - name);
+            element->name(name, (size_t) (text - name));
 
             // Skip whitespace between element name and attributes or >
             skip<whitespace_pred>(text);
@@ -2049,7 +2165,7 @@ FST_BEGIN_NAMESPACE
 
                 // Create new attribute
                 basic_xml_attribute<Ch>* attribute = this->allocate_attribute();
-                attribute->name(name, text - name);
+                attribute->name(name, (size_t) (text - name));
                 node->append_attribute(attribute);
 
                 // Skip whitespace after attribute name
@@ -2083,7 +2199,7 @@ FST_BEGIN_NAMESPACE
 
                 //if (er) { return er; }
                 // Set attribute value
-                attribute->value(value, end - value);
+                attribute->value(value, (size_t) (end - value));
 
                 // Make sure that end quote is present
                 if (*text != quote)
@@ -2372,12 +2488,474 @@ FST_BEGIN_NAMESPACE
     } // namespace internal
     /// \endcond
 
+    ///////////////////////////////////////////////////////////////////////
+    // Printing flags
+
+    const int print_no_indenting = 0x1; //!< Printer flag instructing the printer to suppress indenting of XML. See print() function.
+
+    ///////////////////////////////////////////////////////////////////////
+    // Internal
+
+    //! \cond internal
+    namespace internal
+    {
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Internal character operations
+
+        // Copy characters from given range to given output iterator
+        template <class OutIt, class Ch>
+        inline OutIt copy_chars(const Ch* begin, const Ch* end, OutIt out)
+        {
+            while (begin != end)
+            {
+                *out++ = *begin++;
+            }
+            return out;
+        }
+
+        // Copy characters from given range to given output iterator and expand
+        // characters into references (&lt; &gt; &apos; &quot; &amp;)
+        template <class OutIt, class Ch>
+        inline OutIt copy_and_expand_chars(const Ch* begin, const Ch* end, Ch noexpand, OutIt out)
+        {
+            while (begin != end)
+            {
+                if (*begin == noexpand)
+                {
+                    *out++ = *begin; // No expansion, copy character
+                }
+                else
+                {
+                    switch (*begin)
+                    {
+                    case Ch('<'):
+                        *out++ = Ch('&');
+                        *out++ = Ch('l');
+                        *out++ = Ch('t');
+                        *out++ = Ch(';');
+                        break;
+                    case Ch('>'):
+                        *out++ = Ch('&');
+                        *out++ = Ch('g');
+                        *out++ = Ch('t');
+                        *out++ = Ch(';');
+                        break;
+                    case Ch('\''):
+                        *out++ = Ch('&');
+                        *out++ = Ch('a');
+                        *out++ = Ch('p');
+                        *out++ = Ch('o');
+                        *out++ = Ch('s');
+                        *out++ = Ch(';');
+                        break;
+                    case Ch('"'):
+                        *out++ = Ch('&');
+                        *out++ = Ch('q');
+                        *out++ = Ch('u');
+                        *out++ = Ch('o');
+                        *out++ = Ch('t');
+                        *out++ = Ch(';');
+                        break;
+                    case Ch('&'):
+                        *out++ = Ch('&');
+                        *out++ = Ch('a');
+                        *out++ = Ch('m');
+                        *out++ = Ch('p');
+                        *out++ = Ch(';');
+                        break;
+                    default: *out++ = *begin; // No expansion, copy character
+                    }
+                }
+                ++begin; // Step to next character
+            }
+            return out;
+        }
+
+        // Fill given output iterator with repetitions of the same character
+        template <class OutIt, class Ch>
+        inline OutIt fill_chars(OutIt out, int n, Ch ch)
+        {
+            for (int i = 0; i < n; ++i)
+            {
+                *out++ = ch;
+            }
+
+            return out;
+        }
+
+        // Find character
+        template <class Ch, Ch ch>
+        inline bool find_char(const Ch* begin, const Ch* end)
+        {
+            while (begin != end)
+            {
+                if (*begin++ == ch) { return true; }
+            }
+
+            return false;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Internal printing operations
+        template <class OutIt, class Ch>
+        inline OutIt print_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent);
+
+        // Print children of the node
+        template <class OutIt, class Ch>
+        inline OutIt print_children(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            for (basic_xml_node<Ch>* child = node->first_node(); child; child = child->next_sibling())
+            {
+                out = print_node(out, child, flags, indent);
+            }
+
+            return out;
+        }
+
+        // Print attributes of the node
+        template <class OutIt, class Ch>
+        inline OutIt print_attributes(OutIt out, const basic_xml_node<Ch>* node)
+        {
+            for (basic_xml_attribute<Ch>* attribute = node->first_attribute(); attribute; attribute = attribute->next_attribute())
+            {
+                if (!attribute->name().empty() && !attribute->value().empty())
+                {
+                    // Print attribute name
+                    *out = Ch(' '), ++out;
+                    out = copy_chars(attribute->name().begin(), attribute->name().end(), out);
+                    *out = Ch('='), ++out;
+                    // Print attribute value using appropriate quote type
+                    if (find_char<Ch, Ch('"')>(attribute->value().begin(), attribute->value().end()))
+                    {
+                        *out = Ch('\''), ++out;
+                        out = copy_and_expand_chars(attribute->value().begin(), attribute->value().end(), Ch('"'), out);
+                        *out = Ch('\''), ++out;
+                    }
+                    else
+                    {
+                        *out = Ch('"'), ++out;
+                        out = copy_and_expand_chars(attribute->value().begin(), attribute->value().end(), Ch('\''), out);
+                        *out = Ch('"'), ++out;
+                    }
+                }
+            }
+            return out;
+        }
+
+        // Print data node
+        template <class OutIt, class Ch>
+        inline OutIt print_data_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::data);
+
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            out = copy_and_expand_chars(node->value().begin(), node->value().end(), Ch(0), out);
+            return out;
+        }
+
+        // Print data node
+        template <class OutIt, class Ch>
+        inline OutIt print_cdata_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::cdata);
+
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<');
+            ++out;
+            *out = Ch('!');
+            ++out;
+            *out = Ch('[');
+            ++out;
+            *out = Ch('C');
+            ++out;
+            *out = Ch('D');
+            ++out;
+            *out = Ch('A');
+            ++out;
+            *out = Ch('T');
+            ++out;
+            *out = Ch('A');
+            ++out;
+            *out = Ch('[');
+            ++out;
+            out = copy_chars(node->value().begin(), node->value().end(), out);
+            *out = Ch(']');
+            ++out;
+            *out = Ch(']');
+            ++out;
+            *out = Ch('>');
+            ++out;
+            return out;
+        }
+
+        // Print element node
+        template <class OutIt, class Ch>
+        inline OutIt print_element_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::element);
+
+            // Print element name and attributes, if any
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<'), ++out;
+            out = copy_chars(node->name().begin(), node->name().end(), out);
+            out = print_attributes(out, node);
+
+            // If node is childless
+            if (node->value_size() == 0 && !node->first_node())
+            {
+                // Print childless node tag ending
+                *out = Ch('/'), ++out;
+                *out = Ch('>'), ++out;
+            }
+            else
+            {
+                // Print normal node tag ending
+                *out = Ch('>'), ++out;
+
+                // Test if node contains a single data node only (and no other nodes)
+                basic_xml_node<Ch>* child = node->first_node();
+                if (!child)
+                {
+                    // If node has no children, only print its value without indenting
+                    out = copy_and_expand_chars(node->value().begin(), node->value().end(), Ch(0), out);
+                }
+                else if (child->next_sibling() == 0 && child->type() == xml_node_type::data)
+                {
+                    // If node has a sole data child, only print its value without indenting
+                    out = copy_and_expand_chars(child->value().begin(), child->value().end(), Ch(0), out);
+                }
+                else
+                {
+                    // Print all children with full indenting
+                    if (!(flags & print_no_indenting)) *out = Ch('\n'), ++out;
+
+                    out = print_children(out, node, flags, indent + 1);
+
+                    if (!(flags & print_no_indenting)) out = fill_chars(out, indent, Ch('\t'));
+                }
+
+                // Print node end
+                *out = Ch('<'), ++out;
+                *out = Ch('/'), ++out;
+                out = copy_chars(node->name().begin(), node->name().end(), out);
+                *out = Ch('>'), ++out;
+            }
+            return out;
+        }
+
+        // Print declaration node
+        template <class OutIt, class Ch>
+        inline OutIt print_declaration_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            // Print declaration start
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<'), ++out;
+            *out = Ch('?'), ++out;
+            *out = Ch('x'), ++out;
+            *out = Ch('m'), ++out;
+            *out = Ch('l'), ++out;
+
+            // Print attributes
+            out = print_attributes(out, node);
+
+            // Print declaration end
+            *out = Ch('?'), ++out;
+            *out = Ch('>'), ++out;
+
+            return out;
+        }
+
+        // Print comment node
+        template <class OutIt, class Ch>
+        inline OutIt print_comment_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::comment);
+
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<'), ++out;
+            *out = Ch('!'), ++out;
+            *out = Ch('-'), ++out;
+            *out = Ch('-'), ++out;
+            out = copy_chars(node->value().begin(), node->value().end(), out);
+            *out = Ch('-'), ++out;
+            *out = Ch('-'), ++out;
+            *out = Ch('>'), ++out;
+            return out;
+        }
+
+        // Print doctype node
+        template <class OutIt, class Ch>
+        inline OutIt print_doctype_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::doctype);
+
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<'), ++out;
+            *out = Ch('!'), ++out;
+            *out = Ch('D'), ++out;
+            *out = Ch('O'), ++out;
+            *out = Ch('C'), ++out;
+            *out = Ch('T'), ++out;
+            *out = Ch('Y'), ++out;
+            *out = Ch('P'), ++out;
+            *out = Ch('E'), ++out;
+            *out = Ch(' '), ++out;
+            out = copy_chars(node->value().begin(), node->value().end(), out);
+            *out = Ch('>'), ++out;
+            return out;
+        }
+
+        // Print pi node
+        template <class OutIt, class Ch>
+        inline OutIt print_pi_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            fst_assert(node->type() == xml_node_type::pi);
+
+            if (!(flags & print_no_indenting)) { out = fill_chars(out, indent, Ch('\t')); }
+
+            *out = Ch('<'), ++out;
+            *out = Ch('?'), ++out;
+            out = copy_chars(node->name().begin(), node->name().end(), out);
+            *out = Ch(' '), ++out;
+            out = copy_chars(node->value().begin(), node->value().end(), out);
+            *out = Ch('?'), ++out;
+            *out = Ch('>'), ++out;
+            return out;
+        }
+
+        // Print node
+        template <class OutIt, class Ch>
+        inline OutIt print_node(OutIt out, const basic_xml_node<Ch>* node, int flags, int indent)
+        {
+            // Print proper node type
+            switch (node->type())
+            {
+
+            // Document
+            case xml_node_type::document: out = print_children(out, node, flags, indent); break;
+
+            // Element
+            case xml_node_type::element: out = print_element_node(out, node, flags, indent); break;
+
+            // Data
+            case xml_node_type::data: out = print_data_node(out, node, flags, indent); break;
+
+            // CDATA
+            case xml_node_type::cdata: out = print_cdata_node(out, node, flags, indent); break;
+
+            // Declaration
+            case xml_node_type::declaration: out = print_declaration_node(out, node, flags, indent); break;
+
+            // Comment
+            case xml_node_type::comment: out = print_comment_node(out, node, flags, indent); break;
+
+            // Doctype
+            case xml_node_type::doctype: out = print_doctype_node(out, node, flags, indent); break;
+
+            // Pi
+            case xml_node_type::pi:
+                out = print_pi_node(out, node, flags, indent);
+                break;
+
+                // Unknown
+            default: assert(0); break;
+            }
+
+            // If indenting not disabled, add line break after node
+            if (!(flags & print_no_indenting))
+            {
+                *out = Ch('\n');
+                ++out;
+            }
+
+            // Return modified iterator
+            return out;
+        }
+    } // namespace internal
+    //! \endcond
+
+    //********************************************************************************************************
+    /// TODO: Slow as fuck
+    //********************************************************************************************************
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Printing
+
+    //
+    //! Prints XML to given output iterator.
+    //! \param out Output iterator to print to.
+    //! \param node Node to be printed. Pass xml_document to print entire document.
+    //! \param flags Flags controlling how XML is printed.
+    //! \return Output iterator pointing to position immediately after last character of printed text.
+    template <class OutIt, class Ch>
+    inline OutIt xml_print_output(OutIt out, const basic_xml_node<Ch>& node, int flags = 0)
+    {
+        return internal::print_node(out, &node, flags, 0);
+    }
+
+    //! Prints XML to given output stream.
+    //! \param out Output stream to print to.
+    //! \param node Node to be printed. Pass xml_document to print entire document.
+    //! \param flags Flags controlling how XML is printed.
+    //! \return Output stream.
+    template <class Ch>
+    inline __fst::output_stream<Ch>& xml_print(__fst::output_stream<Ch> & out, const basic_xml_node<Ch>& node, int flags = 0)
+    {
+        xml_print_output(__fst::output_stream_iterator<Ch>(out), node, flags);
+        return out;
+    }
+
+    //! Prints formatted XML to given output stream. Uses default printing flags. Use print() function to customize printing process.
+    //! \param out Output stream to print to.
+    //! \param node Node to be printed.
+    //! \return Output stream.
+    template <class Ch>
+    inline __fst::output_stream<Ch>& operator<<(__fst::output_stream<Ch>& out, const basic_xml_node<Ch>& node)
+    {
+        return xml_print(out, node);
+    }
+
+    ///
+    template <class _CharT, class _MemoryCategory, class _MemoryZone>
+    class basic_xml_stream
+    {
+      public:
+        using document_type = __fst::basic_xml_document<_CharT, _MemoryCategory, _MemoryZone>;
+        using node_type = __fst::basic_xml_node<_CharT>;
+
+        inline basic_xml_stream(document_type& doc, node_type* node) noexcept
+            : _doc(doc)
+            , _node(node)
+        {}
+
+        basic_xml_stream(const basic_xml_stream&) = delete;
+        basic_xml_stream(basic_xml_stream&&) = delete;
+
+        ~basic_xml_stream() noexcept = default;
+
+        basic_xml_stream& operator=(const basic_xml_stream&) = delete;
+        basic_xml_stream& operator=(basic_xml_stream&&) = delete;
+
+        inline document_type& document() noexcept { return _doc; }
+        inline node_type* node() noexcept { return _node; }
+
+      private:
+        document_type& _doc;
+        node_type* _node;
+    };
+
+    using xml_stream = __fst::basic_xml_stream<char, __fst::default_memory_category, __fst::default_memory_zone>;
+
 FST_END_NAMESPACE
 
 // Undefine internal macros
 #undef RAPIDXML_PARSE_ERROR
 
-// On MSVC, restore warnings state
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+FST_PRAGMA_POP()

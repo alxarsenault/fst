@@ -67,16 +67,6 @@ FST_BEGIN_NAMESPACE
         }
     } // namespace memory.
 
-    FST_NODISCARD size_t mem_cache_size() noexcept
-    {
-        return 64;
-    }
-
-    FST_NODISCARD size_t mem_page_size() noexcept
-    {
-        return 4096;
-    }
-
     namespace
     {
         inline void* __fst_aligned_alloc(size_t size, size_t alignment) noexcept

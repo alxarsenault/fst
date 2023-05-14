@@ -41,6 +41,7 @@ FST_BEGIN_NAMESPACE
         using size_type = size_t;
         using difference_type = ptrdiff_t;
 
+        ///
         FST_NODISCARD static inline constexpr size_type size() noexcept { return _Size; }
         FST_NODISCARD static inline constexpr size_type alignment() noexcept { return _Alignment; }
         FST_NODISCARD static inline constexpr size_type aligned_size() noexcept { return sizeof(aligned_storage); }

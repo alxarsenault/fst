@@ -1,4 +1,6 @@
-
+///
+///
+///
 
 /// @macro FST_GNUC_PREREQ
 /// Extend the default __GNUC_PREREQ even if glibc's features.h isn't available.
@@ -212,6 +214,13 @@
 #define FST_UNUSED(...) (void) (__VA_ARGS__)
 
 ///
+#if __FST_MSVC__ && (defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64))
+#define FST_UNALIGNED __unaligned
+#else
+#define FST_UNALIGNED
+#endif
+
+///
 #ifdef __cpp_char8_t
 #define FST_HAS_CHAR8_T 1
 #define FST_IF_CHAR8_T(...) __VA_ARGS__
@@ -227,10 +236,8 @@
 #define FST_INTEGER_TYPES \
     bool, char, signed char, unsigned char, FST_UTF_CHAR_TYPES, short, unsigned short, int, unsigned int, long, unsigned long, long long, unsigned long long
 
-
 #define FST_SIGNED_INTEGER_TYPES char, signed char, short, int, long, long long
 #define FST_UNSIGNED_INTEGER_TYPES unsigned char, FST_UTF_CHAR_TYPES, unsigned short, unsigned int, unsigned long, unsigned long long
-
 
 #define FST_FLOAT_TYPES float, double, long double
 

@@ -26,7 +26,6 @@
 
 #include "fst/common.h"
 #include "fst/traits.h"
-//#include "fst/array.h"
 #include <math.h>
 
 FST_BEGIN_NAMESPACE
@@ -292,9 +291,9 @@ FST_BEGIN_NAMESPACE
     //#endif
 
     template <typename T, __fst::enable_if_t<__fst::is_integral_v<T>>* = nullptr>
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr T is_power_of_two(T v)
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_power_of_two(T v) noexcept
     {
-        return v && !(v & (v - 1));
+        return (bool)(v && !(v & (v - 1)));
     }
 
     /// Returns the next power of two (in 64-bits) that is strictly greater than A.
@@ -342,6 +341,14 @@ FST_BEGIN_NAMESPACE
         return multiply_debruijn_bit_position_2[(uint32_t) (v * 0x077CB531U) >> (uint32_t) 27];
     }
 
+    template <size_t _Pow2Multiple, class _T, __fst::enable_if_t<__fst::is_integral_v<_T>>* = nullptr>
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_multiple_of(_T x)
+    {
+        static_assert(__fst::is_power_of_two(_Pow2Multiple), "_Pow2Multiple must be a power of two");
+        return (x & (_Pow2Multiple - 1)) == 0;
+    }
+
+    //!(alignment & (sizeof(void*) - 1))
     //
     //
     //

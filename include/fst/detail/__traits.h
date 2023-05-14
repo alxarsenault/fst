@@ -1,4 +1,6 @@
-
+///
+///
+///
 
 // clang-format off
 FST_BEGIN_NAMESPACE
@@ -13,16 +15,20 @@ using nullptr_t = decltype(nullptr);
 // always_false
 template <typename T> FST_INLINE_VAR constexpr bool always_false = false;
 
-// empty
-// template<class ...> struct empty_t {};
+/// @struct empty_t
+template<class ...> struct empty_t {};
 
-// void_t
+/// empty_struct
+using empty_struct = empty_t<>;
+
+/// void_t
 template <class... _Types> using void_t = void;
 
-// type_identity
+/// type_identity
 template <class _T> struct type_identity { using type = _T; };
 template <class _T> using type_identity_t = typename type_identity<_T>::type;
 
+/// integral_constant
 template <class _T, _T _Value>
 struct integral_constant {
     static constexpr _T value = _Value;
@@ -32,7 +38,10 @@ struct integral_constant {
     FST_NODISCARD FST_ALWAYS_INLINE constexpr value_type operator()() const noexcept { return value; }
 };
 
-// bool_constant
+/// size_constant
+template<size_t _Size> using size_constant = integral_constant<size_t, _Size>;
+
+/// bool_constant
 template <bool _Value> using bool_constant = __fst::integral_constant<bool, _Value>;
 template <bool _Value> using bool_t = __fst::bool_constant<_Value>;
 using true_t = bool_t<true>;
@@ -40,30 +49,55 @@ using false_t = bool_t<false>;
 
 template <class _CharT> class output_stream;
 
-struct empty_t {};
-
-// nonesuch
+/// nonesuch
 struct nonesuch {
     ~nonesuch() = delete;
-    nonesuch(nonesuch const&) = delete;
-    void operator=(nonesuch const&) = delete;
+    nonesuch(const nonesuch&) = delete;
+    nonesuch& operator=(const nonesuch&) = delete;
 };
 
-// enable_if
-template <bool _Test, class _T = void> struct enable_if {};
+/// @trait enable_if
+///
+/// If @tname{_Test} is @boldblue{true}, `enable_if` has a member typedef type, equal to @tname{_T},
+/// otherwise, it is an empty struct.
+template <bool _Test, class _T = void>
+struct enable_if
+{
+    #ifdef FST_DOC
+    typedef type; ///< either @tname{_T} or no such member, depending on the value of @tname{_Test}.
+    #endif
+};
+
+#ifndef FST_DOC
 template <class _T> struct enable_if<true, _T> { using type = _T; };
 template <bool _Test, class _T = void> using enable_if_t = typename enable_if<_Test, _T>::type;
+#endif
 
-// conditional
+
+/// fst::conditional
+///
+/// @def
+/// template <bool _Test, class _T1, class _T2>
+/// struct conditional;
+///
+/// @description
+/// Provides member typedef type, which is defined as `_T1` if `_Test` is `true` at compile time,
+/// or as `_T2` if `_Test` is `false`.
+///
+/// @type type
+/// `_T1` if `_Test == true`, `_T2` if `_Test == false`
+///
+/// @helper
+/// template <bool _Test, class _T1, class _T2>
+/// using conditional_t = typename conditional<_Test, _T1, _T2>::type;
 template <bool _Test, class _T1, class _T2> struct conditional { using type = _T1; };
 template <class _T1, class _T2> struct conditional<false, _T1, _T2> { using type = _T2; };
 template <bool _Test, class _T1, class _T2> using conditional_t = typename conditional<_Test, _T1, _T2>::type;
 
-// is_same
+/// is_same
 template <class, class> FST_INLINE_VAR constexpr bool is_same_v = false;
 template <class _T> FST_INLINE_VAR constexpr bool is_same_v<_T, _T> = true;
 template <class _T1, class _T2> struct is_same : __fst::bool_t<__fst::is_same_v<_T1, _T2>> {};
-
 
 // is_different
 template <class _T1, class _T2> FST_INLINE_VAR constexpr bool is_different_v = !__fst::is_same_v<_T1, _T2>;

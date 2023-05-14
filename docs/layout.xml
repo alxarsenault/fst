@@ -38,7 +38,8 @@
 
   <!-- Layout definition for a class page -->
   <class>
-    <briefdescription visible="yes"/>
+    <briefdescription visible="no"/>
+    <detaileddescription title="Description"/>
     <includes visible="$SHOW_INCLUDE_FILES"/>
     <inheritancegraph visible="$CLASS_GRAPH"/>
     <collaborationgraph visible="$COLLABORATION_GRAPH"/>
@@ -51,7 +52,7 @@
       <signals title=""/>
       <publicmethods title=""/>
       <publicstaticmethods title=""/>
-      <publicattributes title=""/>
+      <publicattributes title="Member types"/>
       <publicstaticattributes title=""/>
       <protectedtypes title=""/>
       <protectedslots title=""/>
@@ -76,7 +77,6 @@
       <related title="" subtitle=""/>
       <membergroups visible="yes"/>
     </memberdecl>
-    <detaileddescription title=""/>
     <memberdef>
       <inlineclasses title=""/>
       <typedefs title=""/>

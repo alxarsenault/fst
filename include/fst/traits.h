@@ -85,6 +85,16 @@ FST_ALWAYS_INLINE constexpr _T1 exchange(_T1& obj, _T2&& new_value) noexcept {
     return old_value;
 }
 
+template<typename T>
+FST_NODISCARD FST_ALWAYS_INLINE constexpr bool assign(T& dst, T src) {
+  if(dst == src) {
+    return false;
+  }
+
+  dst = src;
+  return true;
+}
+
 template <class _T> FST_ALWAYS_INLINE constexpr __fst::add_const_t<_T>& as_const(_T& t) noexcept { return t; }
 
 ///////////////////////////////

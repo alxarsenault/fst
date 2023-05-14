@@ -38,6 +38,7 @@
 #include "fst/common.h"
 #include "fst/status_code.h"
 #include "fst/traits.h"
+#include "fst/memory_utils.h"
 
 #if __FST_CLANG__
 #define fst_alloca(size) __builtin_alloca(size)
@@ -53,7 +54,6 @@
 FST_BEGIN_NAMESPACE
 
     ///
-    using byte = uint8_t;
 
     ///
     enum class memory_zone_id : uint64_t {
@@ -71,6 +71,7 @@ FST_BEGIN_NAMESPACE
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_zone_id)
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_category_id)
 
+
     ///
     struct default_memory_zone;
 
@@ -82,38 +83,6 @@ FST_BEGIN_NAMESPACE
 
     ///
     struct profiler_memory_zone;
-
-    //namespace simd
-    //{
-    //    template <class T>
-    //    struct vector_type_base
-    //    {
-    //        using type = T;
-    //    };
-
-    //    template <class T>
-    //    struct vector_type
-    //    {
-    //        using type = typename vector_type_base<__fst::remove_const_t<T>>::type;
-    //    };
-
-    //    ///
-    //    template <class T>
-    //    using vector_type_t = typename vector_type<T>::type;
-
-    //    ///
-    //    template <class T>
-    //    using vector_type_alignment = __fst::integral_constant<size_t, alignof(__fst::simd::vector_type_t<T>)>;
-
-    //    template <class T>
-    //    FST_INLINE_VAR constexpr size_t vector_type_alignment_v = vector_type_alignment<T>::value;
-    //} // namespace simd.
-
-    /// Get the cpu cache size (in bytes).
-    size_t mem_cache_size() noexcept;
-
-    /// Get the memory page size (in bytes).
-    size_t mem_page_size() noexcept;
 
     // clang-format off
     template <class T> struct memory_category;

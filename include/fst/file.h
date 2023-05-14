@@ -26,6 +26,7 @@
 
 #include "fst/common.h"
 #include "fst/status_code.h"
+#include "fst/stream.h"
 
 FST_BEGIN_NAMESPACE
     enum class open_mode {
@@ -87,4 +88,17 @@ FST_BEGIN_NAMESPACE
         struct native;
         native* _native = nullptr;
     };
+
+    ///
+    inline __fst::output_stream<char> file_stream(__fst::file & file_ref) noexcept
+    {
+        return __fst::output_stream<char>{ &file_ref, [](void* data, const char* str, size_t size, stream_modifier)
+            {
+                __fst::file* file_ptr = (__fst::file*) data;
+                size_t sz = file_ptr->write((const void*) str, size);
+                fst_assert(sz == size, "error");
+                __fst::unused(sz);
+            } };
+    }
+
 FST_END_NAMESPACE
