@@ -168,7 +168,7 @@ FST_END_NAMESPACE
 // numeric_limits
 #include "fst/detail/__numeric_limits.h"
 
-FST_NODISCARD inline void* operator new(size_t, void* memory, __fst::placement_new_tag) noexcept
+FST_NODISCARD FST_ATTRIBUTE_RETURNS_NONNULL inline void* operator new(size_t, void* memory, __fst::placement_new_tag) noexcept
 {
     return memory;
 }

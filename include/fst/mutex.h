@@ -23,12 +23,20 @@
 //
 
 #pragma once
+#ifndef _FST_MUTEX_H // include guard for 3rd party interop
+#define _FST_MUTEX_H
+//#pragma system_header
 
 #include "fst/common.h"
 #include "fst/traits.h"
 #include "fst/aligned_storage.h"
 #include "fst/atomic.h"
 
+//#define MacroStr(x)   #x
+//#define MacroStr2(x)  MacroStr(x)
+//#define Message(desc) __pragma(message(__FILE__ "(" FST_STRINGIFY(__LINE__) ") :" #desc))
+
+FST_TODO("BINFDLJ")
 FST_BEGIN_NAMESPACE
 
     class mutex
@@ -55,7 +63,6 @@ FST_BEGIN_NAMESPACE
 
       private:
         struct native;
-        //native* _native;
         __fst::aligned_storage<64, 8> _storage;
     };
 
@@ -94,3 +101,13 @@ FST_BEGIN_NAMESPACE
     };
 
 FST_END_NAMESPACE
+#endif // _FST_MUTEX_H
+
+//#if __FST_WINDOWS__
+//#ifdef _WINDOWS_
+////#error DJKSLJDSK
+//#pragma message("_M_IX86 >= 500")
+//#endif
+//#endif
+//#pragma message("_M_IX86 >= 500")
+//#pragma message (__FILE__ "[" STRING(__LINE__) "]: test")

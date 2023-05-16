@@ -92,6 +92,7 @@ FST_BEGIN_NAMESPACE
             {
                 return header{ { uid[0], uid[1], uid[2], uid[3] }, type, 0, n_chunk, file_size, 0 };
             }
+
             inline const chunk_info* get_chunk_info_from_offset(size_t offset) const noexcept
             {
                 return reinterpret_cast<const chunk_info*>(reinterpret_cast<const uint8_t*>(this) + offset);
@@ -105,7 +106,7 @@ FST_BEGIN_NAMESPACE
 
         static inline constexpr size_t get_chunk_info_offset(size_t index) noexcept { return sizeof(header) + index * sizeof(chunk_info); }
 
-        /// Loader.
+        // reader.
         template <class _MemoryCategory, class _MemoryZone>
         class reader
         {
@@ -202,6 +203,7 @@ FST_BEGIN_NAMESPACE
             __fst::file_view _file;
         };
 
+        // file_reader.
         template <class _MemoryCategory, class _MemoryZone>
         class file_reader : public reader<_MemoryCategory, _MemoryZone>
         {
@@ -222,6 +224,7 @@ FST_BEGIN_NAMESPACE
             __fst::file_view _file;
         };
 
+        // writer.
         template <class _MemoryCategory, class _MemoryZone>
         class writer
         {
@@ -246,24 +249,18 @@ FST_BEGIN_NAMESPACE
                     if (!buffer) { return __fst::status_code::not_enough_memory; }
 
                     __fst::memcpy(buffer, data.data(), data.size());
-                    data =  __fst::byte_view((const __fst::byte*) buffer, data.size());
+                    data = __fst::byte_view((const __fst::byte*) buffer, data.size());
 
                     //_chunks.push_back(data_info{ name, __fst::byte_view((const __fst::byte*) buffer, data.size()), udata, nullptr });
 
-                //_write_size += sizeof(data_file::chunk_info);
-                //_write_size += __fst::align(data.size(), data_file::data_alignment);
-
-
-
+                    //_write_size += sizeof(data_file::chunk_info);
+                    //_write_size += __fst::align(data.size(), data_file::data_alignment);
                 }
-                //else 
-                
-                { 
-                    
-                    _write_size += sizeof(data_file::chunk_info);
+
+                _write_size += sizeof(data_file::chunk_info);
                 _write_size += __fst::align(data.size(), data_file::data_alignment);
 
-                    _chunks.push_back(data_info{ name, data, udata, nullptr }); }
+                _chunks.push_back(data_info{ name, data, udata, nullptr });
 
                 return __fst::status_code::success;
             }
@@ -288,22 +285,19 @@ FST_BEGIN_NAMESPACE
 
                     _chunks.push_back(data_info{ name, __fst::byte_view((const __fst::byte*) buffer, data_size), udata, nullptr });
 
-                     _write_size += sizeof(data_file::chunk_info);
-                _write_size += __fst::align(data_size, data_file::data_alignment);
+                    _write_size += sizeof(data_file::chunk_info);
+                    _write_size += __fst::align(data_size, data_file::data_alignment);
                 }
-                else { 
-                    
-                    
-                _write_size += sizeof(data_file::chunk_info);
-                _write_size += __fst::align(wrt.write_size(), data_file::data_alignment);
+                else
+                {
 
-                    _chunks.push_back(data_info{ name, __fst::byte_view(), udata, &wrt }); 
-                
+                    _write_size += sizeof(data_file::chunk_info);
+                    _write_size += __fst::align(wrt.write_size(), data_file::data_alignment);
+
+                    _chunks.push_back(data_info{ name, __fst::byte_view(), udata, &wrt });
                 }
 
-
-
-                     /*size_t total_file_size = sizeof(data_file::header) + _chunks.size() * sizeof(data_file::chunk_info);
+                /*size_t total_file_size = sizeof(data_file::header) + _chunks.size() * sizeof(data_file::chunk_info);
                 for (size_t i = 0; i < _chunks.size(); i++)
                 {
                     if (_chunks[i].wrt) { total_file_size += __fst::align(_chunks[i].wrt->write_size(), data_file::data_alignment); }
@@ -325,8 +319,8 @@ FST_BEGIN_NAMESPACE
 
             inline size_t write_size() const noexcept
             {
-               return _write_size;
-               /* size_t total_file_size = sizeof(data_file::header) + _chunks.size() * sizeof(data_file::chunk_info);
+                return _write_size;
+                /* size_t total_file_size = sizeof(data_file::header) + _chunks.size() * sizeof(data_file::chunk_info);
                 for (size_t i = 0; i < _chunks.size(); i++)
                 {
                     if (_chunks[i].wrt) { total_file_size += __fst::align(_chunks[i].wrt->write_size(), data_file::data_alignment); }
@@ -355,20 +349,19 @@ FST_BEGIN_NAMESPACE
             }
 
             struct dsjklds
-                {
-            __fst::byte_range data;
-            size_t _write_index = 0;
-
-        FST_NODISCARD size_t write(const void* buffer, size_t buffer_size) noexcept
-
             {
-            __fst::memcpy((void*) (data.data() + _write_index), buffer, buffer_size);
-            _write_index += buffer_size;
-            return buffer_size;
-        }
-        //FST_NODISCARD size_t size() const noexcept;
-            };
+                __fst::byte_range data;
+                size_t _write_index = 0;
 
+                FST_NODISCARD size_t write(const void* buffer, size_t buffer_size) noexcept
+
+                {
+                    __fst::memcpy((void*) (data.data() + _write_index), buffer, buffer_size);
+                    _write_index += buffer_size;
+                    return buffer_size;
+                }
+                //FST_NODISCARD size_t size() const noexcept;
+            };
 
             inline __fst::error_result write_to_buffer(__fst::byte_range data) const noexcept
             {
@@ -378,11 +371,12 @@ FST_BEGIN_NAMESPACE
                 dsjklds jk;
                 jk.data = data;
 
-                __fst::output_stream<__fst::byte> stream{ &jk, [](void* data, const __fst::byte* str, size_t size, stream_modifier)noexcept-> size_t
-            {
-               dsjklds* str_ptr = (dsjklds*) data;
-                return str_ptr->write(str, size);
-            } };
+                __fst::output_stream<__fst::byte> stream{ &jk,
+                    [](void* data, const __fst::byte* str, size_t size, stream_modifier) noexcept -> size_t
+                    {
+                        dsjklds* str_ptr = (dsjklds*) data;
+                        return str_ptr->write(str, size);
+                    } };
 
                 return write_to_stream(stream);
                 //return internal_write_to_buffer(data.data(), sz);
@@ -425,7 +419,7 @@ FST_BEGIN_NAMESPACE
                     __fst::memcpy((void*) &c_info.uid, _chunks[i].name.data(), _chunks[i].name.size());
 
                     c_info.udata = _chunks[i].udata;
-                    c_info.size =  _chunks[i].wrt ? (uint32_t)_chunks[i].wrt->write_size() : (uint32_t)_chunks[i].data.size();
+                    c_info.size = _chunks[i].wrt ? (uint32_t) _chunks[i].wrt->write_size() : (uint32_t) _chunks[i].data.size();
 
                     if (const size_t sz = w.write((data_ptr_type) &c_info, (data_size_type) sizeof(data_file::chunk_info)); sz != sizeof(data_file::chunk_info))
                     {
@@ -437,11 +431,7 @@ FST_BEGIN_NAMESPACE
 
                 for (size_t i = 0; i < _chunks.size(); i++)
                 {
-                    if (_chunks[i].wrt) {
-
-                        _chunks[i].wrt->internal_write<_Writer, _DataPtrType, _DataSizeType>(w, _chunks[i].wrt->write_size());
-
-                    }
+                    if (_chunks[i].wrt) { _chunks[i].wrt->internal_write<_Writer, _DataPtrType, _DataSizeType>(w, _chunks[i].wrt->write_size()); }
                     else
                     {
 
@@ -463,48 +453,48 @@ FST_BEGIN_NAMESPACE
                 return __fst::status_code::success;
             }
 
-//            inline __fst::error_result internal_write_to_buffer(__fst::byte* __data, size_t file_size) const noexcept
-//            {
-//                size_t offset = 0;
-//                data_file::header h = data_file::header::create("fstb", 0, (uint16_t) _chunks.size(), (uint32_t) file_size);
-//
-//                //data_file::header h{ { 'f', 's', 't', 'b' }, (uint16_t) _chunks.size(), 0, 0 };
-//                {
-//                    __fst::memcpy(__data, (const __fst::byte*) &h, sizeof(data_file::header));
-//                    offset += sizeof(data_file::header);
-//
-//                    for (size_t i = 0; i < _chunks.size(); i++)
-//                    {
-//                        data_file::chunk_info c_info;
-//                        __fst::memset((void*) &c_info, 0, sizeof(data_file::chunk_info));
-//                        __fst::memcpy((void*) &c_info.uid, _chunks[i].name.data(), _chunks[i].name.size());
-//
-//                        //c_info.size = (uint32_t) _chunks[i].data.size();
-//                                            c_info.size =  _chunks[i].wrt ? (uint32_t)_chunks[i].wrt->write_size() : (uint32_t)_chunks[i].data.size();
-//
-//                        c_info.udata = _chunks[i].udata;
-//
-//                        __fst::memcpy(__data + offset, (const void*) &c_info, sizeof(data_file::chunk_info));
-//                        offset += sizeof(data_file::chunk_info);
-//                    }
-//
-//                    for (size_t i = 0; i < _chunks.size(); i++)
-//                    {
-//                         if (_chunks[i].wrt) {
-//
-//                        _chunks[i].wrt->internal_write_to_buffer(__data + offset, _chunks[i].wrt->write_size());
-//                                                offset += __fst::align(_chunks[i].wrt->write_size(), data_file::data_alignment);
-//
-//}else {
-//                        __fst::byte_view data = _chunks[i].data;
-//                        __fst::memcpy(__data + offset, (const void*) data.data(), data.size());
-//                        offset += __fst::align(data.size(), data_file::data_alignment);
-//                        }
-//                    }
-//
-//                    return __fst::status_code::success;
-//                }
-//            }
+            //            inline __fst::error_result internal_write_to_buffer(__fst::byte* __data, size_t file_size) const noexcept
+            //            {
+            //                size_t offset = 0;
+            //                data_file::header h = data_file::header::create("fstb", 0, (uint16_t) _chunks.size(), (uint32_t) file_size);
+            //
+            //                //data_file::header h{ { 'f', 's', 't', 'b' }, (uint16_t) _chunks.size(), 0, 0 };
+            //                {
+            //                    __fst::memcpy(__data, (const __fst::byte*) &h, sizeof(data_file::header));
+            //                    offset += sizeof(data_file::header);
+            //
+            //                    for (size_t i = 0; i < _chunks.size(); i++)
+            //                    {
+            //                        data_file::chunk_info c_info;
+            //                        __fst::memset((void*) &c_info, 0, sizeof(data_file::chunk_info));
+            //                        __fst::memcpy((void*) &c_info.uid, _chunks[i].name.data(), _chunks[i].name.size());
+            //
+            //                        //c_info.size = (uint32_t) _chunks[i].data.size();
+            //                                            c_info.size =  _chunks[i].wrt ? (uint32_t)_chunks[i].wrt->write_size() : (uint32_t)_chunks[i].data.size();
+            //
+            //                        c_info.udata = _chunks[i].udata;
+            //
+            //                        __fst::memcpy(__data + offset, (const void*) &c_info, sizeof(data_file::chunk_info));
+            //                        offset += sizeof(data_file::chunk_info);
+            //                    }
+            //
+            //                    for (size_t i = 0; i < _chunks.size(); i++)
+            //                    {
+            //                         if (_chunks[i].wrt) {
+            //
+            //                        _chunks[i].wrt->internal_write_to_buffer(__data + offset, _chunks[i].wrt->write_size());
+            //                                                offset += __fst::align(_chunks[i].wrt->write_size(), data_file::data_alignment);
+            //
+            //}else {
+            //                        __fst::byte_view data = _chunks[i].data;
+            //                        __fst::memcpy(__data + offset, (const void*) data.data(), data.size());
+            //                        offset += __fst::align(data.size(), data_file::data_alignment);
+            //                        }
+            //                    }
+            //
+            //                    return __fst::status_code::success;
+            //                }
+            //            }
         };
     };
 
