@@ -14,14 +14,7 @@ namespace
             vec.resize(89);
         }
 
-        {
-            fst::array<int, 1024> buffer;
-            fst::object_memory_pool<4, 4, fst::default_memory_category, fst::void_memory_zone> pool(
-                1024, fst::byte_range((uint8_t*) buffer.data(), buffer.size() * sizeof(int)));
-
-            void* ptr = pool.aligned_allocate(4, 4);
-            fst::unused(ptr);
-        }
+        
         {
 
             fst::pool_memory_zone pool(5, 1024 * 1024);

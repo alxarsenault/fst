@@ -12,7 +12,7 @@ namespace
             fst::string a = "alex:perter";
             auto c = fst::strsplit(a, ':');
 
-            fst::print(c.front(), c.back());
+            //fst::print(c.front(), c.back());
         }
         {
             fst::string s = "B\nJ\nbanana\nalex";
@@ -66,13 +66,13 @@ namespace
         struct banana
         {
 
-            ~banana() { fst::print("vababa"); }
+            ~banana() { /*fst::print("vababa");*/ }
         };
 
         //banana bbb;
         fst::string s = "Aex";
-        fst::print(s);
-        fst::async::thread t2([=] { fst::print("BINFO", s); });
+        //fst::print(s);
+        fst::async::thread t2([=] { /*fst::print("BINFO", s);*/ });
 
         fst::async::thread t3(&callback);
     }

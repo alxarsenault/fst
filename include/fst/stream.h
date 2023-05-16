@@ -211,7 +211,7 @@ FST_BEGIN_NAMESPACE
     class output_stream final
     {
       public:
-        using write_fct = void (*)(void*, const _CharT*, size_t, stream_modifier);
+        using write_fct = size_t (*)(void*, const _CharT*, size_t, stream_modifier)noexcept;
 
         inline constexpr output_stream(void* data, write_fct w) noexcept
             : _write(w)
@@ -221,7 +221,7 @@ FST_BEGIN_NAMESPACE
         write_fct _write;
         void* _data;
 
-        inline void write(const _CharT* str, size_t size, stream_modifier mod = stream_modifier::normal) const noexcept { _write(_data, str, size, mod); }
+        inline size_t write(const _CharT* str, size_t size, stream_modifier mod = stream_modifier::normal) const noexcept { return _write(_data, str, size, mod); }
 
         inline output_stream& operator<<(bool _Val) noexcept
         {
@@ -462,7 +462,7 @@ FST_BEGIN_NAMESPACE
         }
     };*/
 
-    FST_INLINE_VAR output_stream<char> cout = { nullptr, [](void*, const char* str, size_t size, stream_modifier mod)
+    FST_INLINE_VAR output_stream<char> cout = { nullptr, [](void*, const char* str, size_t size, stream_modifier mod)noexcept-> size_t
         {
             static bool has_color = false;
 
@@ -474,12 +474,12 @@ FST_BEGIN_NAMESPACE
                 size = 5;
             }
 
-            __fst::write_stdout(str, size);
+            return __fst::write_stdout(str, size);
         } };
 
-    FST_INLINE_VAR output_stream<wchar_t> wcout = { nullptr, [](void*, const wchar_t* str, size_t size, stream_modifier)
+    FST_INLINE_VAR output_stream<wchar_t> wcout = { nullptr, [](void*, const wchar_t* str, size_t size, stream_modifier)noexcept-> size_t
         {
-            __fst::write_wstdout(str, size);
+            return __fst::write_wstdout(str, size);
         } };
 
     template <typename T, typename _Stream>
@@ -616,11 +616,12 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
                     __fst::memcpy(c->buffer, str, size);
+                    return size;
                 } };
 
             s << t._value;
@@ -630,6 +631,7 @@ FST_BEGIN_NAMESPACE
             {
                 const char* space_buffer = "                                                       ";
                 stream.write(space_buffer, t._size - _content.size);
+
             }
             return stream;
         }
@@ -665,11 +667,12 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
                     __fst::memcpy(c->buffer, str, size);
+                    return size;
                 } };
 
             s << t._value;
@@ -710,11 +713,12 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)
+            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
                     __fst::memcpy(c->buffer, str, size);
+                    return size;
                 } };
 
             s << t._value;

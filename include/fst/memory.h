@@ -440,14 +440,14 @@ FST_BEGIN_NAMESPACE
         }
     };
 
-    FST_INLINE_VAR constexpr void_memory_zone _global_void_memory_zone = {};
-
     ///
     struct default_memory_zone : __fst::memory_zone<default_memory_zone>
     {
         static constexpr const char* name = "default";
+
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
+
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
     };
@@ -456,9 +456,12 @@ FST_BEGIN_NAMESPACE
     struct simd_memory_zone : public __fst::memory_zone<simd_memory_zone>
     {
         static constexpr const char* name = "simd";
+
         FST_NODISCARD static size_t default_alignment() noexcept;
+
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
+
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
     };
@@ -467,8 +470,10 @@ FST_BEGIN_NAMESPACE
     struct profiler_memory_zone : __fst::memory_zone<profiler_memory_zone>
     {
         static constexpr const char* name = "profiler";
+
         FST_NODISCARD static void* allocate(size_t size, __fst::memory_category_id mid) noexcept;
         static void deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
+
         FST_NODISCARD static void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) noexcept;
         static void aligned_deallocate(void* ptr, __fst::memory_category_id mid) noexcept;
     };
@@ -477,6 +482,7 @@ FST_BEGIN_NAMESPACE
     struct pool_memory_zone : __fst::memory_zone<pool_memory_zone>
     {
         static constexpr const char* name = "pool";
+
         pool_memory_zone(size_t buckets, size_t bucket_size) noexcept;
         pool_memory_zone(const pool_memory_zone& other) noexcept;
         pool_memory_zone(pool_memory_zone&& other) noexcept;
@@ -488,6 +494,7 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD void* allocate(size_t size, __fst::memory_category_id mid) const noexcept;
         void deallocate(void* ptr, __fst::memory_category_id mid) const noexcept;
+
         FST_NODISCARD void* aligned_allocate(size_t size, size_t alignment, __fst::memory_category_id mid) const noexcept;
         void aligned_deallocate(void* ptr, __fst::memory_category_id mid) const noexcept;
 
@@ -496,24 +503,28 @@ FST_BEGIN_NAMESPACE
         pool* _pool;
     };
 
+    ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     FST_NODISCARD inline void* allocate(size_t size) noexcept
     {
         return __fst::default_memory_zone::allocate(size, _MemoryCategory::id());
     }
-
+    
+    ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     inline void deallocate(void* ptr) noexcept
     {
         __fst::default_memory_zone::deallocate(ptr, _MemoryCategory::id());
     }
-
+    
+    ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     FST_NODISCARD inline void* aligned_allocate(size_t size, size_t alignment) noexcept
     {
         return __fst::default_memory_zone::aligned_allocate(size, alignment, _MemoryCategory::id());
     }
-
+    
+    ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     inline void aligned_deallocate(void* ptr) noexcept
     {

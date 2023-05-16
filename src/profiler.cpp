@@ -39,9 +39,9 @@ FST_BEGIN_NAMESPACE
         struct tracer
         {
             tracer()
-                : _stream{ this, [](void* data, const char* str, size_t size, stream_modifier)
+                : _stream{ this, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
                     {
-                        ::fwrite(str, size, 1, ((tracer*) data)->_file);
+                        return ::fwrite(str, size, 1, ((tracer*) data)->_file);
                     } }
 
             {

@@ -89,15 +89,32 @@ FST_BEGIN_NAMESPACE
         native* _native = nullptr;
     };
 
+    inline __fst::status write_to_file(const char* filepath, open_mode flags, const void* buffer, size_t buffer_size) noexcept
+    {
+
+        __fst::file fout;
+        __fst::status st = fout.open(filepath, flags);
+        if (!st) { return st; }
+
+        if (const size_t sz = fout.write(buffer, buffer_size); sz != buffer_size)
+        {
+            fout.close();
+            return __fst::status_code::bad_file_descriptor;
+        }
+
+        return fout.close();
+    }
     ///
     inline __fst::output_stream<char> file_stream(__fst::file & file_ref) noexcept
     {
-        return __fst::output_stream<char>{ &file_ref, [](void* data, const char* str, size_t size, stream_modifier)
+        return __fst::output_stream<char>{ &file_ref,
+            [](void* data, const char* str, size_t size, stream_modifier)noexcept -> size_t
             {
                 __fst::file* file_ptr = (__fst::file*) data;
                 size_t sz = file_ptr->write((const void*) str, size);
                 fst_assert(sz == size, "error");
-                __fst::unused(sz);
+                //__fst::unused(sz);
+                return sz;
             } };
     }
 

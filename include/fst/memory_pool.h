@@ -253,88 +253,294 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD FST_ALWAYS_INLINE size_t find_bucket(const void* p) const noexcept { return ((uintptr_t) p - (uintptr_t) _buckets[0].data()) / _bucket_size; }
     };
 
+
+    /// This allocator allocate memory blocks from pre-allocated memory chunks.
     ///
-    template <size_t _Size, size_t _Alignment, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
-    class object_memory_pool
+    /// The memory chunks are allocated by _MemoryZone, which is fst::default_memory_zone by default.
+    ///
+    /// User may also supply a buffer as the first chunk.
+    ///
+    /// If the user-buffer is full then additional chunks are allocated by _MemoryZone.
+    ///
+    /// The user-buffer is not deallocated by this allocator.
+    ///
+    template <class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
+    class forward_memory_pool
     {
       public:
-        static constexpr size_t bucket_size = __fst::maximum(__fst::align(_Size, _Alignment), _Alignment);
+        using size_type = size_t;
+        using chunk_size_type = uint32_t;
+        using memory_category_type = _MemoryCategory;
+        using memory_zone_type = _MemoryZone;
 
-        static constexpr size_t minimum_alignment = _Alignment;
-        static constexpr size_t minimum_alignment_bit_index = __fst::power_of_two_bit_index(_Alignment);
+        static_assert(__fst::is_static_memory_zone<memory_zone_type>::value, "memory_zone_type must a static");
 
-        //static constexpr size_t maximum_alignment = 512;
-        //static constexpr size_t maximum_bucket_count = 8;
-
-        using buffer_pointer = __fst::optional_ptr<uint8_t, _MemoryCategory, _MemoryZone>;
-
-        inline object_memory_pool(size_t buckets_count, __fst::byte_range buffer = __fst::byte_range()) noexcept
-            : _buckets_count(buckets_count)
-        //, _bucket_size(bucket_size)
+      private:
+        // Chunk header for perpending to each chunk.
+        // Chunks are stored as a singly linked list.
+        struct chunk_header
         {
-            fst_assert(buckets_count > 0);
-            if (buckets_count == 0) { return; }
+            chunk_header* next; // Next chunk in the linked list.
+            chunk_size_type capacity; // Capacity of the chunk in bytes (excluding the header itself).
+            chunk_size_type size; // Current size of allocated memory in bytes.
+        };
 
-            //const size_t alignment = __fst::round_to_power_of_two(minimum_alignment * _buckets_count);
-            //_bucket_size = __fst::align(bucket_size, alignment);
+        struct shared_data
+        {
+            __fst::packed_pointer data;
+            size_type refcount;
 
-            const size_t total_size = bucket_size * _buckets_count;
-            if (buffer.size() >= total_size) { _buffer = buffer_pointer(buffer.data(), false); }
-            else { _buffer = buffer_pointer((uint8_t*) _MemoryZone::aligned_allocate(total_size, _Alignment, _MemoryCategory::id()), true); }
+            // Head of the chunk linked-list. Only the head chunk serves allocation.
+            inline chunk_header* head() const noexcept { return data.get_pointer<chunk_header*>(); }
+            inline void set_head(chunk_header* h) noexcept { data.set_pointer(h); }
 
-            if (!_buffer)
+            inline void set_owned(bool owned) noexcept { data.set_int(owned); }
+            inline bool is_owned() const noexcept { return data.get_int<bool>(); }
+        };
+
+      public:
+        static constexpr size_type default_chunk_capacity = 64 * 1024;
+        static constexpr size_type shared_data_size = __fst::align(sizeof(shared_data), __fst::default_alignment);
+        static constexpr size_type chunk_header_size = __fst::align(sizeof(chunk_header), __fst::default_alignment);
+        static constexpr size_type total_reserved_size = shared_data_size + chunk_header_size;
+        static constexpr size_type chunk_alignment = __fst::default_alignment;
+
+        /// @param chunk_size The size of memory chunk, default is default_chunk_capacity.
+        /// @param allocate_chunk Whether or not the chunk_size should be pre allocated.
+        inline explicit forward_memory_pool(size_type chunk_size = default_chunk_capacity, bool allocate_chunk = false) noexcept
+            : _chunk_capacity(chunk_size)
+        {
+            fst_assert(chunk_size, "chunk_size cannot be zero");
+
+            const chunk_size_type init_capacity = allocate_chunk ? (chunk_size_type) chunk_size : 0;
+
+            _shared = (shared_data*) memory_zone_type::aligned_allocate(total_reserved_size + init_capacity, chunk_alignment, memory_category_type::id());
+
+            if (!_shared)
             {
-                fst_error("Allocation failed");
+                fst_error("allocation failed");
                 return;
             }
 
-            uint8_t* data = _buffer.get();
-            fst_assert(__fst::is_aligned(data, _Alignment), "Alignment failed");
-            _bucket.create(bucket_size, __fst::byte_range(data, bucket_size));
+            chunk_header* head = get_chunk_head(_shared);
+            _shared->data.set_pointer(head);
+            head->capacity = init_capacity;
+            head->size = 0;
+            head->next = nullptr;
+            _shared->set_owned(true);
+            _shared->refcount = 1;
         }
 
-        object_memory_pool(const object_memory_pool&) = delete;
-        object_memory_pool(object_memory_pool&&) = delete;
-
-        ~object_memory_pool() noexcept = default;
-
-        object_memory_pool& operator=(const object_memory_pool&) = delete;
-        object_memory_pool& operator=(object_memory_pool&&) = delete;
-
-        FST_NODISCARD FST_ALWAYS_INLINE void* aligned_allocate(size_t size, size_t alignment) noexcept
+        /// The user buffer will be used firstly. When it is full, memory pool allocates new chunk with chunk size.
+        ///
+        /// The user buffer will not be deallocated when this allocator is destructed.
+        ///
+        /// @param buffer User supplied buffer.
+        /// @param size Size of the buffer in bytes. It must at least larger than sizeof(chunk_header).
+        /// @param chunk_size The size of memory chunk. The default is default_chunk_capacity.
+        inline forward_memory_pool(__fst::not_null<void*> buffer, size_type size, size_type chunk_size = default_chunk_capacity) noexcept
+            : _chunk_capacity(chunk_size)
         {
-            fst_assert(size);
-            fst_assert(alignment <= _Alignment);
+            size_t sp = size;
+            _shared = (shared_data*) __fst::align(chunk_alignment, size, buffer, sp);
+            fst_assert(sp >= total_reserved_size);
 
-            if (FST_UNLIKELY(size == 0)) { return nullptr; }
-
-            size_t bucket_index = (__fst::maximum(size, alignment) - 1) >> minimum_alignment_bit_index;
-
-            if (bucket_index == 0)
+            if (!_shared)
             {
-                if (void* ptr = _bucket.allocate()) { return ptr; }
+                fst_error("allocation failed");
+                return;
             }
 
-            // fallback to generic allocator
-            return _MemoryZone::aligned_allocate(size, alignment, _MemoryCategory::id());
+            chunk_header* head = get_chunk_head(_shared);
+            _shared->data.set_pointer(head);
+            head->capacity = (chunk_size_type) (size - total_reserved_size);
+            head->size = 0;
+            head->next = nullptr;
+            _shared->set_owned(false);
+            _shared->refcount = 1;
         }
 
-        FST_ALWAYS_INLINE void aligned_deallocate(void* ptr) noexcept
+        inline forward_memory_pool(const forward_memory_pool& rhs) noexcept
+            : _chunk_capacity(rhs._chunk_capacity)
+            , _shared(rhs._shared)
         {
-            fst_assert(ptr);
+            fst_assert(_shared);
 
-            if (size_t bucket_index = find_bucket(ptr); bucket_index == 0) { return _bucket.deallocate_interval(ptr, ptr); }
-
-            // fallback to generic allocator
-            _MemoryZone::aligned_deallocate(ptr, _MemoryCategory::id());
+            fst_assert(_shared->refcount > 0);
+            ++_shared->refcount;
         }
+
+        inline forward_memory_pool(forward_memory_pool&& rhs) noexcept
+            : _chunk_capacity(rhs._chunk_capacity)
+            , _shared(__fst::exchange(rhs._shared, nullptr))
+        {}
+
+        /// This deallocates all memory chunks, excluding the user-supplied buffer.
+        inline ~forward_memory_pool() noexcept { reset(); }
+
+        inline forward_memory_pool& operator=(const forward_memory_pool& rhs) noexcept
+        {
+            fst_assert(rhs._shared);
+            fst_assert(rhs._shared->refcount > 0);
+
+            ++rhs._shared->refcount;
+            reset();
+
+            _chunk_capacity = rhs._chunk_capacity;
+            _shared = rhs._shared;
+            return *this;
+        }
+
+        inline forward_memory_pool& operator=(forward_memory_pool&& rhs) noexcept
+        {
+            fst_assert(rhs._shared);
+            fst_assert(rhs._shared->refcount > 0);
+            reset();
+            _chunk_capacity = rhs._chunk_capacity;
+            _shared = __fst::exchange(rhs._shared, nullptr);
+            return *this;
+        }
+
+        /// Deallocates all memory chunks, excluding the first/user one.
+        void clear() noexcept
+        {
+            fst_assert(_shared);
+            fst_assert(_shared->refcount > 0);
+            while (true)
+            {
+                chunk_header* c = _shared->head();
+
+                if (!c->next) { break; }
+
+                _shared->set_head(c->next);
+                memory_zone_type::aligned_deallocate(c, memory_category_type::id());
+            }
+
+            _shared->head()->size = 0;
+        }
+
+        /// Computes the total capacity of allocated memory chunks.
+        /// @return total capacity in bytes.
+        FST_NODISCARD inline size_type capacity() const noexcept
+        {
+            fst_assert(_shared->refcount > 0);
+
+            size_type capacity = 0;
+            for (chunk_header* c = _shared->head(); c; c = c->next)
+            {
+                capacity += c->capacity;
+            }
+
+            return capacity;
+        }
+
+        /// Computes the memory blocks allocated.
+        /// @return total used bytes.
+        FST_NODISCARD inline size_type size() const noexcept
+        {
+            fst_assert(_shared);
+            fst_assert(_shared->refcount > 0);
+            size_type size = 0;
+            for (chunk_header* c = _shared->head(); c; c = c->next)
+            {
+                size += c->size;
+            }
+            return size;
+        }
+
+        FST_NODISCARD inline bool is_valid() const noexcept { return _shared != nullptr; }
+
+        /// Whether the allocator is shared.
+        FST_NODISCARD inline bool is_shared() const noexcept
+        {
+            fst_assert(_shared);
+            fst_assert(_shared->refcount > 0);
+            return _shared->refcount > 1;
+        }
+
+        /// Allocates a memory block.
+        FST_NODISCARD void* aligned_allocate(size_type size, size_type alignment = __fst::default_alignment) noexcept
+        {
+            fst_assert(_shared->refcount > 0);
+            if (!size) { return nullptr; }
+
+            //size = __fst::align(size, alignment);
+            size_t aligned_size = __fst::required_aligned_size(chunk_alignment, size, alignment, true);
+
+            chunk_header* head = _shared->head();
+
+            if (FST_UNLIKELY(head->size + aligned_size > head->capacity))
+            {
+                if (!add_chunk(_chunk_capacity > aligned_size ? _chunk_capacity : aligned_size)) { return nullptr; }
+            }
+
+            head = _shared->head();
+            void* buffer = get_chunk_buffer(_shared) + head->size;
+
+            size_t sp = aligned_size;
+            buffer = __fst::align(alignment, size, buffer, sp);
+            fst_assert(buffer);
+
+            head->size += (chunk_size_type) aligned_size;
+            return buffer;
+        }
+
+        static void aligned_deallocate(void* ptr) noexcept
+        {
+            // Does nothing.
+            __fst::unused(ptr);
+        }
+
+        FST_NODISCARD inline bool operator==(const forward_memory_pool& rhs) const noexcept
+        {
+            fst_assert(_shared->refcount > 0);
+            fst_assert(rhs._shared->refcount > 0);
+            return _shared == rhs._shared;
+        }
+
+        FST_NODISCARD inline bool operator!=(const forward_memory_pool& rhs) const noexcept { return !operator==(rhs); }
 
       private:
-        size_t _buckets_count;
-        detail::pool_bucket _bucket;
-        buffer_pointer _buffer;
+        static FST_ALWAYS_INLINE chunk_header* get_chunk_head(shared_data* shared) noexcept
+        {
+            return reinterpret_cast<chunk_header*>(reinterpret_cast<uint8_t*>(shared) + shared_data_size);
+        }
 
-        FST_NODISCARD FST_ALWAYS_INLINE size_t find_bucket(const void* p) const noexcept { return ((uintptr_t) p - (uintptr_t) _bucket.data()) / bucket_size; }
+        static FST_ALWAYS_INLINE uint8_t* get_chunk_buffer(shared_data* shared) noexcept { return reinterpret_cast<uint8_t*>(shared->head()) + chunk_header_size; }
+
+        inline void reset() noexcept
+        {
+            if (!_shared)
+            {
+                // Does nothing if moved.
+                return;
+            }
+
+            if (_shared->refcount > 1)
+            {
+                --_shared->refcount;
+                return;
+            }
+
+            clear();
+
+            if (_shared->is_owned()) { memory_zone_type::aligned_deallocate(_shared, memory_category_type::id()); }
+        }
+
+        bool add_chunk(size_type capacity) noexcept
+        {
+            chunk_header* chunk = (chunk_header*) memory_zone_type::aligned_allocate(chunk_header_size + capacity, chunk_alignment, memory_category_type::id());
+            if (!chunk) { return false; }
+
+            chunk->capacity = (chunk_size_type) capacity;
+            chunk->size = 0;
+            chunk->next = _shared->head();
+            _shared->set_head(chunk);
+            return true;
+        }
+
+        size_type _chunk_capacity;
+        shared_data* _shared;
     };
 
 FST_END_NAMESPACE

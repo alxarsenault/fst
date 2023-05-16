@@ -24,44 +24,8 @@
 
 #pragma once
 
-#include "fst/common.h"
-#include "fst/async/common.h"
+#include "fst/utility.h"
+#include "fst/memory.h"
 
-FST_BEGIN_SUB_NAMESPACE(async)
-
-
-class mutex
-{
-public:
-  //typedef asio::detail::scoped_lock<win_mutex> scoped_lock;
-
-  // Constructor.
-  //ASIO_DECL win_mutex();
-
-  //// Destructor.
-  //~win_mutex()
-  //{
-  //  ::DeleteCriticalSection(&crit_section_);
-  //}
-
-  //// Lock the mutex.
-  //void lock()
-  //{
-  //  ::EnterCriticalSection(&crit_section_);
-  //}
-
-  //// Unlock the mutex.
-  //void unlock()
-  //{
-  //  ::LeaveCriticalSection(&crit_section_);
-  //}
-
-private:
-  // Initialisation must be performed in a separate function to the constructor
-  // since the compiler does not support the use of structured exceptions and
-  // C++ exceptions in the same function.
-  //ASIO_DECL int do_init();
-
-  //::CRITICAL_SECTION crit_section_;
-};
-FST_END_SUB_NAMESPACE
+FST_BEGIN_NAMESPACE
+FST_END_NAMESPACE

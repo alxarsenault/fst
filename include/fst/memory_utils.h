@@ -196,7 +196,7 @@ FST_BEGIN_NAMESPACE
     /// @param avail_space the size of the buffer in which to operate
     ///
     /// @returns the adjusted value of ptr, or nullptr if the space provided is too small.
-    FST_NODISCARD FST_ALWAYS_INLINE void* align_range(size_t alignment, size_t size, void*& ptr, size_t& avail_space) noexcept
+    FST_NODISCARD FST_ALWAYS_INLINE void* align(size_t alignment, size_t size, void* ptr, size_t& avail_space) noexcept
     {
         fst_assert(avail_space >= size);
         fst_assert(size > 0, "invalid size");
@@ -209,7 +209,7 @@ FST_BEGIN_NAMESPACE
             if (avail_space < offset || avail_space - offset < size) { return nullptr; }
 
             avail_space -= offset;
-            return ptr = static_cast<char*>(ptr) + offset;
+            return static_cast<char*>(ptr) + offset;
         }
 
         return ptr;

@@ -199,13 +199,22 @@
 
 ///
 #if __FST_ARCH_INTEL__
+
 #if __FST_MSVC__
+extern "C" {
+void _mm_pause(void);
+}
 #define FST_NOP() _mm_pause()
+
 #else
+// TODO: check this
 #define FST_NOP() __builtin_ia32_pause()
 #endif
+
 #elif __FST_ARCH_ARM__
+// TODO: check this on windows
 #define FST_NOP() asm volatile("yield")
+
 #else
 #define FST_NOP() ({ (void) 0; })
 #endif

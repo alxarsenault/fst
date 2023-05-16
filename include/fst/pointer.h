@@ -470,7 +470,7 @@ FST_BEGIN_NAMESPACE
             : _data{ { ptr, powned }, __fst::move(mem_zone) }
         {}
 
-        template <class _OtherMemoryCategory = memory_category, class _OtherMemoryZone = memory_zone_type,
+        template <class _OtherMemoryCategory = memory_category_type, class _OtherMemoryZone = memory_zone_type,
             __fst::enable_if_t<
                 __fst::conjunction_v<__fst::is_reference<_OtherMemoryZone>, __fst::is_constructible<_OtherMemoryZone, __fst::remove_reference_t<_OtherMemoryZone>>>, int>
             = 0>

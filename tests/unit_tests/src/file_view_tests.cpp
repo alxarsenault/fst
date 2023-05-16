@@ -9,6 +9,6 @@ namespace
         REQUIRE(file.open(FST_TEST_RESOURCES_DIRECTORY "/test.txt"));
         REQUIRE(file.str() == "Test");
 
-        fst::print(fst::status(fst::status_code::address_in_use));
+        //fst::print(fst::status(fst::status_code::address_in_use));
     }
 } // namespace

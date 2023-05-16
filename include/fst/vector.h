@@ -1413,4 +1413,17 @@ FST_BEGIN_NAMESPACE
     struct is_vector<__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>> : __fst::true_t
     {};
 
+    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
+    inline __fst::output_stream<_T> byte_stream(__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>& vec) noexcept
+    {
+        return __fst::output_stream<_T>{ &vec, [](void* data, const _T* str, size_t size, stream_modifier)noexcept-> size_t
+            {
+                __fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>* vec_ptr = (__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>*) data;
+                size_t index = vec_ptr->size();
+                vec_ptr->resize(index + size);
+
+                __fst::memcpy(vec_ptr->data() + index, str, size);
+                return size;
+            } };
+    }
 FST_END_NAMESPACE

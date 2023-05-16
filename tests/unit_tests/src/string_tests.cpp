@@ -8,7 +8,7 @@ namespace
         fst::string s = "abcdefghijklmnopqrstuvwxyz";
         REQUIRE_EQ(s.size(), 26);
         REQUIRE(s.is_small());
-        fst::print(fst::string::small_capacity, fst::string::small_array_size);
+        //fst::print(fst::string::small_capacity, fst::string::small_array_size);
     }
 
     TEST_CASE("fst::wstring")

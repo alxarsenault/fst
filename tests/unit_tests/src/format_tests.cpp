@@ -37,7 +37,7 @@ REQUIRE(fst::is_aligned(cptr, 16));
          //fst::string s(buffer, 2);
         REQUIRE(fst::clip_alignment(8) == fst::default_alignment);
         fst::get_digit_pair(buffer, 78);
-        fst::print("----------------------", buffer[0], buffer[1]);
+        //fst::print("----------------------", buffer[0], buffer[1]);
 
 
         //for(int i =0; i < 100; i++)

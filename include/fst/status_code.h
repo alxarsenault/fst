@@ -117,7 +117,8 @@ FST_BEGIN_NAMESPACE
         invalid_file_content,
         invalid_channel_size,
         invalid_audio_format,
-
+        empty_data,
+        name_exists,
         invalid
     };
 
@@ -245,6 +246,10 @@ FST_BEGIN_NAMESPACE
             case status_code::invalid_file_content: return "invalid_file_content";
             case status_code::invalid_channel_size: return "invalid_channel_size";
             case status_code::invalid_audio_format: return "invalid_audio_format";
+
+                            case status_code::empty_data: return "empty_data";
+                                            case status_code::name_exists: return "name_exists";
+
             }
 
             return "unknown";

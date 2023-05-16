@@ -40,7 +40,7 @@ namespace
         REQUIRE(!er);
         if (er) { return; }
 
-        fst::xml_print(fst::cout, doc);
+        //fst::xml_print(fst::cout, doc);
 
         fst::xml_node* root_node = doc.first_node("note");
         REQUIRE(root_node);
@@ -48,26 +48,26 @@ namespace
         fst::xml_node* node = root_node->first_node("to");
         REQUIRE(node);
         //fst::string_view value(node->value(), node->value_size());
-        fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
+        //fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
 
         node = root_node->first_node("from");
         REQUIRE(node);
-        fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
+        //fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
         //fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", value);
 
         node = node->next_sibling();
         REQUIRE(node);
         //value = fst::string_view(node->value(), node->value_size());
-        fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
+        //fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", node->value());
 
         node = root_node->first_node("numbers");
         REQUIRE(node);
 
-        for (fst::xml_node* it = node->first_node(); it; it = it->next_sibling())
-        {
-            //value = fst::string_view(it->value(), it->value_size());
-            fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", it->value());
-        }
+        //for (fst::xml_node* it = node->first_node(); it; it = it->next_sibling())
+        //{
+        //    //value = fst::string_view(it->value(), it->value_size());
+        //    fst::print("DSLKDJSKLDJSKJDKLSJDKLJDS", it->value());
+        //}
     }
 
     struct banana
@@ -99,12 +99,12 @@ namespace
         fst::xml_node* root = doc.create_node("root");
         doc.append_node(root);
 
-        fst::xml_stream stream(doc, root);
+        //fst::xml_stream stream(doc, root);
 
-        banana a = { "Alex", 32, 45 };
-        stream << a;
+        //banana a = { "Alex", 32, 45 };
+        //stream << a;
 
-        fst::xml_print(fst::cout, doc);
+        //fst::xml_print(fst::cout, doc);
     }
 
     //
@@ -140,9 +140,9 @@ namespace
 
         doc.append_node(node);
 
-        fst::print(node->value());
+        //fst::print(node->value());
 
-        fst::xml_print(fst::cout, doc);
+        //fst::xml_print(fst::cout, doc);
 
         //
         {
@@ -157,17 +157,17 @@ namespace
 
         //
         {
-            fst::string str;
-            fst::xml_print_output(fst::back_insert_iterator(str), doc, 0);
-            fst::print(str);
+            //fst::string str;
+            //fst::xml_print_output(fst::back_insert_iterator(str), doc, 0);
+            //fst::print(str);
         }
 
         //
         {
-            fst::string str;
-            fst::output_stream<char> stream = fst::string_stream(str);
-            fst::xml_print(stream, doc);
-            fst::print(str);
+            //fst::string str;
+            //fst::output_stream<char> stream = fst::string_stream(str);
+            //fst::xml_print(stream, doc);
+            //fst::print(str);
         }
     }
 

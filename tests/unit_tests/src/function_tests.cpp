@@ -6,7 +6,7 @@ namespace
 {
     static void call_fct(int a)
     {
-        fst::print("AA", a);
+        //fst::print("AA", a);
     }
 
     struct abc
@@ -14,7 +14,7 @@ namespace
 
         int bingo(int a)
         {
-            fst::debug<fst::info_flags::function>()("AA", a);
+            //fst::debug<fst::info_flags::function>()("AA", a);
             return a * 2;
         }
     };
@@ -29,7 +29,7 @@ namespace
         }
 
         {
-            fst::function<void(int)> f([](int a) { fst::print("A", a); });
+            fst::function<void(int)> f([](int a) { /*fst::print("A", a);*/ });
             f(33);
         }
 
@@ -49,7 +49,7 @@ namespace
             {
                 int b = 35;
                 fst::array<char, 1024> data;
-                fst::function<void(int)> f([=](int a) { fst::print("A", a, b, data[0]); });
+                fst::function<void(int)> f([=](int a) { /*fst::print("A", a, b, data[0]);*/ });
                 f2 = f;
             }
             f2(33);

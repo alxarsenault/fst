@@ -54,7 +54,7 @@ FST_BEGIN_NAMESPACE
         static constexpr size_type maximum_size = _Size;
         static constexpr size_type npos = (__fst::numeric_limits<size_type>::max)();
 
-        static_assert(!__fst::is_c_array_v<value_type>::value, "Character type of basic_small_string must not be an array.");
+        static_assert(!__fst::is_c_array_v<value_type>, "Character type of basic_small_string must not be an array.");
         static_assert(__fst::is_trivial<value_type>::value, "Character type of basic_small_string must be trivial.");
         static_assert(__fst::is_same<value_type, typename traits_type::char_type>::value, "traits_type::char_type must be the same type as value_type.");
 
