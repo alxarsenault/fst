@@ -1,11 +1,10 @@
 #include "fst/path.h"
 #include "fst/string.h"
+#include "fst/unicode.h"
 
 #if __FST_WINDOWS__ && __FST_DEBUG_BUILD__
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include "fst/unicode.h"
-
 #endif // __FST_WINDOWS__
 
 FST_BEGIN_NAMESPACE
