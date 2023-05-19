@@ -360,9 +360,9 @@ FST_BEGIN_NAMESPACE
 FST_END_NAMESPACE
 
 #else
-FST_BEGIN_SUB_NAMESPACE(http)
+FST_BEGIN_NAMESPACE
 
-    __fst::http_response url::send(bool with_header) const noexcept
+    __fst::http_response http_url::send(bool with_header) const noexcept
     {
         __fst::unused(with_header);
         return __fst::http_response(__fst::status_code::unknown);

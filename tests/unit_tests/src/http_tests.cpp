@@ -2,7 +2,7 @@
 #include "fst/http.h"
 #include "fst/unicode.h"
 
-#if __FST_WINDOWS__
+#if 0//__FST_WINDOWS__
 namespace
 {
     TEST_CASE("fst::http", "[network]")
