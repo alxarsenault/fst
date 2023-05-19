@@ -1,25 +1,25 @@
 #include "utest.h"
-#include "fst/web/http.h"
+#include "fst/http.h"
 #include "fst/unicode.h"
 
-#if false//__FST_WINDOWS__
+#if __FST_WINDOWS__
 namespace
 {
     TEST_CASE("fst::http", "[network]")
     {
-        {
-            fst::http::url url = fst::http::url("johnbnfd");
-            fst::http::response resp = url.send();
+        /*{
+            fst::http_url url = fst::http_url("johnbnfd");
+            fst::http_response resp = url.send();
 
             REQUIRE(!resp);
             fst::print(resp.error());
-        }
+        }*/
         {
             fst::string_view furl = "https://dummyjson.com/products/search?q=phone";
-            fst::http::url url = fst::http::url("https://dummyjson.com/products/search").with_parameter({ "q", "phone" });
+            fst::http_url url = fst::http_url("https://dummyjson.com/products/search").with_parameter({ "q", "phone" });
 
-            fst::http::request req(fst::move(url));
-            fst::http::response resp = req.send();
+            fst::http_request req(fst::move(url));
+            fst::http_response resp = req.send();
 
             REQUIRE(resp.has_data());
             fst::string_view data = resp.as_string();
@@ -30,8 +30,8 @@ namespace
         }
 
         {
-            fst::http::url url("www.example.com");
-            fst::http::response resp = url.send();
+            fst::http_url url("www.example.com");
+            fst::http_response resp = url.send();
 
             REQUIRE(resp);
             REQUIRE(resp.status());
@@ -47,7 +47,7 @@ namespace
         {
             fst::string_view furl = "https://dummyjson.com/products/search?q=phone";
 
-            fst::http::url url = fst::http::url("https://dummyjson.com/products/search").with_parameter({ "q", "phone" });
+            fst::http_url url = fst::http_url("https://dummyjson.com/products/search").with_parameter({ "q", "phone" });
             REQUIRE(url.get_scheme() == "https://");
             REQUIRE(url.get_domain() == "dummyjson.com");
 
@@ -56,7 +56,7 @@ namespace
             REQUIRE(url.get_parameters_string() == "?q=phone");
             REQUIRE(url.get_string(true, true) == furl);
 
-            fst::http::response resp = url.send();
+            fst::http_response resp = url.send();
 
             REQUIRE(resp.has_data());
             fst::string_view data = resp.as_string();
@@ -69,7 +69,7 @@ namespace
         //
         {
 
-            fst::http::url url("www.google.com/banana");
+            fst::http_url url("www.google.com/banana");
 
             REQUIRE(url.get_route() == "/banana");
 
@@ -77,7 +77,7 @@ namespace
             REQUIRE_FALSE(url.has_scheme());
             REQUIRE_FALSE(url.has_parameters());
 
-            url.with_scheme(fst::http::scheme::http);
+            url.with_scheme(fst::http_scheme::http);
             //fst::print(url.get_scheme());
             REQUIRE(url.has_scheme());
 
@@ -86,22 +86,22 @@ namespace
             url.with_parameter({ "peter", "123" });
             REQUIRE(url.has_parameters());
 
-            const fst::http::parameter* peter_param = url.get_parameter("peter");
+            const fst::http_parameter* peter_param = url.get_parameter("peter");
             REQUIRE(peter_param);
             REQUIRE_EQ(peter_param->value, "123");
         }
     }
 
-    TEST_CASE("fst::http::request")
+    TEST_CASE("fst::request")
     {
-        fst::http::url url = fst::http::url("https://dummyjson.com/products/add");
+        fst::http_url url = fst::http_url("https://dummyjson.com/products/add");
 
-        fst::http::request req(fst::move(url));
-        req.set_method(fst::http::method::POST);
+        fst::http_request req(fst::move(url));
+        req.set_method(fst::http_method::POST);
         req.add_header({ "Content-Type", "application/json" });
         req.set_body("{\"title\":\"john\"}");
 
-        fst::http::response resp = req.send();
+        fst::http_response resp = req.send();
 
         REQUIRE(resp.has_data());
         fst::string_view data = resp.as_string();

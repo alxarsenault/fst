@@ -81,7 +81,7 @@ FST_BEGIN_SUB_NAMESPACE(os)
         window(window&&) noexcept;
 
         virtual ~window() noexcept;
-        
+
         window& operator=(const window&) = delete;
         window& operator=(window&&) noexcept;
 

@@ -98,7 +98,7 @@ FST_BEGIN_SUB_NAMESPACE(async)
         // static members
         //static unsigned int hardware_concurrency() noexcept;
 
-        using native_pointer = __fst::unique_ptr<native, __fst::async_memory_category,  __fst::default_memory_zone>;
+        using native_pointer = __fst::unique_ptr<native, __fst::async_memory_category, __fst::default_memory_zone>;
         native_pointer _native;
         thread_data _thread_data;
     };

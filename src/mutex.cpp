@@ -7,6 +7,8 @@
 #include <Windows.h>
 #endif // __FST_WINDOWS__
 
+FST_TODO("mutex posix implementation")
+
 FST_BEGIN_NAMESPACE
 
 #if __FST_WINDOWS__
@@ -14,10 +16,12 @@ FST_BEGIN_NAMESPACE
     {
         using native_type = ::CRITICAL_SECTION;
 
-        FST_ALWAYS_INLINE native() noexcept { 
-            
+        FST_ALWAYS_INLINE native() noexcept
+        {
+
             //fst::debug()(sizeof(native_type));
-            ::InitializeCriticalSection(&_critical_section); }
+            ::InitializeCriticalSection(&_critical_section);
+        }
 
         FST_ALWAYS_INLINE ~native() noexcept { ::DeleteCriticalSection(&_critical_section); }
 
@@ -40,27 +44,27 @@ FST_BEGIN_NAMESPACE
 
     mutex::~mutex() noexcept
     {
-            _storage.data<native>()->~native();
+        _storage.data<native>()->~native();
     }
 
     void mutex::lock() noexcept
     {
-         _storage.data<native>()->lock();
+        _storage.data<native>()->lock();
     }
 
     bool mutex::try_lock() noexcept
     {
-        return  _storage.data<native>()->try_lock();
+        return _storage.data<native>()->try_lock();
     }
 
     void mutex::unlock() noexcept
     {
-         _storage.data<native>()->unlock();
+        _storage.data<native>()->unlock();
     }
 
     mutex::handle mutex::get_handle() const noexcept
     {
-        return  _storage.data<native>()->get_handle();
+        return _storage.data<native>()->get_handle();
     }
 
 FST_END_NAMESPACE

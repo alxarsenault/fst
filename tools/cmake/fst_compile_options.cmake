@@ -100,6 +100,7 @@ function(fst_set_compile_options TARGET EXPOSURE)
             /EHs-c- # Disable exceptions
             # /we26800
 
+            /wd4623
             /wd4625
             /wd4626 # derived class : assignment operator was implicitly defined as deleted because a base class assignment operator is inaccessible or deleted
             /wd5025

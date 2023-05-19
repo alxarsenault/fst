@@ -870,7 +870,7 @@ FST_BEGIN_NAMESPACE
 
         using memory_zone_type = _MemoryZone;
         FST_DECLARE_CONTAINER_TYPES(_T);
-        
+
         using storage_type = __fst::pair<_T*, _MemoryZone>;
         using zone_reference = typename storage_type::second_reference;
         using zone_const_reference = typename storage_type::second_const_reference;
@@ -1198,6 +1198,47 @@ FST_BEGIN_NAMESPACE
             --_size;
         }
 
+        FST_ALWAYS_INLINE constexpr void move_element(size_type index, size_type dst) noexcept
+        {
+            fst_assert(index < _size, "Try to erase out of bounds index.");
+
+            if (index == dst) { return; }
+
+            /* iterator it = this->begin() + index; 
+            iterator dit = this->begin() + dst;*/
+
+            if (dst > index) { dst--; }
+            if (index == _size - 1)
+            {
+                value_type elem = __fst::move(back());
+                pop_back();
+                this->insert(this->begin() + dst, __fst::move(elem));
+                return;
+            }
+
+            if constexpr (__fst::is_trivially_copyable_v<value_type>)
+            {
+                value_type elem = __fst::move(this->operator[](index));
+                __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type));
+
+                _size--;
+                this->insert(this->begin() + dst, __fst::move(elem));
+            }
+            else
+            {
+                value_type elem = __fst::move(this->operator[](index));
+
+                for (size_type i = index; i < size() - 1; i++)
+                {
+                    this->data()[i] = __fst::move(this->data()[i + 1]);
+                }
+
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+                _size--;
+                this->insert(this->begin() + dst, __fst::move(elem));
+            }
+        }
+
         FST_ALWAYS_INLINE constexpr void erase_at(size_type index) noexcept
         {
             fst_assert(index < _size, "Try to erase out of bounds index.");
@@ -1363,6 +1404,32 @@ FST_BEGIN_NAMESPACE
 
         FST_ALWAYS_INLINE constexpr void resize_extra(size_type count, const_reference value) noexcept { resize(size() + count, value); }
 
+        inline iterator find(const value_type& v) noexcept
+        {
+            for (size_type i = 0; i < size(); i++)
+            {
+                if (this->data()[i] == v)
+                {
+                    return begin() + i;
+                    ;
+                }
+            }
+            return end();
+        }
+
+        inline const_iterator find(const value_type& v) const noexcept
+        {
+            for (size_type i = 0; i < size(); i++)
+            {
+                if (this->data()[i] == v)
+                {
+                    return cbegin() + i;
+                    ;
+                }
+            }
+            return cend();
+        }
+
       private:
         __fst::pair<_T*, _MemoryZone> _data = {};
         size_t _size = 0;
@@ -1414,9 +1481,10 @@ FST_BEGIN_NAMESPACE
     {};
 
     template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
-    inline __fst::output_stream<_T> byte_stream(__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>& vec) noexcept
+    inline __fst::output_stream<_T> byte_stream(__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone> & vec) noexcept
     {
-        return __fst::output_stream<_T>{ &vec, [](void* data, const _T* str, size_t size, stream_modifier)noexcept-> size_t
+        return __fst::output_stream<_T>{ &vec,
+            [](void* data, const _T* str, size_t size, stream_modifier) noexcept -> size_t
             {
                 __fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>* vec_ptr = (__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>*) data;
                 size_t index = vec_ptr->size();

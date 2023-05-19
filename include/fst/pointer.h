@@ -32,7 +32,6 @@
 
 FST_BEGIN_NAMESPACE
 
-
     struct make_tag
     {};
 
@@ -271,6 +270,10 @@ FST_BEGIN_NAMESPACE
         using memory_zone_type = _MemoryZone;
         using memory_category_type = _MemoryCategory;
 
+        using storage_type = __fst::pair<pointer, _MemoryZone>;
+        using zone_reference = typename storage_type::second_reference;
+        using zone_const_reference = typename storage_type::second_const_reference;
+
         template <class _Zone>
         using enable_if_zone_default_constructible_t = __fst::enable_if_t<!__fst::is_pointer_v<_Zone> && __fst::is_default_constructible_v<_Zone>, int>;
 
@@ -336,7 +339,7 @@ FST_BEGIN_NAMESPACE
             : _data{ _Right.get(), __fst::forward<_OtherMemoryZone>(_Right.get_memory_zone()) }
         {
 
-            _Right.release();
+            (void) _Right.release();
         }
 
         unique_ptr(const unique_ptr&) = delete;
@@ -356,7 +359,7 @@ FST_BEGIN_NAMESPACE
             if (_data.first())
             {
                 _data.first()->~element_type();
-                _data.second().aligned_deallocate(_data.first(), _MemoryCategory::id());
+                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
             }
         }
 
@@ -391,8 +394,8 @@ FST_BEGIN_NAMESPACE
             return *this;
         }
 
-        FST_NODISCARD memory_zone_type& get_memory_zone() noexcept { return _data.second(); }
-        FST_NODISCARD const memory_zone_type& get_memory_zone() const noexcept { return _data.second(); }
+        FST_NODISCARD zone_reference get_memory_zone() noexcept { return _data.second(); }
+        FST_NODISCARD zone_const_reference get_memory_zone() const noexcept { return _data.second(); }
 
         FST_NODISCARD __fst::add_lvalue_reference_t<_T> operator*() const noexcept { return *_data.first(); }
 
@@ -406,12 +409,89 @@ FST_BEGIN_NAMESPACE
 
         inline void reset(pointer ptr = nullptr) noexcept
         {
-            if (pointer old_ptr = __fst::exchange(_data.first(), ptr)) { _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id()); }
+            if (pointer old_ptr = __fst::exchange(_data.first(), ptr))
+            {
+
+                old_ptr->~element_type();
+                _data.second().aligned_deallocate(old_ptr, _MemoryCategory::id());
+            }
         }
 
       private:
         __fst::pair<pointer, _MemoryZone> _data;
     };
+
+    template <class _T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone, class... _Args>
+    static inline unique_ptr<_T, _MemoryCategory, _MemoryZone> make_unique(_Args && ... args) noexcept
+    {
+        return unique_ptr<_T, _MemoryCategory, _MemoryZone>::make(__fst::forward<_Args>(args)...);
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone, class... _Args>
+    inline __fst::unique_ptr<_T, _MemoryCategory, _MemoryZone>& get_unique_ref(__fst::unique_ptr<_T, _MemoryCategory, _MemoryZone> & ptr, _Args && ... args)
+    {
+        return ptr ? ptr : (ptr = __fst::make_unique<_T>(__fst::forward<_Args>(args)...));
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone, class _T2, class _MemoryCategory2>
+    inline bool operator==(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, const unique_ptr<_T2, _MemoryCategory2, _MemoryZone>& y) noexcept
+    {
+        return x.get() == y.get();
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone, class _T2, class _MemoryCategory2>
+    inline bool operator!=(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, const unique_ptr<_T2, _MemoryCategory2, _MemoryZone>& y) noexcept
+    {
+        return x.get() != y.get();
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator==(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, __fst::nullptr_t) noexcept
+    {
+        return x.get() == nullptr;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator==(__fst::nullptr_t, const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x) noexcept
+    {
+        return x.get() == nullptr;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator!=(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, __fst::nullptr_t) noexcept
+    {
+        return x.get() != nullptr;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator!=(__fst::nullptr_t, const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x) noexcept
+    {
+        return x.get() != nullptr;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator==(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, const _T* y) noexcept
+    {
+        return x.get() == y;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator==(const _T* x, const unique_ptr<_T, _MemoryCategory, _MemoryZone>& y) noexcept
+    {
+        return y.get() == x;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator!=(const unique_ptr<_T, _MemoryCategory, _MemoryZone>& x, const _T* y) noexcept
+    {
+        return x.get() != y;
+    }
+
+    template <class _T, class _MemoryCategory, class _MemoryZone>
+    inline bool operator!=(const _T* x, const unique_ptr<_T, _MemoryCategory, _MemoryZone>& y) noexcept
+    {
+        return y.get() != x;
+    }
 
     ///
     template <class _T, class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>

@@ -2,25 +2,34 @@
 ///
 ///
 
-// clang-format off
-#ifndef __has_include
-#define __has_include(x) 0
+#ifdef __has_include
+#define FST_HAS_INCLUDE(x) __has_include(x)
+#else
+#define FST_HAS_INCLUDE(x) 0
 #endif
 
-#ifndef __has_feature
-#define __has_feature(x) 0
+#ifdef __has_feature
+#define FST_HAS_FEATURE(x) __has_feature(x)
+#else
+#define FST_HAS_FEATURE(x) 0
 #endif
 
-#ifndef __has_extension
-#define __has_extension(x) 0
+#ifdef __has_extension
+#define FST_HAS_EXTENSION(x) __has_extension(x)
+#else
+#define FST_HAS_EXTENSION(x) 0
 #endif
 
-#ifndef __has_attribute
-#define __has_attribute(x) 0
+#ifdef __has_attribute
+#define FST_HAS_ATTRIBUTE(x) __has_attribute(x)
+#else
+#define FST_HAS_ATTRIBUTE(x) 0
 #endif
 
-#ifndef __has_builtin
-#define __has_builtin(x) 0
+#ifdef __has_builtin
+#define FST_HAS_BUILTIN(x) __has_builtin(x)
+#else
+#define FST_HAS_BUILTIN(x) 0
 #endif
 
 ///
@@ -29,7 +38,7 @@
 
 ///
 #define FST_CONCAT(_X, _Y) __FST_CONCAT(_X, _Y)
-#define __FST_CONCAT(_X, _Y) _X ## _Y
+#define __FST_CONCAT(_X, _Y) _X##_Y
 
 ///
 #define FST_EXPAND(X) X
@@ -40,4 +49,3 @@
 #define __FST_ARGS_DUMMY(...) dummy, ##__VA_ARGS__
 #define __FST_SELECT_5(_1, _2, _3, _4, _5, num, ...) num
 #define __FST_IS_MACRO_EMPTY(...) FST_EXPAND(__FST_SELECT_5(__VA_ARGS__, 0, 0, 0, 0, 1))
-// clang-format on

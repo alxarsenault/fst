@@ -33,54 +33,53 @@ FST_BEGIN_NAMESPACE
     ///////////////////////////////////////////////////////////////////////////////
     template <class... _Args>
     struct type_tuple;
-    
+
     template <class... _Args>
     struct tuple;
-    
 
     // tuple_element
     template <size_t I, class T>
     struct tuple_element;
-    
+
     template <size_t I, class T>
     using tuple_element_t = typename tuple_element<I, T>::type;
 
     // type_tuple_element
     template <size_t I, class T>
     using type_tuple_element = tuple_element<I, T>;
-    
+
     template <size_t I, class T>
     using type_tuple_element_t = typename type_tuple_element<I, T>::type;
 
     // tuple_size
     template <class... Types>
     struct tuple_size;
-    
+
     template <class... Ts>
     struct to_tuple;
-    
+
     template <class... Ts>
     struct to_type_tuple;
-    
+
     template <class... Types>
     using type_tuple_size = tuple_size<Types...>;
-    
+
     template <class... Ts>
     using to_tuple_t = typename to_tuple<Ts...>::type;
-    
+
     template <class... Ts>
     using to_type_tuple_t = typename to_type_tuple<Ts...>::type;
 
     // merged_tuple
     template <class...>
     struct merged_tuple;
-    
+
     template <class... Args1, class... Args2>
     struct merged_tuple<tuple<Args1...>, tuple<Args2...>>
     {
         using type = tuple<Args1..., Args2...>;
     };
-    
+
     template <class... Args1, class... Args2, class... Tail>
     struct merged_tuple<tuple<Args1...>, tuple<Args2...>, Tail...>
     {
@@ -89,8 +88,6 @@ FST_BEGIN_NAMESPACE
 
     template <class... Args>
     using merged_tuple_t = typename merged_tuple<Args...>::type;
-
-    
 
     namespace detail
     {
@@ -149,17 +146,17 @@ FST_BEGIN_NAMESPACE
     template <size_t I, class Head, class... Tail>
     struct tuple_element<I, tuple<Head, Tail...>> : tuple_element<I - 1, tuple<Tail...>>
     {};
-    
+
     template <class Head, class... Tail>
     struct tuple_element<0, tuple<Head, Tail...>>
     {
         using type = Head;
     };
-    
+
     template <size_t I, class Head, class... Tail>
     struct tuple_element<I, type_tuple<Head, Tail...>> : tuple_element<I - 1, type_tuple<Tail...>>
     {};
-    
+
     template <class Head, class... Tail>
     struct tuple_element<0, type_tuple<Head, Tail...>>
     {
@@ -170,7 +167,7 @@ FST_BEGIN_NAMESPACE
     template <class... Types>
     struct tuple_size<tuple<Types...>> : __fst::integral_constant<size_t, sizeof...(Types)>
     {};
-    
+
     template <class... Types>
     struct tuple_size<type_tuple<Types...>> : __fst::integral_constant<size_t, sizeof...(Types)>
     {};
@@ -245,7 +242,6 @@ FST_BEGIN_NAMESPACE
     {
         using type = type_tuple<Ts...>;
     };
-
 
     // is_tuple
     template <typename>

@@ -131,6 +131,9 @@ FST_BEGIN_NAMESPACE
     template <class _T> struct is_u16string_view_convertible : __fst::is_convertible<const _T&, __fst::basic_string_view<char16_t>> {};
     template <class _T> struct is_u32string_view_convertible : __fst::is_convertible<const _T&, __fst::basic_string_view<char32_t>> {};
 
+    template < class _T>
+    FST_INLINE_VAR constexpr bool is_string_view_convertible_v = __fst::is_string_view_convertible<  _T>::value;
+
     template <class _T> struct is_string_view_convertible_not_char_buffer : __fst::is_basic_string_view_convertible_not_char_buffer<char, _T> {};
     template <class _T> struct is_wstring_view_convertible_not_char_buffer : __fst::is_basic_string_view_convertible_not_char_buffer<wchar_t, _T> {};
     template <class _T> struct is_u16string_view_convertible_not_char_buffer : __fst::is_basic_string_view_convertible_not_char_buffer<char16_t, _T> {};
@@ -259,7 +262,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD static constexpr const char_type* find(const char_type* const _First, size_t _Count, const char_type _Ch) noexcept
         {
 
-#if __has_builtin(__builtin_char_memchr)
+#if FST_HAS_BUILTIN(__builtin_char_memchr)
             return (const char_type*) __builtin_char_memchr(_First, _Ch, _Count);
 #else
             return (const char_type*) ::memchr(_First, _Ch, _Count);
@@ -1237,6 +1240,12 @@ FST_BEGIN_NAMESPACE
             return basic_string_view(_data + pos, __fst::minimum(len, max_length));
         }
 
+        FST_NODISCARD inline constexpr basic_string_view last(size_type __count) const noexcept FST_UNIT_TESTED
+        {
+            __count = __fst::minimum(size(), __count);
+            return { data() + size() - __count, __count };
+        }
+
         FST_NODISCARD inline constexpr int compare(basic_string_view v) const noexcept
         {
             if (size() != v.size()) { return size() < v.size() ? -1 : size() > v.size() ? 1 : 0; }
@@ -1279,6 +1288,18 @@ FST_BEGIN_NAMESPACE
         inline constexpr size_type find_first_of(value_type c) const noexcept { return find(c); }
         inline constexpr size_type find_first_of(basic_string_view str) const noexcept { return find(str); }
 
+        inline constexpr size_type find_last_of(value_type c) const noexcept
+        {
+            if (empty()) { return npos; }
+
+            for (size_type i = 0, k = _size - 1; i < _size; i++, k--)
+            {
+                if (_data[k] == c) { return k; }
+            }
+
+            return npos;
+        }
+
       private:
         const_pointer _data = nullptr;
         size_type _size = 0;
@@ -1304,6 +1325,181 @@ FST_BEGIN_NAMESPACE
     ///
     ///
     ///
+
+    template <typename _CharT>
+    class basic_string_range
+    {
+      public:
+        using value_type = _CharT;
+        using traits_type = __fst::char_traits<_CharT>;
+        using size_type = size_t;
+        using reference = value_type&;
+        using const_reference = const value_type&;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
+        using iterator = pointer;
+        using const_iterator = const_pointer;
+
+        static constexpr size_type npos = size_type(-1);
+
+        constexpr basic_string_range() noexcept = default;
+        constexpr basic_string_range(const basic_string_range&) noexcept = default;
+        constexpr basic_string_range(basic_string_range&&) noexcept = default;
+
+        inline constexpr basic_string_range(pointer str) noexcept
+            : _data(str)
+            , _size(traits_type::length(str))
+        {}
+
+        inline constexpr basic_string_range(pointer str, size_type count) noexcept
+            : _data(str)
+            , _size(count)
+        {}
+
+        template <size_t _Size>
+        inline constexpr basic_string_range(value_type (&__arr)[_Size]) noexcept
+            : _data{ __arr }
+            , _size{ (size_type) _Size }
+        {}
+
+        template <size_t _Size>
+        inline constexpr basic_string_range(__fst::array<value_type, _Size>& arr) noexcept
+            : _data{ arr.data() }
+            , _size{ (size_type) _Size }
+        {}
+
+        template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container> && __fst::is_different_v<__fst::remove_cvref_t<_Container>, basic_string_range>
+                                                           && __fst::is_same_v<__fst::container_value_type_t<_Container>, value_type>,
+                                        int>
+                                    = 0>
+        FST_ALWAYS_INLINE constexpr basic_string_range(_Container& c) noexcept
+            : _data(c.data())
+            , _size(c.size())
+        {}
+
+        constexpr basic_string_range& operator=(const basic_string_range&) = default;
+        constexpr basic_string_range& operator=(basic_string_range&&) = default;
+
+        FST_NODISCARD constexpr size_type size() const noexcept { return _size; }
+        FST_NODISCARD constexpr size_type length() const noexcept { return _size; }
+        FST_NODISCARD constexpr size_type max_size() const noexcept { return npos - 1; }
+
+        FST_NODISCARD constexpr bool empty() const noexcept { return !_data || size() == 0; }
+
+        FST_NODISCARD constexpr pointer data() noexcept { return _data; }
+        FST_NODISCARD constexpr const_pointer data() const noexcept { return _data; }
+
+        inline __fst::basic_string_view<_CharT> view() const noexcept { return { _data, _size }; }
+        FST_NODISCARD constexpr reference operator[](size_type pos) noexcept { return _data[pos]; }
+        FST_NODISCARD constexpr const_reference operator[](size_type pos) const noexcept { return _data[pos]; }
+
+        FST_NODISCARD constexpr reference front() noexcept { return _data[0]; }
+        FST_NODISCARD constexpr const_reference front() const noexcept { return _data[0]; }
+        FST_NODISCARD constexpr reference back() noexcept { return _data[size() - 1]; }
+        FST_NODISCARD constexpr const_reference back() const noexcept { return _data[size() - 1]; }
+
+        FST_NODISCARD constexpr iterator begin() noexcept { return data(); }
+        FST_NODISCARD constexpr const_iterator begin() const noexcept { return data(); }
+        FST_NODISCARD constexpr const_iterator cbegin() const noexcept { return data(); }
+
+        FST_NODISCARD constexpr iterator end() noexcept { return data() + size(); }
+        FST_NODISCARD constexpr const_iterator end() const noexcept { return data() + size(); }
+        FST_NODISCARD constexpr const_iterator cend() const noexcept { return end(); }
+
+        inline constexpr void swap(basic_string_range& v) noexcept
+        {
+            __fst::memswap(_size, v._size);
+            __fst::memswap(_data, v._data);
+        }
+
+        FST_NODISCARD inline constexpr basic_string_range substr(size_t pos = 0, size_t len = npos) const noexcept
+        {
+            const size_type max_length = pos > size() ? 0 : size() - pos;
+            fst_assert(pos <= size(), "Index out of range in basic_string_range::substr");
+            return basic_string_range(_data + pos, __fst::minimum(len, max_length));
+        }
+
+        FST_NODISCARD inline constexpr basic_string_range last(size_type __count) const noexcept FST_UNIT_TESTED
+        {
+            __count = __fst::minimum(size(), __count);
+            return { data() + size() - __count, __count };
+        }
+
+        FST_NODISCARD inline constexpr int compare(basic_string_range v) const noexcept
+        {
+            if (size() != v.size()) { return size() < v.size() ? -1 : size() > v.size() ? 1 : 0; }
+
+            return traits_type::compare(data(), v.data(), __fst::minimum(size(), v.size()));
+        }
+
+        constexpr void remove_prefix(const size_type _Count) noexcept
+        {
+            _data += _Count;
+            _size -= _Count;
+        }
+
+        inline constexpr size_type find(value_type c) const noexcept
+        {
+            const value_type* ptr = traits_type::find(data(), size(), c);
+            return ptr == nullptr ? npos : (size_type) __fst::pdistance(begin(), ptr);
+        }
+
+        inline constexpr size_type find(basic_string_range str) const noexcept
+        {
+            size_type n = size();
+            size_type m = str.size();
+
+            for (size_type i = 0; i <= n - m; ++i)
+            {
+                size_type j = 0;
+                while (j < m && (*this)[i + j] == str[j])
+                {
+                    ++j;
+                }
+                if (j == m)
+                { // match found
+                    return i;
+                }
+            }
+            return npos;
+        }
+
+        inline constexpr size_type find_first_of(value_type c) const noexcept { return find(c); }
+        inline constexpr size_type find_first_of(basic_string_range str) const noexcept { return find(str); }
+
+        inline constexpr size_type find_last_of(value_type c) const noexcept
+        {
+            if (empty()) { return npos; }
+
+            for (size_type i = 0, k = _size - 1; i < _size; i++, k--)
+            {
+                if (_data[k] == c) { return k; }
+            }
+
+            return npos;
+        }
+
+        _CharT null_last() noexcept { return __fst::exchange(*end(), _CharT(0)); }
+
+        void unnull_last(_CharT c) noexcept { *end() = c; }
+
+        struct scoped_null
+        {
+            scoped_null(basic_string_range s)
+                : str(s)
+                , last(s.null_last())
+            {}
+            ~scoped_null() { str.unnull_last(last); }
+            basic_string_range str;
+            _CharT last;
+        };
+
+        inline scoped_null null_scope() { return scoped_null(*this); }
+
+      private:
+        pointer _data = nullptr;
+        size_type _size = 0;
+    };
 
     ///
     ///
@@ -1802,264 +1998,263 @@ FST_BEGIN_NAMESPACE
     template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container>, int> = 0>
     line_range(const _Container&) -> line_range<__fst::container_data_type_t<_Container>>;
     //
-//
-//    inline constexpr char distance_between_lower_and_upper_case() { return 'a' - 'A'; }
-//inline constexpr bool is_char(char c) { return c >= 0; }
-//inline constexpr bool is_null(char c) { return c == 0; }
-//inline constexpr bool is_space(char c) { return c == ' '; }
-//inline constexpr bool is_tab(char c) { return c == '\t'; }
-//inline constexpr bool is_space_or_tab(char c) { return is_space(c) || is_tab(c); }
-//inline constexpr bool is_digit(char c) { return c >= '0' && c <= '9'; }
-//inline constexpr bool is_letter(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
-//inline constexpr bool is_lower_case_letter(char c) { return c >= 'a' && c <= 'z'; }
-//inline constexpr bool is_upper_case_letter(char c) { return c >= 'A' && c <= 'Z'; }
-//inline constexpr bool is_alphanumeric(char c) { return is_digit(c) || is_letter(c); }
-//inline constexpr bool is_letter_or_underscore(char c) { return is_letter(c) || c == '_'; }
-//inline constexpr bool is_alphanumeric_or_underscore(char c) { return is_alphanumeric(c) || c == '_'; }
-//inline constexpr bool is_operator(char c) noexcept { return c == '<' || c == '>' || c == '='; }
-//inline constexpr bool is_dot(char c) noexcept { return c == '.'; }
-//inline constexpr bool is_logical_or(char c) noexcept { return c == '|'; }
-//inline constexpr bool is_hyphen(char c) noexcept { return c == '-'; }
-//inline constexpr bool is_hex(char c) { return is_digit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'); }
-//inline constexpr bool is_control(char c) { return (c >= 0 && c <= 31) || c == 127; }
-//inline constexpr bool is_end_of_line(char c) { return c == '\n' || c == '\r'; }
-//
-//constexpr inline unsigned char hex_to_char(char c) {
-//  if (is_digit(c)) {
-//    return c - '0';
-//  }
-//
-//  if (c >= 'a' && c <= 'f') {
-//    return 10 + c - 'a';
-//  }
-//
-//  if (c >= 'A' && c <= 'F') {
-//    return 10 + c - 'A';
-//  }
-//  return 0;
-//}
-//
-//inline constexpr bool is_special(char c) {
-//  // ! " # $ % & ' ( ) * + - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
-//  return (c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
-//}
-//
-//inline constexpr unsigned int to_digit(char c) { return c - '0'; }
-//
-//inline constexpr char to_upper_case(char c) {
-//  return is_lower_case_letter(c) ? (c - distance_between_lower_and_upper_case()) : c;
-//}
-//
-//inline constexpr char to_lower_case(char c) {
-//  return is_upper_case_letter(c) ? (c + distance_between_lower_and_upper_case()) : c;
-//}
-//
-//inline constexpr char to_lower(char c) noexcept { return to_lower_case(c); }
-//
-//inline constexpr char to_upper(char c) noexcept { return to_upper_case(c); }
+    //
+    //    inline constexpr char distance_between_lower_and_upper_case() { return 'a' - 'A'; }
+    //inline constexpr bool is_char(char c) { return c >= 0; }
+    //inline constexpr bool is_null(char c) { return c == 0; }
+    //inline constexpr bool is_space(char c) { return c == ' '; }
+    //inline constexpr bool is_tab(char c) { return c == '\t'; }
+    //inline constexpr bool is_space_or_tab(char c) { return is_space(c) || is_tab(c); }
+    //inline constexpr bool is_digit(char c) { return c >= '0' && c <= '9'; }
+    //inline constexpr bool is_letter(char c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
+    //inline constexpr bool is_lower_case_letter(char c) { return c >= 'a' && c <= 'z'; }
+    //inline constexpr bool is_upper_case_letter(char c) { return c >= 'A' && c <= 'Z'; }
+    //inline constexpr bool is_alphanumeric(char c) { return is_digit(c) || is_letter(c); }
+    //inline constexpr bool is_letter_or_underscore(char c) { return is_letter(c) || c == '_'; }
+    //inline constexpr bool is_alphanumeric_or_underscore(char c) { return is_alphanumeric(c) || c == '_'; }
+    //inline constexpr bool is_operator(char c) noexcept { return c == '<' || c == '>' || c == '='; }
+    //inline constexpr bool is_dot(char c) noexcept { return c == '.'; }
+    //inline constexpr bool is_logical_or(char c) noexcept { return c == '|'; }
+    //inline constexpr bool is_hyphen(char c) noexcept { return c == '-'; }
+    //inline constexpr bool is_hex(char c) { return is_digit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'); }
+    //inline constexpr bool is_control(char c) { return (c >= 0 && c <= 31) || c == 127; }
+    //inline constexpr bool is_end_of_line(char c) { return c == '\n' || c == '\r'; }
+    //
+    //constexpr inline unsigned char hex_to_char(char c) {
+    //  if (is_digit(c)) {
+    //    return c - '0';
+    //  }
+    //
+    //  if (c >= 'a' && c <= 'f') {
+    //    return 10 + c - 'a';
+    //  }
+    //
+    //  if (c >= 'A' && c <= 'F') {
+    //    return 10 + c - 'A';
+    //  }
+    //  return 0;
+    //}
+    //
+    //inline constexpr bool is_special(char c) {
+    //  // ! " # $ % & ' ( ) * + - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
+    //  return (c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 96) || (c >= 123 && c <= 126);
+    //}
+    //
+    //inline constexpr unsigned int to_digit(char c) { return c - '0'; }
+    //
+    //inline constexpr char to_upper_case(char c) {
+    //  return is_lower_case_letter(c) ? (c - distance_between_lower_and_upper_case()) : c;
+    //}
+    //
+    //inline constexpr char to_lower_case(char c) {
+    //  return is_upper_case_letter(c) ? (c + distance_between_lower_and_upper_case()) : c;
+    //}
+    //
+    //inline constexpr char to_lower(char c) noexcept { return to_lower_case(c); }
+    //
+    //inline constexpr char to_upper(char c) noexcept { return to_upper_case(c); }
 
-//
-//    std::string ltrim(const std::string& s) {
-//  std::string::size_type pos = s.find_first_not_of(" \n\t\r\v");
-//  return pos == std::string::npos ? std::string() : s.substr(pos);
-//}
-//
-//inline std::string_view ltrim(std::string_view s) {
-//  std::string_view::size_type pos = s.find_first_not_of(" \n\t\r\v");
-//  return pos == std::string_view::npos ? std::string_view() : s.substr(pos);
-//}
-//
-//std::string rtrim(const std::string& s) {
-//  std::string::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
-//  return pos == std::string::npos ? std::string() : s.substr(0, pos + 1);
-//}
-//
-//std::string_view rtrim(std::string_view s) {
-//  std::string_view::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
-//  return pos == std::string_view::npos ? std::string_view() : s.substr(0, pos + 1);
-//}
-//
-//std::string trim(const std::string& s) { return rtrim(ltrim(s)); }
-//
-//std::string_view trim(std::string_view s) { return rtrim(ltrim(s)); }
-    
-//inline constexpr bool is_upper_case(std::string_view s) {
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (fst::is_letter(s[i]) && !fst::is_upper_case_letter(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_lower_case(std::string_view s) {
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (fst::is_letter(s[i]) && !fst::is_lower_case_letter(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_alphanumeric(std::string_view s) {
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (!fst::is_alphanumeric(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_alphanumeric_with_spaces(std::string_view s) {
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (!(fst::is_alphanumeric(s[i]) || fst::is_space(s[i]))) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool has_leading_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s[0]); }
-//
-//inline constexpr bool has_trailing_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s.back()); }
-//
-//inline constexpr bool has_end_of_line(std::string_view s) {
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (fst::is_end_of_line(s[i])) {
-//      return true;
-//    }
-//  }
-//
-//  return false;
-//}
-//
-//inline constexpr std::string_view strip_leading_spaces(std::string_view s) {
-//  const std::size_t b = s.find_first_not_of(' ');
-//  if (b == std::string_view::npos) {
-//    return std::string_view();
-//  }
-//
-//  return s.substr(b);
-//}
-//
-//inline constexpr std::string_view strip_trailing_spaces(std::string_view s) {
-//  const std::size_t b = s.find_last_not_of(' ');
-//  if (b == std::string_view::npos) {
-//    return std::string_view();
-//  }
-//
-//  return s.substr(0, b + 1);
-//}
-//
-//inline constexpr std::string_view strip_leading_and_trailing_spaces(std::string_view s) {
-//  return strip_trailing_spaces(strip_leading_spaces(s));
-//}
-//
-//inline constexpr bool is_signed_integer(std::string_view s) {
-//  if (s.empty()) {
-//    return false;
-//  }
-//
-//  std::size_t start_index = 0;
-//
-//  if (s[0] == '-') {
-//    if (s.size() == 1) {
-//      return false;
-//    }
-//
-//    start_index = 1;
-//  }
-//
-//  for (std::size_t i = start_index; i < s.size(); i++) {
-//    if (!fst::is_digit(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_unsigned_integer(std::string_view s) {
-//  if (s.empty()) {
-//    return false;
-//  }
-//
-//  for (std::size_t i = 0; i < s.size(); i++) {
-//    if (!fst::is_digit(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_floating_point(std::string_view s) {
-//  if (s.empty()) {
-//    return false;
-//  }
-//
-//  std::size_t start_index = 0;
-//
-//  if (s[0] == '-') {
-//    if (s.size() == 1) {
-//      return false;
-//    }
-//
-//    start_index = 1;
-//  }
-//
-//  // Find point index.
-//  const std::size_t point_index = s.find_first_of('.');
-//
-//  if (point_index == std::string_view::npos) {
-//    for (std::size_t i = start_index; i < s.size(); i++) {
-//      if (!fst::is_digit(s[i])) {
-//        return false;
-//      }
-//    }
-//
-//    return true;
-//  }
-//
-//  // Point exist.
-//
-//  // Check if point is at the beginning or at the end.
-//  if ((start_index == point_index) || (point_index == s.size() - 1)) {
-//    return false;
-//  }
-//
-//  // Check left side.
-//  for (std::size_t i = start_index; i < point_index; i++) {
-//    if (!fst::is_digit(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  // Check right side.
-//  for (std::size_t i = point_index + 1; i < s.size(); i++) {
-//    if (!fst::is_digit(s[i])) {
-//      return false;
-//    }
-//  }
-//
-//  return true;
-//}
-//
-//inline constexpr bool is_convertible_to_signed_integer(std::string_view s) {
-//  return is_signed_integer(strip_leading_and_trailing_spaces(s));
-//}
-//
-//inline constexpr bool is_convertible_to_unsigned_integer(std::string_view s) {
-//  return is_unsigned_integer(strip_leading_and_trailing_spaces(s));
-//}
-//
-//inline constexpr bool is_convertible_to_floating_point(std::string_view s) {
-//  return is_floating_point(strip_leading_and_trailing_spaces(s));
-//}
+    //
+    //    std::string ltrim(const std::string& s) {
+    //  std::string::size_type pos = s.find_first_not_of(" \n\t\r\v");
+    //  return pos == std::string::npos ? std::string() : s.substr(pos);
+    //}
+    //
+    //inline std::string_view ltrim(std::string_view s) {
+    //  std::string_view::size_type pos = s.find_first_not_of(" \n\t\r\v");
+    //  return pos == std::string_view::npos ? std::string_view() : s.substr(pos);
+    //}
+    //
+    //std::string rtrim(const std::string& s) {
+    //  std::string::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
+    //  return pos == std::string::npos ? std::string() : s.substr(0, pos + 1);
+    //}
+    //
+    //std::string_view rtrim(std::string_view s) {
+    //  std::string_view::size_type pos = s.find_last_not_of(" \n\t\r\v"); /// must succeed
+    //  return pos == std::string_view::npos ? std::string_view() : s.substr(0, pos + 1);
+    //}
+    //
+    //std::string trim(const std::string& s) { return rtrim(ltrim(s)); }
+    //
+    //std::string_view trim(std::string_view s) { return rtrim(ltrim(s)); }
 
+    //inline constexpr bool is_upper_case(std::string_view s) {
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (fst::is_letter(s[i]) && !fst::is_upper_case_letter(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_lower_case(std::string_view s) {
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (fst::is_letter(s[i]) && !fst::is_lower_case_letter(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_alphanumeric(std::string_view s) {
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (!fst::is_alphanumeric(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_alphanumeric_with_spaces(std::string_view s) {
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (!(fst::is_alphanumeric(s[i]) || fst::is_space(s[i]))) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool has_leading_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s[0]); }
+    //
+    //inline constexpr bool has_trailing_spaces(std::string_view s) { return s.empty() ? false : fst::is_space(s.back()); }
+    //
+    //inline constexpr bool has_end_of_line(std::string_view s) {
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (fst::is_end_of_line(s[i])) {
+    //      return true;
+    //    }
+    //  }
+    //
+    //  return false;
+    //}
+    //
+    //inline constexpr std::string_view strip_leading_spaces(std::string_view s) {
+    //  const std::size_t b = s.find_first_not_of(' ');
+    //  if (b == std::string_view::npos) {
+    //    return std::string_view();
+    //  }
+    //
+    //  return s.substr(b);
+    //}
+    //
+    //inline constexpr std::string_view strip_trailing_spaces(std::string_view s) {
+    //  const std::size_t b = s.find_last_not_of(' ');
+    //  if (b == std::string_view::npos) {
+    //    return std::string_view();
+    //  }
+    //
+    //  return s.substr(0, b + 1);
+    //}
+    //
+    //inline constexpr std::string_view strip_leading_and_trailing_spaces(std::string_view s) {
+    //  return strip_trailing_spaces(strip_leading_spaces(s));
+    //}
+    //
+    //inline constexpr bool is_signed_integer(std::string_view s) {
+    //  if (s.empty()) {
+    //    return false;
+    //  }
+    //
+    //  std::size_t start_index = 0;
+    //
+    //  if (s[0] == '-') {
+    //    if (s.size() == 1) {
+    //      return false;
+    //    }
+    //
+    //    start_index = 1;
+    //  }
+    //
+    //  for (std::size_t i = start_index; i < s.size(); i++) {
+    //    if (!fst::is_digit(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_unsigned_integer(std::string_view s) {
+    //  if (s.empty()) {
+    //    return false;
+    //  }
+    //
+    //  for (std::size_t i = 0; i < s.size(); i++) {
+    //    if (!fst::is_digit(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_floating_point(std::string_view s) {
+    //  if (s.empty()) {
+    //    return false;
+    //  }
+    //
+    //  std::size_t start_index = 0;
+    //
+    //  if (s[0] == '-') {
+    //    if (s.size() == 1) {
+    //      return false;
+    //    }
+    //
+    //    start_index = 1;
+    //  }
+    //
+    //  // Find point index.
+    //  const std::size_t point_index = s.find_first_of('.');
+    //
+    //  if (point_index == std::string_view::npos) {
+    //    for (std::size_t i = start_index; i < s.size(); i++) {
+    //      if (!fst::is_digit(s[i])) {
+    //        return false;
+    //      }
+    //    }
+    //
+    //    return true;
+    //  }
+    //
+    //  // Point exist.
+    //
+    //  // Check if point is at the beginning or at the end.
+    //  if ((start_index == point_index) || (point_index == s.size() - 1)) {
+    //    return false;
+    //  }
+    //
+    //  // Check left side.
+    //  for (std::size_t i = start_index; i < point_index; i++) {
+    //    if (!fst::is_digit(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  // Check right side.
+    //  for (std::size_t i = point_index + 1; i < s.size(); i++) {
+    //    if (!fst::is_digit(s[i])) {
+    //      return false;
+    //    }
+    //  }
+    //
+    //  return true;
+    //}
+    //
+    //inline constexpr bool is_convertible_to_signed_integer(std::string_view s) {
+    //  return is_signed_integer(strip_leading_and_trailing_spaces(s));
+    //}
+    //
+    //inline constexpr bool is_convertible_to_unsigned_integer(std::string_view s) {
+    //  return is_unsigned_integer(strip_leading_and_trailing_spaces(s));
+    //}
+    //
+    //inline constexpr bool is_convertible_to_floating_point(std::string_view s) {
+    //  return is_floating_point(strip_leading_and_trailing_spaces(s));
+    //}
 
 FST_END_NAMESPACE

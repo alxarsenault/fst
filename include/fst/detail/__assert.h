@@ -27,12 +27,12 @@
 /// @macro FST_DEBUGTRAP
 /// On compilers which support it, expands to an expression which causes the
 /// program to break while running under a debugger.
-#if __has_builtin(__builtin_debugtrap)
+#if FST_HAS_BUILTIN(__builtin_debugtrap)
 #define FST_DEBUGTRAP() __builtin_debugtrap()
 
 #elif __FST_MSVC__
 // The __debugbreak intrinsic is supported by MSVC and breaks while
-// running under the debugger, and also supports invoking a debugger
+// running under the debNOINLINEugger, and also supports invoking a debugger
 // when the OS is configured appropriately.
 #define FST_DEBUGTRAP() __debugbreak()
 
@@ -43,6 +43,8 @@
 #else
 #define FST_DEBUGTRAP() ::abort()
 #endif
+
+#define FST_ABORT() ::abort()
 
 #if FST_USE_ASSERT_COLOR
 #define fst_terminal_color(X) "\033[" #X "m"
@@ -74,31 +76,27 @@
 #ifndef FST_ASSERT_BREAK
 #define FST_ASSERT_BREAK() FST_DEBUGTRAP()
 #endif
-  //#define fst_cxpr_assert(CHECK) (FST_LIKELY(CHECK) ? void(0) : [] { assert(!#CHECK); }())
-
-
-
+//#define fst_cxpr_assert(CHECK) (FST_LIKELY(CHECK) ? void(0) : [] { assert(!#CHECK); }())
 
 // No message in assert
-#define __FST_CXPR_ASSERT_1(expr)                                   \
-    (void) ((!(expr)) &&                                       \
-            [](const char* expr_str)                           \
-            {                                                  \
-if(!__fst::is_constant_evaluated()){fst_assert(false);}\
-                return false;                                  \
+#define __FST_CXPR_ASSERT_1(expr)                                           \
+    (void) (FST_UNLIKELY(!(expr)) &&                                        \
+            [](const char* expr_str)                                        \
+            {                                                               \
+                if (!__fst::is_constant_evaluated()) { fst_assert(false); } \
+                return false;                                               \
             }(#expr))
 
-#define __FST_CXPR_ASSERT_2(expr, msg)                              \
-    (void) ((!(expr)) &&                                       \
-            [](const char* expr_str, const char* msg_str)      \
-            {                                                  \
-                return false;                                  \
+#define __FST_CXPR_ASSERT_2(expr, msg)                    \
+    (void) (FST_UNLIKELY(!(expr)) &&                      \
+            [](const char* expr_str, const char* msg_str) \
+            {                                             \
+                return false;                             \
             }(#expr, msg))
-
 
 #if FST_USE_ASSERT_MSG
 #define __FST_ASSERT_1(expr)                                                                          \
-    (void) ((!(expr)) &&                                                                              \
+    (void) (FST_UNLIKELY(!(expr)) &&                                                                  \
             [](const char* expr_str)                                                                  \
             {                                                                                         \
                 FST_NAMESPACE::warnprintf("assert failed\nexpected:\t %s\nsource:\t\t %s\nline:\t\t " \
@@ -110,7 +108,7 @@ if(!__fst::is_constant_evaluated()){fst_assert(false);}\
             }(#expr))
 
 #define __FST_ASSERT_2(expr, msg)                                                             \
-    (void) ((!(expr)) &&                                                                      \
+    (void) (FST_UNLIKELY(!(expr)) &&                                                          \
             [](const char* expr_str, const char* msg_str)                                     \
             {                                                                                 \
                 FST_NAMESPACE::warnprintf("assert failed:\t %s\nexpected:\t %s\nsource:\t\t " \
@@ -124,7 +122,7 @@ if(!__fst::is_constant_evaluated()){fst_assert(false);}\
 #else
 // No message in assert
 #define __FST_ASSERT_1(expr)                                   \
-    (void) ((!(expr)) &&                                       \
+    (void) (FST_UNLIKELY(!(expr)) &&                           \
             [](const char* expr_str)                           \
             {                                                  \
                 FST_ASSERT_HOOK(expr_str, __FILE__, __LINE__); \
@@ -133,7 +131,7 @@ if(!__fst::is_constant_evaluated()){fst_assert(false);}\
             }(#expr))
 
 #define __FST_ASSERT_2(expr, msg)                              \
-    (void) ((!(expr)) &&                                       \
+    (void) (FST_UNLIKELY(!(expr)) &&                           \
             [](const char* expr_str, const char* msg_str)      \
             {                                                  \
                 FST_ASSERT_HOOK(expr_str, __FILE__, __LINE__); \

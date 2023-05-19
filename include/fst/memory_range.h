@@ -31,6 +31,7 @@
 #include "fst/array.h"
 #include "fst/traits.h"
 #include "fst/utility.h"
+#include "fst/pointer.h"
 
 FST_BEGIN_NAMESPACE
 

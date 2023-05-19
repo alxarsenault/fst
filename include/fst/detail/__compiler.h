@@ -144,4 +144,6 @@
 #endif
 
 //
-#define FST_TODO(desc) FST_MESSAGE("fst - [TODO] : "__FILE__ "(" FST_STRINGIFY(__LINE__) ") : " desc)
+#define FST_TODO(desc)                    \
+    FST_MESSAGE("fst - [TODO] : "__FILE__ \
+                "(" FST_STRINGIFY(__LINE__) ") : " desc)

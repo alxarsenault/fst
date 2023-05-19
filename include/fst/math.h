@@ -59,7 +59,6 @@ FST_BEGIN_NAMESPACE
     //
     //
 
-
     /* #define FMT_POWERS_OF_10(factor)                                             \
   factor * 10, (factor)*100, (factor)*1000, (factor)*10000, (factor)*100000, \
       (factor)*1000000, (factor)*10000000, (factor)*100000000,               \
@@ -293,7 +292,7 @@ FST_BEGIN_NAMESPACE
     template <typename T, __fst::enable_if_t<__fst::is_integral_v<T>>* = nullptr>
     FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_power_of_two(T v) noexcept
     {
-        return (bool)(v && !(v & (v - 1)));
+        return (bool) (v && !(v & (v - 1)));
     }
 
     /// Returns the next power of two (in 64-bits) that is strictly greater than A.
@@ -421,8 +420,6 @@ FST_BEGIN_NAMESPACE
         }
     } // namespace cxpr
 
-
-    
     // Returns true if value is negative, false otherwise.
     // Same as `value < 0` but doesn't produce warnings if T is an unsigned type.
     template <typename T, __fst::enable_if_t<__fst::is_signed_v<T>>>
@@ -437,22 +434,23 @@ FST_BEGIN_NAMESPACE
         return false;
     }
 
-    namespace detail{
-    FST_INLINE_VAR constexpr uint32_t uint32_powers_10[10] = {
-        1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
-        //   123456789
-    };
+    namespace detail
+    {
+        FST_INLINE_VAR constexpr uint32_t uint32_powers_10[10] = {
+            1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+            //   123456789
+        };
 
-    FST_INLINE_VAR constexpr uint64_t uint64_powers_10[20] = {
-        1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL, 100000000ULL, 1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL,
-        10000000000000ULL, 100000000000000ULL, 1000000000000000ULL, 10000000000000000ULL, 100000000000000000ULL, 1000000000000000000ULL, 10000000000000000000ULL
-        //   1234567890123456789
-    };
-    }
+        FST_INLINE_VAR constexpr uint64_t uint64_powers_10[20] = {
+            1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL, 100000000ULL, 1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL,
+            10000000000000ULL, 100000000000000ULL, 1000000000000000ULL, 10000000000000000ULL, 100000000000000000ULL, 1000000000000000000ULL, 10000000000000000000ULL
+            //   1234567890123456789
+        };
+    } // namespace detail
 
     template <typename TUint>
-    FST_NODISCARD FST_ALWAYS_INLINE constexpr const TUint* powers_10()noexcept;
-    
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr const TUint* powers_10() noexcept;
+
     template <>
     FST_NODISCARD FST_ALWAYS_INLINE constexpr const uint32_t* powers_10() noexcept
     {

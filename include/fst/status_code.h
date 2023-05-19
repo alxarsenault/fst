@@ -29,7 +29,19 @@
 
 FST_BEGIN_NAMESPACE
 
-    enum class status_code {
+    //
+    enum class status_code;
+
+    //
+    struct status;
+
+    //
+    struct error_result;
+
+    //
+    class status_ref;
+
+    enum class status_code : int32_t {
         success = 0,
         unknown = -1,
 
@@ -112,6 +124,8 @@ FST_BEGIN_NAMESPACE
         text_file_busy = 139, // ETXTBSY
         operation_would_block = 140, // EWOULDBLOCK
 
+        // Custom codes.
+
         already_created,
         invalid_file_format,
         invalid_file_content,
@@ -119,10 +133,46 @@ FST_BEGIN_NAMESPACE
         invalid_audio_format,
         empty_data,
         name_exists,
-        invalid
-    };
+        invalid,
 
-    struct error_result;
+        // http
+        cancelled,
+        bad_url,
+        unresolved_name,
+        unsupported_url,
+        cannot_find_host,
+        cannot_connect_to_host,
+        network_connection_lost,
+        dns_lookup_failed,
+        http_too_many_redirects,
+        resource_unavailable,
+        not_connected_to_internet,
+        redirect_to_non_existent_location,
+        bad_server_response,
+        user_cancelled_authentication,
+        user_authentication_required,
+        zero_byte_resource,
+        cannot_decode_raw_data,
+        cannot_decode_content_data,
+        cannot_parse_response,
+        app_transport_security_requires_secure_connection,
+        file_does_not_exist,
+        file_is_directory,
+        no_permissions_to_read_file,
+        data_length_exceeds_maximum,
+        file_outside_safe_area,
+
+        // ssl errors.
+
+        secure_connection_failed,
+        server_certificate_has_bad_date,
+        server_certificate_untrusted,
+        server_certificate_has_unknown_root,
+        server_certificate_not_yet_valid,
+        client_certificate_rejected,
+        client_certificate_required,
+        cannot_load_from_network
+    };
 
     /// @struct status
     struct status
@@ -241,15 +291,47 @@ FST_BEGIN_NAMESPACE
             case status_code::value_too_large: return "value_too_large";
             case status_code::wrong_protocol_type: return "wrong_protocol_type";
 
-                            case status_code::already_created: return "already_created";
+            case status_code::already_created: return "already_created";
             case status_code::invalid_file_format: return "invalid_file_format";
             case status_code::invalid_file_content: return "invalid_file_content";
             case status_code::invalid_channel_size: return "invalid_channel_size";
             case status_code::invalid_audio_format: return "invalid_audio_format";
+            case status_code::empty_data: return "empty_data";
+            case status_code::name_exists: return "name_exists";
 
-                            case status_code::empty_data: return "empty_data";
-                                            case status_code::name_exists: return "name_exists";
-
+            case status_code::cancelled: return "cancelled";
+            case status_code::bad_url: return "badurl";
+            case status_code::unresolved_name: return "unresolved name";
+            case status_code::unsupported_url: return "unsupported url";
+            case status_code::cannot_find_host: return "cannot find host";
+            case status_code::cannot_connect_to_host: return "cannot connect to host";
+            case status_code::network_connection_lost: return "network connection lost";
+            case status_code::dns_lookup_failed: return "dns lookup failed";
+            case status_code::http_too_many_redirects: return "http too many redirects";
+            case status_code::resource_unavailable: return "resource unavailable";
+            case status_code::not_connected_to_internet: return "not connected to internet";
+            case status_code::redirect_to_non_existent_location: return "redirect to non-existent location";
+            case status_code::bad_server_response: return "bad server response";
+            case status_code::user_cancelled_authentication: return "user cancelled authentication";
+            case status_code::user_authentication_required: return "user authentication required";
+            case status_code::zero_byte_resource: return "zero byte resource";
+            case status_code::cannot_decode_raw_data: return "cannot decode raw data";
+            case status_code::cannot_decode_content_data: return "cannot decode content data";
+            case status_code::cannot_parse_response: return "cannot parse response";
+            case status_code::app_transport_security_requires_secure_connection: return "app transport security requires secure connection";
+            case status_code::file_does_not_exist: return "file does not exist";
+            case status_code::file_is_directory: return "file is directory";
+            case status_code::no_permissions_to_read_file: return "no permissions to read file";
+            case status_code::data_length_exceeds_maximum: return "data length exceeds maximum";
+            case status_code::file_outside_safe_area: return "file outside safe area";
+            case status_code::secure_connection_failed: return "secure connection failed";
+            case status_code::server_certificate_has_bad_date: return "server certificate has bad date";
+            case status_code::server_certificate_untrusted: return "server certificate untrusted";
+            case status_code::server_certificate_has_unknown_root: return "server certificate has unknown root";
+            case status_code::server_certificate_not_yet_valid: return "server certificate not yet valid";
+            case status_code::client_certificate_rejected: return "client certificate rejected";
+            case status_code::client_certificate_required: return "client certificate required";
+            case status_code::cannot_load_from_network: return "cannot load from network";
             }
 
             return "unknown";

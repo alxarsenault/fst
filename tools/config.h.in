@@ -120,6 +120,10 @@
 
 #define FST_PROFILER_LOG_PATH "@FST_PROFILER_LOG_PATH@"
 
+#cmakedefine FST_TRACE_LEVEL @FST_TRACE_LEVEL@
+
+#define FST_TRACE_DIRECTORY "@FST_TRACE_DIRECTORY@"
+
 // ---------------------------------------------
 // Simd
 // ---------------------------------------------

@@ -330,43 +330,43 @@ namespace detail
 //
 //
 //
-#define FST_SIMD_LOOP(...)                                                      \
+#define FST_SIMD_LOOP(...)                                                       \
     if constexpr (_Size == __fst::dynamic_size)                                  \
-    {                                                                           \
-        for (size_type I = 0; I < size(); I += vector_size)                     \
-        {                                                                       \
-            __VA_ARGS__;                                                        \
-        }                                                                       \
-    }                                                                           \
-    else                                                                        \
-    {                                                                           \
-        static constexpr size_t loop_size = size() / vector_size;               \
+    {                                                                            \
+        for (size_type I = 0; I < size(); I += vector_size)                      \
+        {                                                                        \
+            __VA_ARGS__;                                                         \
+        }                                                                        \
+    }                                                                            \
+    else                                                                         \
+    {                                                                            \
+        static constexpr size_t loop_size = size() / vector_size;                \
         __fst::unroll<loop_size, vector_size>([&]<size_t I>() { __VA_ARGS__; }); \
-    }                                                                           \
+    }                                                                            \
     (void) 0
 
-#define FST_SIMD_SEQ_LOOP(__InSize, __InAlign, __InDerived, __InName, OP)                                             \
-    if constexpr (_Size == __InSize) { OP(__InName); }                                                                \
+#define FST_SIMD_SEQ_LOOP(__InSize, __InAlign, __InDerived, __InName, OP)                                               \
+    if constexpr (_Size == __InSize) { OP(__InName); }                                                                  \
     else if constexpr (__fst::simd::has_fixed_size<_Derived>::value && __fst::simd::has_fixed_size<__InDerived>::value) \
-    {                                                                                                                 \
-        static_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");              \
-        constexpr size_type count = size() / __InName.size();                                                         \
-        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                            \
-        for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                            \
-        {                                                                                                             \
-            __fst::simd::detail::range_base<_T, __InSize, salign>(data(k)).OP(__InName);                               \
-        }                                                                                                             \
-    }                                                                                                                 \
-    else                                                                                                              \
-    {                                                                                                                 \
-        fst_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");                 \
-        const size_type count = size() / __InName.size();                                                             \
-        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                            \
-        for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                            \
-        {                                                                                                             \
+    {                                                                                                                   \
+        static_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");                \
+        constexpr size_type count = size() / __InName.size();                                                           \
+        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                             \
+        for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                              \
+        {                                                                                                               \
+            __fst::simd::detail::range_base<_T, __InSize, salign>(data(k)).OP(__InName);                                \
+        }                                                                                                               \
+    }                                                                                                                   \
+    else                                                                                                                \
+    {                                                                                                                   \
+        fst_assert(__InName.size() <= size() && (size() & (__InName.size() - 1)) == 0, "Wrong size");                   \
+        const size_type count = size() / __InName.size();                                                               \
+        constexpr size_type salign = __fst::minimum(_Alignment, __InAlign);                                             \
+        for (size_type i = 0, k = 0; i < count; i++, k += __InName.size())                                              \
+        {                                                                                                               \
             __fst::simd::detail::range_base<_T, __fst::dynamic_size, salign>(data(k), __InName.size()).OP(__InName);    \
-        }                                                                                                             \
-    }                                                                                                                 \
+        }                                                                                                               \
+    }                                                                                                                   \
     (void) 0
 
         // data[i] = 0

@@ -211,7 +211,7 @@ FST_BEGIN_NAMESPACE
     class output_stream final
     {
       public:
-        using write_fct = size_t (*)(void*, const _CharT*, size_t, stream_modifier)noexcept;
+        using write_fct = size_t (*)(void*, const _CharT*, size_t, stream_modifier) noexcept;
 
         inline constexpr output_stream(void* data, write_fct w) noexcept
             : _write(w)
@@ -432,7 +432,7 @@ FST_BEGIN_NAMESPACE
         }
     };
 
-   /* template <class _CharT>
+    /* template <class _CharT>
     class output_stream_imp
     {
       public:
@@ -462,7 +462,8 @@ FST_BEGIN_NAMESPACE
         }
     };*/
 
-    FST_INLINE_VAR output_stream<char> cout = { nullptr, [](void*, const char* str, size_t size, stream_modifier mod)noexcept-> size_t
+    FST_INLINE_VAR output_stream<char> cout = { nullptr,
+        [](void*, const char* str, size_t size, stream_modifier mod) noexcept -> size_t
         {
             static bool has_color = false;
 
@@ -477,10 +478,13 @@ FST_BEGIN_NAMESPACE
             return __fst::write_stdout(str, size);
         } };
 
-    FST_INLINE_VAR output_stream<wchar_t> wcout = { nullptr, [](void*, const wchar_t* str, size_t size, stream_modifier)noexcept-> size_t
+    FST_INLINE_VAR output_stream<wchar_t> wcout = { nullptr,
+        [](void*, const wchar_t* str, size_t size, stream_modifier) noexcept -> size_t
         {
             return __fst::write_wstdout(str, size);
         } };
+
+    extern __fst::output_stream<char> dbgout;
 
     template <typename T, typename _Stream>
     inline void print_element(_Stream & stream, const T& t) noexcept;
@@ -565,6 +569,7 @@ FST_BEGIN_NAMESPACE
     }
 
     enum class info_flags {
+        none,
         function = 2,
         file = 4,
         line = 8,
@@ -583,7 +588,7 @@ FST_BEGIN_NAMESPACE
         template <typename... Args>
         inline void operator()(Args&&... args) const noexcept
         {
-            __fst::output_stream<char>& stream = __fst::cout;
+            __fst::output_stream<char>& stream = __fst::dbgout << "[DEBUG]: ";
 
             if constexpr ((_Flags & __fst::info_flags::file) != 0) { stream << _loc.file_name() << ' '; }
             if constexpr ((_Flags & __fst::info_flags::line) != 0) { stream << _loc.line() << ' '; }
@@ -598,6 +603,8 @@ FST_BEGIN_NAMESPACE
 
         __fst::source_location _loc;
     };
+
+#define fst_dbg debug()
 
     template <class T>
     struct space_padding
@@ -616,7 +623,8 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
+            __fst::output_stream<char> s{ &_content,
+                [](void* data, const char* str, size_t size, stream_modifier) noexcept -> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
@@ -631,7 +639,6 @@ FST_BEGIN_NAMESPACE
             {
                 const char* space_buffer = "                                                       ";
                 stream.write(space_buffer, t._size - _content.size);
-
             }
             return stream;
         }
@@ -667,7 +674,8 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
+            __fst::output_stream<char> s{ &_content,
+                [](void* data, const char* str, size_t size, stream_modifier) noexcept -> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
@@ -713,7 +721,8 @@ FST_BEGIN_NAMESPACE
             };
 
             content _content;
-            __fst::output_stream<char> s{ &_content, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
+            __fst::output_stream<char> s{ &_content,
+                [](void* data, const char* str, size_t size, stream_modifier) noexcept -> size_t
                 {
                     content* c = (content*) data;
                     c->size = size;
@@ -738,6 +747,55 @@ FST_BEGIN_NAMESPACE
     };
 
     template <size_t _Size, class T>
+    struct fzero_padding_right
+    {
+        fzero_padding_right() = delete;
+        fzero_padding_right(const fzero_padding_right&) = delete;
+        fzero_padding_right(fzero_padding_right&&) = delete;
+
+        fzero_padding_right& operator=(const fzero_padding_right&) = delete;
+        fzero_padding_right& operator=(fzero_padding_right&&) = delete;
+
+        inline constexpr fzero_padding_right(T value) noexcept
+            : _value(value)
+        {}
+
+        friend inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const fzero_padding_right& t)
+        {
+            struct content
+            {
+
+                char buffer[1024];
+                size_t size;
+            };
+
+            content _content;
+            __fst::output_stream<char> s{ &_content,
+                [](void* data, const char* str, size_t size, stream_modifier) noexcept -> size_t
+                {
+                    content* c = (content*) data;
+                    c->size = size;
+                    __fst::memcpy(c->buffer, str, size);
+                    return size;
+                } };
+
+            s << t._value;
+
+            if (_Size > _content.size)
+            {
+                const char* space_buffer = "0000000000000000000000000000000000000000000000000000";
+                stream.write(space_buffer, _Size - _content.size);
+            }
+
+            stream.write(_content.buffer, _content.size);
+
+            return stream;
+        }
+
+        T _value;
+    };
+
+    template <size_t _Size, class T>
     inline fspace_padding<_Size, T> padded(T && arg) noexcept
     {
         return fspace_padding<_Size, T>(__fst::forward<T>(arg));
@@ -747,6 +805,17 @@ FST_BEGIN_NAMESPACE
     inline fspace_padding_right<_Size, T> padded_right(T && arg) noexcept
     {
         return fspace_padding_right<_Size, T>(__fst::forward<T>(arg));
+    }
+
+    template <size_t _Size, class T>
+    inline fzero_padding_right<_Size, T> zero_padded_right(T && arg) noexcept
+    {
+        return fzero_padding_right<_Size, T>(__fst::forward<T>(arg));
+    }
+
+    inline __fst::output_stream<char>& operator<<(__fst::output_stream<char>& stream, const __fst::source_location& loc) noexcept
+    {
+        return stream << loc.file_name() << " - " << loc.function_name() << " - " << loc.line();
     }
 
 #define fst_fprint(...)                             \

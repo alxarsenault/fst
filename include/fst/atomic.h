@@ -239,7 +239,7 @@ FST_BEGIN_NAMESPACE
     class atomic
     {
       public:
-        static_assert(__fst::is_one_of((int)sizeof(T), 1, 2, 4, 8), "Only types of size 1, 2, 4 or 8 are supported");
+        static_assert(__fst::is_one_of((int) sizeof(T), 1, 2, 4, 8), "Only types of size 1, 2, 4 or 8 are supported");
 
         FST_ALWAYS_INLINE atomic() noexcept
             : _value(static_cast<T>(0))
@@ -283,12 +283,12 @@ FST_BEGIN_NAMESPACE
 #if __FST_ATOMIC_GCC_INTRINSICS__
             T after = __atomic_add_fetch(&_value, 1, __ATOMIC_SEQ_CST);
 #elif __FST_ATOMIC_MSVC_INTRINSICS__
-             T after =  msvc::interlocked<T>::increment(&_value);
+            T after = msvc::interlocked<T>::increment(&_value);
 #else
-             T after =  ++_value;
-            
+            T after = ++_value;
+
 #endif
-              return --after;
+            return --after;
         }
 
         /// @brief Performs an atomic compare-and-swap (CAS) operation.
@@ -306,15 +306,12 @@ FST_BEGIN_NAMESPACE
             return __atomic_compare_exchange_n(&_value, &e, new_val, true, __ATOMIC_SEQ_CST, __ATOMIC_SEQ_CST);
 #elif __FST_ATOMIC_MSVC_INTRINSICS__
             const T old_val = msvc::interlocked<T>::compare_exchange(&_value, new_val, expected_val);
-            if (old_val == expected_val)
-                {
-                return true;
-                }
+            if (old_val == expected_val) { return true; }
             else
-                {
+            {
                 expected_val = old_val;
                 return false;
-                }
+            }
 #else
             T e = expected_val;
             return _value.compare_exchange_weak(e, new_val);

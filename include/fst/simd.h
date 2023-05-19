@@ -61,33 +61,32 @@
 ////#include <xmmintrin.h>
 //
 ////
-// 
-    //namespace simd
-    //{
-    //    template <class T>
-    //    struct vector_type_base
-    //    {
-    //        using type = T;
-    //    };
+//
+//namespace simd
+//{
+//    template <class T>
+//    struct vector_type_base
+//    {
+//        using type = T;
+//    };
 
-    //    template <class T>
-    //    struct vector_type
-    //    {
-    //        using type = typename vector_type_base<__fst::remove_const_t<T>>::type;
-    //    };
+//    template <class T>
+//    struct vector_type
+//    {
+//        using type = typename vector_type_base<__fst::remove_const_t<T>>::type;
+//    };
 
-    //    ///
-    //    template <class T>
-    //    using vector_type_t = typename vector_type<T>::type;
+//    ///
+//    template <class T>
+//    using vector_type_t = typename vector_type<T>::type;
 
-    //    ///
-    //    template <class T>
-    //    using vector_type_alignment = __fst::integral_constant<size_t, alignof(__fst::simd::vector_type_t<T>)>;
+//    ///
+//    template <class T>
+//    using vector_type_alignment = __fst::integral_constant<size_t, alignof(__fst::simd::vector_type_t<T>)>;
 
-    //    template <class T>
-    //    FST_INLINE_VAR constexpr size_t vector_type_alignment_v = vector_type_alignment<T>::value;
-    //} // namespace simd.
-
+//    template <class T>
+//    FST_INLINE_VAR constexpr size_t vector_type_alignment_v = vector_type_alignment<T>::value;
+//} // namespace simd.
 
 //FST_BEGIN_SUB_NAMESPACE(simd)
 //    void print_version();

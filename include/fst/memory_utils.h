@@ -91,7 +91,7 @@ FST_BEGIN_NAMESPACE
     {
         if (__fst::is_constant_evaluated()) { return ptr; }
 
-#if __has_builtin(__builtin_assume_aligned) || __FST_MSVC__
+#if FST_HAS_BUILTIN(__builtin_assume_aligned) || __FST_MSVC__
         return static_cast<_T*>(__builtin_assume_aligned(ptr, _Alignment));
 #else
         return ptr;
@@ -102,7 +102,7 @@ FST_BEGIN_NAMESPACE
     template <class _T>
     FST_NODISCARD constexpr _T* launder(_T * ptr) noexcept
     {
-#if __has_builtin(__builtin_launder) || __FST_MSVC__
+#if FST_HAS_BUILTIN(__builtin_launder) || __FST_MSVC__
         return __builtin_launder(ptr);
 #else
         return ptr;

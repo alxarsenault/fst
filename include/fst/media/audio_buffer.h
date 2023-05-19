@@ -246,10 +246,7 @@ FST_BEGIN_NAMESPACE
 
         void deallocate_audio_buffer(void* buffers) noexcept
         {
-            if (buffers)
-            {
-                _MemoryZone::deallocate(buffers, _MemoryCategory::id());
-            }
+            if (buffers) { _MemoryZone::deallocate(buffers, _MemoryCategory::id()); }
         }
 
         FST_NODISCARD void** allocate_audio_buffer(size_t channel_size, size_t buffer_size, size_t type_size) noexcept
@@ -291,7 +288,7 @@ FST_BEGIN_NAMESPACE
                 buffers[i] = channel_ptr;
 
                 raw_ptr = static_cast<uint8_t*>(channel_ptr) + channel_buffer_size;
-                sp = (size_t)(raw_ptr_end - static_cast<uint8_t*>(static_cast<void*>(buffers[i])));
+                sp = (size_t) (raw_ptr_end - static_cast<uint8_t*>(static_cast<void*>(buffers[i])));
             }
 
             return buffers;

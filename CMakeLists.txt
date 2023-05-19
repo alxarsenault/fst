@@ -73,7 +73,9 @@ endif()
 # Profiler
 set(FST_PROFILER_LOG_DIR "${CMAKE_BINARY_DIR}/profiler")
 set(FST_PROFILER_LOG_PATH "${FST_PROFILER_LOG_DIR}/profiler.log")
+set(FST_TRACE_DIRECTORY "${FST_PROFILER_LOG_DIR}/trace")
 file(MAKE_DIRECTORY "${FST_PROFILER_LOG_DIR}")
+file(MAKE_DIRECTORY "${FST_TRACE_DIRECTORY}")
 
 # Config file
 if(FST_USE_CUSTOM_CONFIG)
@@ -81,7 +83,7 @@ if(FST_USE_CUSTOM_CONFIG)
 
 else()
     set(FST_DEFAULT_CONFIG_DEFAULT TRUE)
-
+set(FST_TRACE_LEVEL 5)
     # namespace
     set(FST_NAMESPACE "fst")
 

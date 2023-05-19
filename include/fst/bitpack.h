@@ -85,11 +85,12 @@ FST_BEGIN_NAMESPACE
         template <class T>
         static constexpr size_t type_bitlen = T::len;
 
-        static constexpr __fst::array<size_t, sizeof...(_Args)> sizes = { type_bitlen<_Args>... };
+        static constexpr __fst::array<size_t, sizeof...(_Args)> sizes = { { type_bitlen<_Args>... } };
 
         static constexpr __fst::array<size_t, sizeof...(_Args)> offsets = []()
         {
-            __fst::array<size_t, sizeof...(_Args)> arr = { 0 };
+            // Should be filled with zeros.
+            __fst::array<size_t, sizeof...(_Args)> arr = {};
             for (size_t i = 1; i < arr.size(); i++)
             {
                 arr[i] = sizes[i - 1] + arr[i - 1];
@@ -99,7 +100,8 @@ FST_BEGIN_NAMESPACE
 
         static constexpr __fst::array<size_t, sizeof...(_Args)> masks = []()
         {
-            __fst::array<size_t, sizeof...(_Args)> arr = { 0 };
+            // Should be filled with zeros.
+            __fst::array<size_t, sizeof...(_Args)> arr = {};
             for (size_t i = 0; i < arr.size(); i++)
             {
                 arr[i] = __fst::bitmask(offsets[i], sizes[i]);

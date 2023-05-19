@@ -1947,7 +1947,8 @@ FST_BEGIN_NAMESPACE
     template <class _CharT, class _Allocator = __fst::allocator<_CharT>>
     inline __fst::output_stream<_CharT> string_stream(__fst::basic_string<_CharT, _Allocator> & s) noexcept
     {
-        return __fst::output_stream<_CharT>{ &s, [](void* data, const char* str, size_t size, stream_modifier)noexcept-> size_t
+        return __fst::output_stream<_CharT>{ &s,
+            [](void* data, const char* str, size_t size, stream_modifier) noexcept -> size_t
             {
                 __fst::basic_string<_CharT, _Allocator>* str_ptr = (__fst::basic_string<_CharT, _Allocator>*) data;
                 str_ptr->append(str, size);

@@ -32,13 +32,7 @@
 #include "fst/aligned_storage.h"
 #include "fst/atomic.h"
 
-//#define MacroStr(x)   #x
-//#define MacroStr2(x)  MacroStr(x)
-//#define Message(desc) __pragma(message(__FILE__ "(" FST_STRINGIFY(__LINE__) ") :" #desc))
-
-FST_TODO("BINFDLJ")
 FST_BEGIN_NAMESPACE
-
     class mutex
     {
       public:

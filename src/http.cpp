@@ -1,4 +1,4 @@
-#include "fst/web/http.h"
+#include "fst/http.h"
 #include "fst/unicode.h"
 
 #if __FST_WINDOWS__
@@ -10,7 +10,7 @@
 
 //#pragma comment(lib, "winhttp.lib")
 
-FST_BEGIN_SUB_NAMESPACE(http)
+FST_BEGIN_NAMESPACE
 
     void print_win_error()
     {
@@ -22,11 +22,11 @@ FST_BEGIN_SUB_NAMESPACE(http)
         else { __fst::print(::GetLastError(), "Error--------"); }
     }
 
-    using web_wstring = __fst::basic_string<wchar_t, __fst::allocator<wchar_t, __fst::web_memory_category>>;
-    using web_string = __fst::basic_string<char, __fst::allocator<char, __fst::web_memory_category>>;
+    //using web_wstring = __fst::basic_string<wchar_t, __fst::allocator<wchar_t, __fst::network_memory_category>>;
+    //using web_string = __fst::basic_string<char, __fst::allocator<char, __fst::network_memory_category>>;
 
     //
-    void get_response_headers(HINTERNET hRequest, __fst::http::response::header_field_vector & headers)
+    void get_response_headers(HINTERNET hRequest, __fst::http_response::header_field_vector & headers)
     {
         DWORD header_size = 0;
         WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_RAW_HEADERS_CRLF, WINHTTP_HEADER_NAME_BY_INDEX, nullptr, &header_size, WINHTTP_NO_HEADER_INDEX);
@@ -34,7 +34,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         // Allocate memory for the buffer.
         if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
         {
-            __fst::basic_string<wchar_t, __fst::allocator<wchar_t, __fst::web_memory_category>> wheader;
+            http_wstring wheader;
             wheader.resize(header_size / sizeof(wchar_t));
 
             // Now, use WinHttpQueryHeaders to retrieve the header.
@@ -44,7 +44,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
                 return;
             }
 
-            using string_type = __fst::http::header_field::string_type;
+            using string_type = __fst::http_header_field::string_type;
             string_type header_str = __fst::utf_cvt(wheader);
 
             size_t line_count = __fst::count_lines(header_str.c_str());
@@ -84,7 +84,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         }
     }
 
-    __fst::http::response url::send(bool with_header) const noexcept
+    __fst::http_response http_url::send(bool with_header) const noexcept
     {
 
         // WinHTTP Sessions Overview | https://msdn.microsoft.com/en-us/library/windows/desktop/aa384270(v=vs.85).aspx
@@ -94,32 +94,32 @@ FST_BEGIN_SUB_NAMESPACE(http)
         if (!hSession)
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_session([=]() { WinHttpCloseHandle(hSession); });
 
         // Specify an HTTP server.
-        web_wstring domain = __fst::utf_cvt(get_domain());
+        http_wstring domain = __fst::utf_cvt(get_domain());
 
         HINTERNET hConnect = WinHttpConnect(hSession, domain.c_str(), INTERNET_DEFAULT_HTTPS_PORT, 0);
         if (!hConnect)
         {
 
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_connect([=]() { WinHttpCloseHandle(hConnect); });
 
         // Create an HTTP request handle.
-        web_wstring route = __fst::utf_cvt(get_route(true));
+        http_wstring route = __fst::utf_cvt(get_route(true));
 
         HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"GET", route.c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
         if (!hRequest)
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_request([=]() { WinHttpCloseHandle(hRequest); });
@@ -132,31 +132,31 @@ FST_BEGIN_SUB_NAMESPACE(http)
 
             switch (::GetLastError())
             {
-            case ERROR_WINHTTP_CANNOT_CONNECT: return __fst::http::response(__fst::http::error_code::cannot_connect_to_host);
-            case ERROR_WINHTTP_CLIENT_AUTH_CERT_NEEDED: return __fst::http::response(__fst::http::error_code::client_certificate_required);
-            case ERROR_WINHTTP_CONNECTION_ERROR: return __fst::http::response(__fst::http::error_code::cannot_connect_to_host);
-            case ERROR_WINHTTP_INCORRECT_HANDLE_STATE: return __fst::http::response(__fst::http::error_code::unknown);
-            case ERROR_WINHTTP_INCORRECT_HANDLE_TYPE: return __fst::http::response(__fst::http::error_code::unknown);
-            case ERROR_WINHTTP_INTERNAL_ERROR: return __fst::http::response(__fst::http::error_code::unknown);
-            case ERROR_WINHTTP_INVALID_URL: return __fst::http::response(__fst::http::error_code::bad_url);
-            case ERROR_WINHTTP_LOGIN_FAILURE: return __fst::http::response(__fst::http::error_code::unknown);
-            case ERROR_WINHTTP_NAME_NOT_RESOLVED: return __fst::http::response(__fst::http::error_code::unresolved_name);
-            case ERROR_WINHTTP_OPERATION_CANCELLED: return __fst::http::response(__fst::http::error_code::cancelled);
-            case ERROR_WINHTTP_RESPONSE_DRAIN_OVERFLOW: return __fst::http::response(__fst::http::error_code::cancelled);
-            case ERROR_WINHTTP_SECURE_FAILURE: return __fst::http::response(__fst::http::error_code::secure_connection_failed);
-            case ERROR_WINHTTP_SHUTDOWN: return __fst::http::response(__fst::http::error_code::cancelled);
-            case ERROR_WINHTTP_TIMEOUT: return __fst::http::response(__fst::http::error_code::timed_out);
-            case ERROR_WINHTTP_UNRECOGNIZED_SCHEME: return __fst::http::response(__fst::http::error_code::unknown);
-            case ERROR_WINHTTP_RESEND_REQUEST: return __fst::http::response(__fst::http::error_code::unknown);
+            case ERROR_WINHTTP_CANNOT_CONNECT: return __fst::http_response(__fst::status_code::cannot_connect_to_host);
+            case ERROR_WINHTTP_CLIENT_AUTH_CERT_NEEDED: return __fst::http_response(__fst::status_code::client_certificate_required);
+            case ERROR_WINHTTP_CONNECTION_ERROR: return __fst::http_response(__fst::status_code::cannot_connect_to_host);
+            case ERROR_WINHTTP_INCORRECT_HANDLE_STATE: return __fst::http_response(__fst::status_code::unknown);
+            case ERROR_WINHTTP_INCORRECT_HANDLE_TYPE: return __fst::http_response(__fst::status_code::unknown);
+            case ERROR_WINHTTP_INTERNAL_ERROR: return __fst::http_response(__fst::status_code::unknown);
+            case ERROR_WINHTTP_INVALID_URL: return __fst::http_response(__fst::status_code::bad_url);
+            case ERROR_WINHTTP_LOGIN_FAILURE: return __fst::http_response(__fst::status_code::unknown);
+            case ERROR_WINHTTP_NAME_NOT_RESOLVED: return __fst::http_response(__fst::status_code::unresolved_name);
+            case ERROR_WINHTTP_OPERATION_CANCELLED: return __fst::http_response(__fst::status_code::cancelled);
+            case ERROR_WINHTTP_RESPONSE_DRAIN_OVERFLOW: return __fst::http_response(__fst::status_code::cancelled);
+            case ERROR_WINHTTP_SECURE_FAILURE: return __fst::http_response(__fst::status_code::secure_connection_failed);
+            case ERROR_WINHTTP_SHUTDOWN: return __fst::http_response(__fst::status_code::cancelled);
+            case ERROR_WINHTTP_TIMEOUT: return __fst::http_response(__fst::status_code::timed_out);
+            case ERROR_WINHTTP_UNRECOGNIZED_SCHEME: return __fst::http_response(__fst::status_code::unknown);
+            case ERROR_WINHTTP_RESEND_REQUEST: return __fst::http_response(__fst::status_code::unknown);
             }
 
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         if (!WinHttpReceiveResponse(hRequest, nullptr))
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         DWORD dwStatusCode = 0;
@@ -168,14 +168,14 @@ FST_BEGIN_SUB_NAMESPACE(http)
                     hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, WINHTTP_HEADER_NAME_BY_INDEX, &dwStatusCode, &dwStatusSize, WINHTTP_NO_HEADER_INDEX))
             {
                 print_win_error();
-                return __fst::http::response(__fst::http::error_code::cancelled);
+                return __fst::http_response(__fst::status_code::cancelled);
             }
         }
 
-        __fst::http::response::header_field_vector headers;
+        __fst::http_response::header_field_vector headers;
         if (with_header) { get_response_headers(hRequest, headers); }
 
-        __fst::http::response::data_vector data;
+        __fst::http_response::data_vector data;
 
         // Keep checking for data until there is nothing left.
         {
@@ -189,7 +189,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
                 {
                     print_win_error();
                     //printf("Error %u in WinHttpQueryDataAvailable.\n", GetLastError());
-                    return __fst::http::response(__fst::http::error_code::cancelled);
+                    return __fst::http_response(__fst::status_code::cancelled);
                 }
 
                 //
@@ -205,41 +205,41 @@ FST_BEGIN_SUB_NAMESPACE(http)
                     {
                         print_win_error();
                         //printf("Error %u in WinHttpReadData.\n", GetLastError());
-                        return __fst::http::response(__fst::http::error_code::cancelled);
+                        return __fst::http_response(__fst::status_code::cancelled);
                     }
                 }
             } while (dwSize > 0);
         }
 
-        return __fst::http::response(__fst::move(data), (int) dwStatusCode, __fst::move(headers));
+        return __fst::http_response(__fst::move(data), (int) dwStatusCode, __fst::move(headers));
     }
 
-    response request::send(bool with_header) const noexcept
+    http_response http_request::send(bool with_header) const noexcept
     {
         // Use WinHttpOpen to obtain a session handle.
         HINTERNET hSession = WinHttpOpen(nullptr, WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
         if (!hSession)
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_session([=]() { WinHttpCloseHandle(hSession); });
 
         // Specify an HTTP server.
-        web_wstring domain = __fst::utf_cvt(get_domain());
+        http_wstring domain = __fst::utf_cvt(get_domain());
 
         HINTERNET hConnect = WinHttpConnect(hSession, domain.c_str(), INTERNET_DEFAULT_HTTPS_PORT, 0);
         if (!hConnect)
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_connect([=]() { WinHttpCloseHandle(hConnect); });
 
         // Create an HTTP request handle.
-        web_wstring route = __fst::utf_cvt(get_route(true));
+        http_wstring route = __fst::utf_cvt(get_route(true));
 
         constexpr const wchar_t* method_str[] = { L"GET", L"POST", L"PUT", L"PATCH", L"DELETE" };
 
@@ -248,20 +248,20 @@ FST_BEGIN_SUB_NAMESPACE(http)
         if (!hRequest)
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         __fst::final_action _close_request([=]() { WinHttpCloseHandle(hRequest); });
 
         // Headers.
         wchar_t* header_ptr = nullptr;
-        web_wstring header_wstr;
+        http_wstring header_wstr;
         DWORD header_size = 0;
 
         // Add headers.
         if (!_headers.empty())
         {
-            web_string header_str;
+            http_string header_str;
             header_str.reserve(1024);
 
             for (size_t i = 0; i < _headers.size(); i++)
@@ -275,7 +275,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
         }
 
         // Data.
-        web_string data_str;
+        http_string data_str;
         void* data_ptr = nullptr;
         DWORD data_size = 0;
 
@@ -294,13 +294,13 @@ FST_BEGIN_SUB_NAMESPACE(http)
         if (!WinHttpSendRequest(hRequest, header_ptr, header_size, data_ptr, data_size, data_size, 0))
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         if (!WinHttpReceiveResponse(hRequest, nullptr))
         {
             print_win_error();
-            return __fst::http::response(__fst::http::error_code::cancelled);
+            return __fst::http_response(__fst::status_code::cancelled);
         }
 
         DWORD dwStatusCode = 0;
@@ -312,14 +312,14 @@ FST_BEGIN_SUB_NAMESPACE(http)
                     hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, WINHTTP_HEADER_NAME_BY_INDEX, &dwStatusCode, &dwStatusSize, WINHTTP_NO_HEADER_INDEX))
             {
                 print_win_error();
-                return __fst::http::response(__fst::http::error_code::cancelled);
+                return __fst::http_response(__fst::status_code::cancelled);
             }
         }
 
-        __fst::http::response::header_field_vector headers;
+        __fst::http_response::header_field_vector headers;
         if (with_header) { get_response_headers(hRequest, headers); }
 
-        __fst::http::response::data_vector data;
+        __fst::http_response::data_vector data;
 
         // Keep checking for data until there is nothing left.
         {
@@ -333,7 +333,7 @@ FST_BEGIN_SUB_NAMESPACE(http)
                 {
                     //printf("Error %u in WinHttpQueryDataAvailable.\n", GetLastError());
                     print_win_error();
-                    return __fst::http::response(__fst::http::error_code::cancelled);
+                    return __fst::http_response(__fst::status_code::cancelled);
                 }
 
                 //
@@ -349,29 +349,29 @@ FST_BEGIN_SUB_NAMESPACE(http)
                     {
                         //printf("Error %u in WinHttpReadData.\n", GetLastError());
                         print_win_error();
-                        return __fst::http::response(__fst::http::error_code::cancelled);
+                        return __fst::http_response(__fst::status_code::cancelled);
                     }
                 }
             } while (dwSize > 0);
         }
 
-        return __fst::http::response(__fst::move(data), (int) dwStatusCode, __fst::move(headers));
+        return __fst::http_response(__fst::move(data), (int) dwStatusCode, __fst::move(headers));
     }
-FST_END_SUB_NAMESPACE
+FST_END_NAMESPACE
 
 #else
 FST_BEGIN_SUB_NAMESPACE(http)
 
-    __fst::http::response url::send(bool with_header) const noexcept
+    __fst::http_response url::send(bool with_header) const noexcept
     {
         __fst::unused(with_header);
-        return __fst::http::response(__fst::http::error_code::unknown);
+        return __fst::http_response(__fst::status_code::unknown);
     }
-    __fst::http::response request::send(bool with_header) const noexcept
+    __fst::http_response http_request::send(bool with_header) const noexcept
     {
         __fst::unused(with_header);
-        return __fst::http::response(__fst::http::error_code::unknown);
+        return __fst::http_response(__fst::status_code::unknown);
     }
-FST_END_SUB_NAMESPACE
+FST_END_NAMESPACE
 
 #endif //

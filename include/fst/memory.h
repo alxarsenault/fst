@@ -71,7 +71,6 @@ FST_BEGIN_NAMESPACE
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_zone_id)
     FST_DECLARE_ENUM_CLASS_OPERATORS(memory_category_id)
 
-
     ///
     struct default_memory_zone;
 
@@ -509,21 +508,21 @@ FST_BEGIN_NAMESPACE
     {
         return __fst::default_memory_zone::allocate(size, _MemoryCategory::id());
     }
-    
+
     ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     inline void deallocate(void* ptr) noexcept
     {
         __fst::default_memory_zone::deallocate(ptr, _MemoryCategory::id());
     }
-    
+
     ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     FST_NODISCARD inline void* aligned_allocate(size_t size, size_t alignment) noexcept
     {
         return __fst::default_memory_zone::aligned_allocate(size, alignment, _MemoryCategory::id());
     }
-    
+
     ///
     template <class _MemoryCategory = __fst::default_memory_category, __fst::enable_if_t<__fst::is_memory_category<_MemoryCategory>::value, int> = 0>
     inline void aligned_deallocate(void* ptr) noexcept

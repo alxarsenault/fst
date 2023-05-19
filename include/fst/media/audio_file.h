@@ -131,9 +131,9 @@ FST_BEGIN_NAMESPACE
             st = CONVERT_BUFFER(pcm_16s);
             break;
         //case 24:
-            //ft = __fst::audio_format_type::pcm_24s;
-            //st = CONVERT_BUFFER(pcm_24s);
-            //break;
+        //ft = __fst::audio_format_type::pcm_24s;
+        //st = CONVERT_BUFFER(pcm_24s);
+        //break;
         case 32:
             if (format->audio_format == __fst::wav_audio_format::ieee)
             {

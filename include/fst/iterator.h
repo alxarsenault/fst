@@ -84,14 +84,14 @@ FST_BEGIN_NAMESPACE
     // iterator_value_type
     template <class _T>
     using iterator_value_type = __fst::type_identity<typename __fst::iterator_traits<_T>::value_type>;
-    
+
     template <class _T>
     using iterator_value_type_t = typename __fst::iterator_value_type<_T>::type;
 
     // iterator_pointer_type
     template <class _T>
     using iterator_pointer_type = __fst::type_identity<typename __fst::iterator_traits<_T>::pointer>;
-    
+
     template <class _T>
     using iterator_pointer_type_t = typename __fst::iterator_pointer_type<_T>::type;
 

@@ -9,15 +9,15 @@ FST_BEGIN_NAMESPACE
 
 FST_END_NAMESPACE
 
-#define FST_DECLARE_CONTAINER_TYPES(T_NAME)       \
-    using value_type = T_NAME;                    \
-    using size_type = size_t;                     \
-    using difference_type = ptrdiff_t;            \
-    using pointer = T_NAME*;                      \
-    using const_pointer = const T_NAME*;          \
-    using reference = T_NAME&;                    \
+#define FST_DECLARE_CONTAINER_TYPES(T_NAME)        \
+    using value_type = T_NAME;                     \
+    using size_type = size_t;                      \
+    using difference_type = ptrdiff_t;             \
+    using pointer = T_NAME*;                       \
+    using const_pointer = const T_NAME*;           \
+    using reference = T_NAME&;                     \
     using const_reference = __fst::cref_t<T_NAME>; \
-    using iterator = pointer;                     \
+    using iterator = pointer;                      \
     using const_iterator = const_pointer
 
 #define FST_DECLARE_CONTAINER_DEFAULT_CTOR(NAME)               \

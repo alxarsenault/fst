@@ -253,7 +253,6 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD FST_ALWAYS_INLINE size_t find_bucket(const void* p) const noexcept { return ((uintptr_t) p - (uintptr_t) _buckets[0].data()) / _bucket_size; }
     };
 
-
     /// This allocator allocate memory blocks from pre-allocated memory chunks.
     ///
     /// The memory chunks are allocated by _MemoryZone, which is fst::default_memory_zone by default.

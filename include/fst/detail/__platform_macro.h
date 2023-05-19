@@ -34,20 +34,21 @@
 #endif
 
 /// @macro FST_ALWAYS_INLINE
-/// On compilers where we have a directive to do so, mark a method "always
-/// inline" because it is performance sensitive. GCC 3.4 supported this but is
-/// buggy in various cases and produces unimplemented errors, just use it in
-/// GCC 4.0 and later.
-#if __has_attribute(always_inline) || FST_GNUC_PREREQ(4, 0, 0)
-#define FST_ALWAYS_INLINE inline //__attribute__((always_inline))
+#if __FST_CLANG__ && FST_HAS_ATTRIBUTE(always_inline)
+#define FST_ALWAYS_INLINE [[clang::always_inline]] inline
+
+#elif __FST_GCC__ && FST_HAS_ATTRIBUTE(always_inline)
+#define FST_ALWAYS_INLINE inline __attribute__((__always_inline__))
+
 #elif __FST_MSVC__
 #define FST_ALWAYS_INLINE __forceinline
+
 #else
 #define FST_ALWAYS_INLINE inline
 #endif
 
 /// @macro FST_LIKELY and FST_UNLIKELY
-#if __has_builtin(__builtin_expect) || FST_GNUC_PREREQ(4, 0, 0)
+#if FST_HAS_BUILTIN(__builtin_expect) || FST_GNUC_PREREQ(4, 0, 0)
 #define FST_LIKELY(EXPR) __builtin_expect((bool) (EXPR), true)
 #define FST_UNLIKELY(EXPR) __builtin_expect((bool) (EXPR), false)
 #else
@@ -55,17 +56,18 @@
 #define FST_UNLIKELY(EXPR) (EXPR)
 #endif
 
-// Microsoft Specific
-//__declspec(noinline) tells the compiler to never inline a particular member function (function in a class).
-// It may be worthwhile to not inline a function if it is small and not critical to the performance of your code. That
-// is, if the function is small and not likely to be called often, such as a function that handles an error condition.
-// Keep in mind that if a function is marked noinline, the calling function will be smaller and thus, itself a candidate
-// for compiler inlining.
-#if __FST_MSVC__
+// Annotate a function indicating it should not be inlined.
+// Use like:
+//   FST_NOINLINE void DoStuff() { ... }
+#if __FST_CLANG__ && FST_HAS_ATTRIBUTE(noinline)
+#define FST_NOINLINE [[clang::noinline]]
+#elif __FST_GCC__ && FST_HAS_ATTRIBUTE(noinline)
+#define FST_NOINLINE __attribute__((noinline))
+#elif __FST_MSVC__
 #define FST_NOINLINE __declspec(noinline)
 #else
 #define FST_NOINLINE
-#endif //
+#endif
 
 /// @macro FST_ATTRIBUTE_UNUSED
 /// Some compilers warn about unused functions. When a function is sometimes
@@ -79,7 +81,7 @@
 #if defined(__cplusplus) && __cplusplus > 201402L && FST_HAS_CPP_ATTRIBUTE(maybe_unused)
 #define FST_ATTRIBUTE_UNUSED [[maybe_unused]]
 
-#elif __has_attribute(unused) || FST_GNUC_PREREQ(3, 1, 0)
+#elif FST_HAS_ATTRIBUTE(unused) || FST_GNUC_PREREQ(3, 1, 0)
 #define FST_ATTRIBUTE_UNUSED __attribute__((__unused__))
 
 #else
@@ -114,7 +116,7 @@
 #endif
 
 /// @macro FST_ATTRIBUTE_RETURNS_NONNULL.
-#if __has_attribute(returns_nonnull) || FST_GNUC_PREREQ(4, 9, 0)
+#if FST_HAS_ATTRIBUTE(returns_nonnull) || FST_GNUC_PREREQ(4, 9, 0)
 #define FST_ATTRIBUTE_RETURNS_NONNULL __attribute__((returns_nonnull))
 #elif __FST_MSVC__
 #define FST_ATTRIBUTE_RETURNS_NONNULL _Ret_notnull_
@@ -123,7 +125,7 @@
 #endif
 
 /// @macro FST_ATTRIBUTE_NO_RETURN.
-#if __has_attribute(noreturn) || FST_GNUC_PREREQ(4, 9, 0)
+#if FST_HAS_ATTRIBUTE(noreturn) || FST_GNUC_PREREQ(4, 9, 0)
 #define FST_ATTRIBUTE_NO_RETURN __attribute__((noreturn))
 #elif __FST_MSVC__
 #define FST_ATTRIBUTE_NO_RETURN __declspec(noreturn)
@@ -132,7 +134,7 @@
 #endif
 
 /// @macro FST_ATTRIBUTE_HIDDEN.
-#if __has_attribute(visibility) || FST_GNUC_PREREQ(4, 0, 0)
+#if FST_HAS_ATTRIBUTE(visibility) || FST_GNUC_PREREQ(4, 0, 0)
 #define FST_ATTRIBUTE_HIDDEN __attribute__((visibility("hidden")))
 #else
 #define FST_ATTRIBUTE_HIDDEN
@@ -220,7 +222,7 @@ void _mm_pause(void);
 #endif
 
 //#define FST_UNUSED(X) __pragma(warning(suppress : 4100)) X
-#define FST_UNUSED(...) (void) (__VA_ARGS__)
+#define FST_UNUSED(...) //(void) (__VA_ARGS__)
 
 ///
 #if __FST_MSVC__ && (defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64))
@@ -254,7 +256,7 @@ void _mm_pause(void);
 #ifdef offsetof
 #define fst_offsetof(s, m) offsetof(s, m)
 
-#elif __has_builtin(__builtin_offsetof)
+#elif FST_HAS_BUILTIN(__builtin_offsetof)
 #define fst_offsetof(s, m) __builtin_offsetof(s, m)
 
 #else

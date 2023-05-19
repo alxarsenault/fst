@@ -79,7 +79,7 @@ FST_BEGIN_NAMESPACE
     {
       public:
         static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
-                                                 "allocator<const T> is ill-formed.");
+                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
         using pointer = T*;
@@ -156,12 +156,12 @@ FST_BEGIN_NAMESPACE
     // memory_zone_allocator
     // static memory zone
     template <class T, class _MemoryCategory, class _MemoryZone>
-    class memory_zone_allocator<T,  _MemoryCategory, _MemoryZone,
+    class memory_zone_allocator<T, _MemoryCategory, _MemoryZone,
         __fst::enable_if_t<__fst::is_static_memory_zone<_MemoryZone>::value && __fst::is_memory_category<_MemoryCategory>::value>>
     {
       public:
         static_assert(!__fst::is_const<T>::value, "The C++ Standard forbids containers of const elements because "
-                                                 "allocator<const T> is ill-formed.");
+                                                  "allocator<const T> is ill-formed.");
 
         using value_type = T;
         using pointer = T*;
@@ -177,7 +177,7 @@ FST_BEGIN_NAMESPACE
         template <class U>
         struct rebind
         {
-            using other = memory_zone_allocator<U,  _MemoryCategory, _MemoryZone>;
+            using other = memory_zone_allocator<U, _MemoryCategory, _MemoryZone>;
         };
 
         static constexpr size_t alignment = __fst::default_alignof<T>;

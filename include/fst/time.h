@@ -26,6 +26,7 @@
 
 #include "fst/common.h"
 #include "fst/utility.h"
+#include "fst/memory_range.h"
 
 #include <time.h>
 
@@ -90,4 +91,8 @@ FST_BEGIN_NAMESPACE
 
         FST_NODISCARD static ::time_t to_time_t(const time_point& t) noexcept { return (::time_t) t.time_since_epoch(); }
     };
+
+    size_t time_to_string(__fst::memory_range<char, 13> buffer, time_point now, char sep = ':') noexcept;
+    size_t time_to_string2(__fst::memory_range<char, 12> buffer, time_point now, char sep) noexcept;
+    ;
 FST_END_NAMESPACE

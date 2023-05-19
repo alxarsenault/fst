@@ -47,6 +47,16 @@ FST_BEGIN_NAMESPACE
     }
 
     template <typename _CharT>
+    inline constexpr bool operator==(__fst::basic_string_view<_CharT> lhs, const _CharT rhs) noexcept
+    {
+        return lhs.empty() ? false : lhs.front() == rhs;
+    }
+    template <typename _CharT>
+    inline constexpr bool operator==(const _CharT lhs, __fst::basic_string_view<_CharT> rhs) noexcept
+    {
+        return rhs.empty() ? false : rhs.front() == lhs;
+    }
+    template <typename _CharT>
     inline constexpr bool operator==(const __fst::basic_string_view<_CharT>& lhs, const __fst::basic_string_view<_CharT>& rhs) noexcept
     {
         return lhs.compare(rhs) == 0;
@@ -156,6 +166,150 @@ FST_BEGIN_NAMESPACE
 
     template <class _CharT>
     inline __fst::output_stream<_CharT>& operator<<(__fst::output_stream<_CharT>& stream, __fst::basic_string_view<_CharT> str) noexcept
+    {
+        stream.write(str.data(), str.size());
+        return stream;
+    }
+
+    //
+    ///
+
+    using string_range = basic_string_range<char>;
+    using wstring_range = basic_string_range<wchar_t>;
+    using u16string_range = basic_string_range<char16_t>;
+    using u32string_range = basic_string_range<char32_t>;
+
+#if FST_HAS_CHAR8_T
+    using u8string_range = basic_string_range<char8_t>;
+#endif // FST_HAS_CHAR8_T
+
+    template <typename _CharT>
+    inline constexpr void swap(__fst::basic_string_range<_CharT> & lhs, __fst::basic_string_range<_CharT> & rhs) noexcept
+    {
+        lhs.swap(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator==(__fst::basic_string_range<_CharT> lhs, const _CharT rhs) noexcept
+    {
+        return lhs.empty() ? false : lhs.front() == rhs;
+    }
+    template <typename _CharT>
+    inline constexpr bool operator==(const _CharT lhs, __fst::basic_string_range<_CharT> rhs) noexcept
+    {
+        return rhs.empty() ? false : rhs.front() == lhs;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator==(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) == 0;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator==(__fst::basic_string_range<_CharT> lhs, const _CharT* rhs) noexcept
+    {
+        return lhs.view() == __fst::basic_string_view<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator==(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_view<_CharT>(lhs) == rhs.view();
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator!=(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) != 0;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator!=(const __fst::basic_string_range<_CharT>& lhs, const _CharT* rhs) noexcept
+    {
+        return lhs.view() != __fst::basic_string_view<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator!=(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_view<_CharT>(lhs) != rhs.view();
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator<(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) < 0;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator<(const __fst::basic_string_range<_CharT>& lhs, const _CharT* rhs) noexcept
+    {
+        return lhs.view() < __fst::basic_string_view<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator<(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_range<_CharT>(lhs) < rhs.view();
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) > 0;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>(const __fst::basic_string_range<_CharT>& lhs, const _CharT* rhs) noexcept
+    {
+        return lhs > __fst::basic_string_range<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_view<_CharT>(lhs) > rhs.view();
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator<=(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) <= 0;
+    }
+
+    template <typename _CharT>
+    inline bool operator<=(const __fst::basic_string_range<_CharT>& lhs, const _CharT* rhs) noexcept
+    {
+        return lhs.view() <= __fst::basic_string_view<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator<=(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_view<_CharT>(lhs) <= rhs.view();
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>=(const __fst::basic_string_range<_CharT>& lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return lhs.compare(rhs) >= 0;
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>=(const __fst::basic_string_range<_CharT>& lhs, const _CharT* rhs) noexcept
+    {
+        return lhs.view() >= __fst::basic_string_view<_CharT>(rhs);
+    }
+
+    template <typename _CharT>
+    inline constexpr bool operator>=(const _CharT* lhs, const __fst::basic_string_range<_CharT>& rhs) noexcept
+    {
+        return __fst::basic_string_view<_CharT>(lhs) >= rhs.view();
+    }
+
+    template <class _CharT>
+    inline __fst::output_stream<_CharT>& operator<<(__fst::output_stream<_CharT>& stream, __fst::basic_string_range<_CharT> str) noexcept
     {
         stream.write(str.data(), str.size());
         return stream;

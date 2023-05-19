@@ -79,7 +79,7 @@ FST_BEGIN_NAMESPACE
         {
 
             __fst::output_stream<char>& stream = tracer("section")
-                                                << __fst::stream_detail::sep_t{} << __fst::padded_right<32>(section) << __fst::stream_detail::sep_t{} << " begin";
+                                                 << __fst::stream_detail::sep_t{} << __fst::padded_right<32>(section) << __fst::stream_detail::sep_t{} << " begin";
 
             if constexpr (sizeof...(ts) > 1)
             {
@@ -95,7 +95,7 @@ FST_BEGIN_NAMESPACE
             return scoped_trace{ section };
         }
 
-        using result_type = __fst::vector<result, alignof(result), __fst::profiler_memory_category,  __fst::profiler_memory_zone>;
+        using result_type = __fst::vector<result, alignof(result), __fst::profiler_memory_category, __fst::profiler_memory_zone>;
 
 #if FST_USE_PROFILER
 
