@@ -177,7 +177,7 @@ FST_BEGIN_NAMESPACE
             {
                 for (size_t i = 0; i < _names.size(); i++)
                 {
-                    if (_names[i] == name) { return __fst::string_view(_data[i].data<const char>(), _data[i].size()); }
+                    if (_names[i] == name) { return __fst::string_view(_data[i].template data<const char>(), _data[i].size()); }
                 }
 
                 return __fst::string_view();
@@ -431,7 +431,7 @@ FST_BEGIN_NAMESPACE
 
                 for (size_t i = 0; i < _chunks.size(); i++)
                 {
-                    if (_chunks[i].wrt) { _chunks[i].wrt->internal_write<_Writer, _DataPtrType, _DataSizeType>(w, _chunks[i].wrt->write_size()); }
+                    if (_chunks[i].wrt) { _chunks[i].wrt->template internal_write<_Writer, _DataPtrType, _DataSizeType>(w, _chunks[i].wrt->write_size()); }
                     else
                     {
 
