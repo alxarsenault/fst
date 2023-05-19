@@ -476,13 +476,13 @@ namespace vargs_detail
     struct drop_first_n_imp<N, I, K, Args...> : __fst::conditional_t<I == N - 1, __fst::type_list<Args...>, drop_first_n_imp<N, I + 1, Args...>> {};
 
 
-    template<class A, class B>
-    struct keep_first_n_imp;
+    //template<class A, class B>
+    //struct keep_first_n_imp;
 
 
-    template<class...Args, class...RArgs>
-    struct keep_first_n_imp<__fst::type_list<Args..., RArgs...>, __fst::type_list<RArgs...>> : __fst::type_list<Args...>
-    {};
+    //template<class...Args, class...RArgs>
+    //struct keep_first_n_imp<__fst::type_list<Args..., RArgs...>, __fst::type_list<RArgs...>> : __fst::type_list<Args...>
+    //{};
 
     // 
     //template<size_t, size_t, class...Args>
