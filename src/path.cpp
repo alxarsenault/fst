@@ -16,7 +16,7 @@ FST_BEGIN_NAMESPACE
         {
             namespace win32
             {
-                using string_type = __fst::basic_small_string<wchar_t, MAX_PATH>;
+                using string_type = __fst::basic_small_string<wchar_t, 1024>;
                 inline string_type create_wstring(__fst::string_view name) noexcept
                 {
                     return __fst::utf_cvt(name);

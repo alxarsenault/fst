@@ -2,10 +2,11 @@
 #include "fst/stream.h"
 
 #if __FST_WINDOWS__
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <Windowsx.h>
-#endif // __FST__WINDOWS__
+
 
 FST_BEGIN_SUB_NAMESPACE(os)
 
@@ -370,3 +371,5 @@ FST_BEGIN_SUB_NAMESPACE(os)
     }
 
 FST_END_SUB_NAMESPACE
+
+#endif // __FST__WINDOWS__
