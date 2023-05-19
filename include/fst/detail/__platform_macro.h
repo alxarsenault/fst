@@ -35,7 +35,7 @@
 
 /// @macro FST_ALWAYS_INLINE
 #if __FST_CLANG__ && FST_HAS_ATTRIBUTE(always_inline)
-#define FST_ALWAYS_INLINE [[clang::always_inline]] inline
+#define FST_ALWAYS_INLINE __attribute__((__always_inline__)) inline
 
 #elif __FST_GCC__ && FST_HAS_ATTRIBUTE(always_inline)
 #define FST_ALWAYS_INLINE inline __attribute__((__always_inline__))
