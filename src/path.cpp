@@ -2,7 +2,7 @@
 #include "fst/string.h"
 #include "fst/unicode.h"
 
-#if __FST_WINDOWS__ && __FST_DEBUG_BUILD__
+#if __FST_WINDOWS__
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif // __FST_WINDOWS__
