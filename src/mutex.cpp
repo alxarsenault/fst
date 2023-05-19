@@ -35,6 +35,26 @@ FST_BEGIN_NAMESPACE
 
         native_type _critical_section;
     };
+
+#else
+    struct mutex::native
+    {
+        FST_ALWAYS_INLINE native() noexcept
+        {
+
+        }
+
+        FST_ALWAYS_INLINE ~native() noexcept {  }
+
+        FST_ALWAYS_INLINE void lock() noexcept {   }
+
+        FST_ALWAYS_INLINE bool try_lock() noexcept { return false; }
+
+        FST_ALWAYS_INLINE void unlock() noexcept {   }
+
+        FST_ALWAYS_INLINE handle get_handle() const noexcept { return nullptr; }
+
+    };
 #endif // __FST_WINDOWS__
 
     mutex::mutex() noexcept
