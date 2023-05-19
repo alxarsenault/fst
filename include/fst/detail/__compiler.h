@@ -143,7 +143,6 @@
 #define FST_PRAGMA_DISABLE_WARNING_GCC(X)
 #endif
 
-//
-#define FST_TODO(desc)                    \
-    FST_MESSAGE("fst - [TODO] : "__FILE__ \
-                "(" FST_STRINGIFY(__LINE__) ") : " desc)
+// clang-format off
+#define FST_TODO(desc) FST_MESSAGE("fst - [TODO] : " __FILE__ "(" FST_STRINGIFY(__LINE__) ") : " desc)
+// clang-format on
