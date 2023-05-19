@@ -14,6 +14,8 @@ FST_BEGIN_NAMESPACE
     {
         namespace
         {
+
+#if __FST_WINDOWS__
             namespace win32
             {
                 using string_type = __fst::basic_small_string<wchar_t, 1024>;
@@ -98,6 +100,8 @@ FST_BEGIN_NAMESPACE
                     return err ? err.code : win32::create_directory(name, true);
                 }
             } // namespace win32
+
+#endif // __FST_WINDOWS__
         } // namespace
         //using wstring_type = __fst::basic_string<wchar_t, __fst::memory_zone_allocator<wchar_t, __fst::default_memory_category, __fst::default_memory_zone>>;
 
