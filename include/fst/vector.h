@@ -28,11 +28,652 @@
 #include "fst/aligned_storage.h"
 #include "fst/math.h"
 #include "fst/memory.h"
+#include "fst/stream.h"
 #include "fst/traits.h"
+#include "fst/pair.h"
+#include "fst/pointer.h"
 #include "fst/utility.h"
 
 FST_BEGIN_NAMESPACE
 
+    template <typename _T, size_t _Alignment = alignof(_T), //
+        class _MemoryCategory = __fst::default_memory_category, //
+        class _MemoryZone = __fst::default_memory_zone>
+    class vector
+    {
+      public:
+        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+
+        using value_type = _T;
+#include "fst/template/container_types.template"
+
+        using memory_zone_type = _MemoryZone;
+        using storage_type = __fst::pair<_T*, _MemoryZone>;
+        using memory_zone_reference = typename storage_type::second_reference;
+        using memory_zone_const_reference = typename storage_type::second_const_reference;
+
+        FST_NODISCARD FST_ALWAYS_INLINE memory_zone_const_reference get_memory_zone() const noexcept { return _data.second(); }
+        FST_NODISCARD FST_ALWAYS_INLINE memory_zone_reference get_memory_zone() noexcept { return _data.second(); }
+
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_default_constructible_v<_Zone>, int> = 0>
+        inline vector() noexcept
+            : _data(nullptr, memory_zone_type{})
+            , _size(0)
+            , _capacity(0)
+
+        {}
+
+        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_copy_constructible_v<_Zone>, int> = 0>
+        inline vector(const memory_zone_type& zone) noexcept
+            : _data(nullptr, zone)
+            , _size(0)
+            , _capacity(0)
+        {}
+
+        vector(const vector& vec) noexcept
+            : _data(nullptr, vec.get_memory_zone())
+        {
+
+            if (grow(vec.size()))
+            {
+                __fst::copy_construct_range(_data.first(), vec.data(), vec.size());
+                _size = vec.size();
+                _capacity = vec.size();
+            }
+            else { fst_error("CALADLKLADKA"); }
+        }
+
+        vector(vector&& vec) noexcept
+            : _data(nullptr, __fst::move(vec.get_memory_zone()))
+        {
+            _data.first() = vec._data.first();
+            _capacity = vec._capacity;
+            _size = vec._size;
+
+            vec._data.first() = nullptr;
+            vec._capacity = 0;
+            vec._size = 0;
+        }
+
+        inline ~vector() noexcept
+        {
+            if (_data.first())
+            {
+                __fst::destruct_range(data(), size());
+                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
+            }
+        }
+
+        inline vector& operator=(const vector& vec) noexcept
+        {
+            reset();
+
+            if (grow(vec.size()))
+            {
+                __fst::copy_construct_range(data(), vec.data(), vec.size());
+                _size = vec.size();
+                _capacity = vec.size();
+            }
+            else { fst_error("CALADLKLADKA"); }
+
+            return *this;
+        }
+
+        inline vector& operator=(vector&& vec) noexcept
+        {
+            reset();
+
+            _data.first() = vec._data.first();
+            _capacity = vec._capacity;
+            _size = vec._size;
+
+            vec._data.first() = nullptr;
+            vec._capacity = 0;
+            vec._size = 0;
+
+            return *this;
+        }
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
+        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
+        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _data.first() == nullptr || _size == 0; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_full() const noexcept { return (bool) _size == _capacity; }
+
+        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return true; }
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data.first(); }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data.first(); }
+#include "fst/template/container_data.template"
+
+        inline void reset()
+        {
+            if (_data.first())
+            {
+                __fst::destruct_range(data(), size());
+                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
+            }
+
+            _data.first() = nullptr;
+            _size = 0;
+            _capacity = 0;
+        }
+
+        FST_ALWAYS_INLINE constexpr void clear() noexcept
+        {
+
+            if (_data.first()) { __fst::destruct_range(data(), size()); }
+
+            _size = 0;
+        }
+
+        FST_ALWAYS_INLINE constexpr void push_back(const_reference value) noexcept
+        {
+            if (size() < capacity())
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
+                else { fst_placement_new(this->data() + _size++) value_type(value); }
+
+                return;
+            }
+
+            if (grow(__fst::next_power_of_two(capacity())))
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
+                else { fst_placement_new(this->data() + _size++) value_type(value); }
+
+                return;
+            }
+
+            fst_error("DLKSJDKLSJDLS");
+        }
+
+        template <class U = value_type,
+            __fst::enable_if_t<!__fst::is_trivial_cref_v<U> && __fst::is_same_rcv<U, value_type>::value && !__fst::is_const<U>::value, int> = 0>
+        FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
+        {
+            if (size() < capacity())
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
+
+                return;
+            }
+
+            if (grow(__fst::next_power_of_two(capacity())))
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
+
+                return;
+            }
+
+            fst_error("DLKSJDKLSJDLS");
+        }
+
+        /*template <class U, __fst::enable_if_t<__fst::is_same_v<U, value_type>, int> = 0>
+        FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
+        {
+            if (size() < capacity())
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else
+                {
+                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
+                }
+
+                return;
+            }
+
+            if (grow(__fst::next_power_of_two(capacity())))
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
+                else
+                {
+                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
+                }
+
+                return;
+            }
+
+            fst_error("DLKSJDKLSJDLS");
+        }*/
+
+        template <typename... _Args>
+        FST_ALWAYS_INLINE constexpr reference emplace_back(_Args&&... args) noexcept
+        {
+            // push_back(value_type(__fst::forward<_Args>(args)...));
+            if (size() < capacity())
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
+
+                return this->back();
+            }
+
+            if (grow(__fst::next_power_of_two(capacity())))
+            {
+                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
+                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
+
+                return this->back();
+            }
+
+            fst_error("DLKSJDKLSJDLS");
+
+            return this->back();
+        }
+
+        inline constexpr iterator insert(const_iterator pos, const_reference value) noexcept
+        {
+            if (!_size || pos == cend())
+            {
+                push_back(value);
+                return end() - 1;
+            }
+
+            if (size() < capacity())
+            {
+                const size_type index = __fst::pdistance(cbegin(), pos);
+
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
+                {
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
+                }
+                else
+                {
+                    fst_placement_new(end()) value_type(__fst::move(back()));
+
+                    for (size_type i = size() - 1; i > index; i--)
+                    {
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
+                    }
+
+                    __fst::copy_element((*this)[index], value);
+                }
+
+                _size++;
+                return begin() + index;
+            }
+
+            const size_type index = __fst::pdistance(cbegin(), pos);
+
+            if (!grow(__fst::next_power_of_two(capacity()),
+                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
+                    {
+                        __fst::relocate(ndata, data, index);
+                        __fst::relocate(ndata + index + 1, data + index, size - index);
+                        fst_placement_new(ndata + index) value_type(value);
+                    }))
+            {
+
+                fst_error("DSDS");
+                return end();
+            }
+
+            _size++;
+
+            return begin() + index;
+        }
+
+        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
+        inline constexpr iterator insert(const_iterator pos, U&& value) noexcept
+        {
+            if (!_size || pos == cend())
+            {
+                push_back(__fst::move(value));
+                return end() - 1;
+            }
+
+            if (size() < capacity())
+            {
+                const size_type index = __fst::pdistance(cbegin(), pos);
+
+                if constexpr (__fst::is_trivially_copyable_v<_T>)
+                {
+                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
+                    __fst::copy_element((*this)[index], value);
+                }
+                else
+                {
+                    fst_placement_new(end()) value_type(__fst::move(back()));
+
+                    for (size_type i = size() - 1; i > index; i--)
+                    {
+                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
+                    }
+
+                    __fst::move_element((*this)[index], __fst::move(value));
+                }
+
+                _size++;
+                return begin() + index;
+            }
+
+            const size_type index = __fst::pdistance(cbegin(), pos);
+
+            if (!grow(__fst::next_power_of_two(capacity()),
+                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
+                    {
+                        __fst::relocate(ndata, data, index);
+                        __fst::relocate(ndata + index + 1, data + index, size - index);
+                        fst_placement_new(ndata + index) value_type(__fst::move(value));
+                    }))
+            {
+
+                fst_error("DSDS");
+                return end();
+            }
+
+            _size++;
+            return begin() + index;
+        }
+
+        FST_ALWAYS_INLINE constexpr void pop_back() noexcept
+        {
+            fst_assert(_size > 0, "Can't pop_back an empty fixed_vector.");
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            --_size;
+        }
+
+        FST_ALWAYS_INLINE constexpr void move_element(size_type index, size_type dst) noexcept
+        {
+            fst_assert(index < _size, "Try to erase out of bounds index.");
+
+            if (index == dst) { return; }
+
+            /* iterator it = this->begin() + index; 
+            iterator dit = this->begin() + dst;*/
+
+            if (dst > index) { dst--; }
+            if (index == _size - 1)
+            {
+                value_type elem = __fst::move(back());
+                pop_back();
+                this->insert(this->begin() + dst, __fst::move(elem));
+                return;
+            }
+
+            if constexpr (__fst::is_trivially_copyable_v<value_type>)
+            {
+                value_type elem = __fst::move(this->operator[](index));
+                __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type));
+
+                _size--;
+                this->insert(this->begin() + dst, __fst::move(elem));
+            }
+            else
+            {
+                value_type elem = __fst::move(this->operator[](index));
+
+                for (size_type i = index; i < size() - 1; i++)
+                {
+                    this->data()[i] = __fst::move(this->data()[i + 1]);
+                }
+
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+                _size--;
+                this->insert(this->begin() + dst, __fst::move(elem));
+            }
+        }
+
+        FST_ALWAYS_INLINE constexpr void erase_at(size_type index) noexcept
+        {
+            fst_assert(index < _size, "Try to erase out of bounds index.");
+
+            if (index == _size - 1)
+            {
+                pop_back();
+                return;
+            }
+
+            if constexpr (__fst::is_trivially_copyable_v<value_type>) { __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
+            else
+            {
+                for (size_type i = index; i < size() - 1; i++)
+                {
+                    this->data()[i] = __fst::move(this->data()[i + 1]);
+                }
+
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            }
+
+            _size--;
+        }
+
+        FST_ALWAYS_INLINE constexpr void erase(const_iterator it) noexcept { erase_at(__fst::pdistance(cbegin(), it)); }
+
+        FST_ALWAYS_INLINE constexpr void unordered_erase(size_type index) noexcept
+        {
+            fst_assert(index < _size, "Try to erase out of bounds index.");
+
+            if (index == _size - 1)
+            {
+                pop_back();
+                return;
+            }
+
+            __fst::move_element((*this)[index], __fst::move(this->back()));
+
+            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
+            _size--;
+        }
+
+        void reserve(size_type count) noexcept
+        {
+            if (count <= capacity()) { return; }
+
+            if (!grow(count))
+            {
+                fst_error("ERROR");
+                return;
+            }
+        }
+
+        FST_ALWAYS_INLINE constexpr void resize(size_type count) noexcept
+        {
+            if (count <= size())
+            {
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
+                {
+                    for (size_type i = count; i < size(); i++)
+                    {
+                        (*this)[i].~value_type();
+                    }
+                }
+                _size = count;
+                return;
+            }
+
+            if (count <= capacity())
+            {
+                if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
+                {
+                    for (size_type i = size(); i < count; i++)
+                    {
+                        fst_placement_new(data() + i) value_type();
+                    }
+                }
+
+                _size = count;
+
+                return;
+            }
+
+            if (!grow(__fst::next_power_of_two(count)))
+            {
+                fst_assert(count <= capacity());
+                return;
+            }
+
+            if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
+            {
+                for (size_type i = size(); i < count; i++)
+                {
+                    fst_placement_new(data() + i) value_type();
+                }
+            }
+
+            _size = count;
+        }
+
+        FST_ALWAYS_INLINE constexpr void resize(size_type count, const_reference value) noexcept
+        {
+            if (count <= size())
+            {
+                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
+                {
+                    for (size_type i = count; i < size(); i++)
+                    {
+                        (*this)[i].~value_type();
+                    }
+                }
+                _size = count;
+                return;
+            }
+
+            if (count <= capacity())
+            {
+                if constexpr (__fst::is_trivially_copyable_v<value_type>)
+                {
+                    for (size_type i = size(); i < count; i++)
+                    {
+                        __fst::copy_element((*this)[i], value);
+                    }
+                }
+                else
+                {
+                    for (size_type i = size(); i < count; i++)
+                    {
+                        fst_placement_new(data() + i) value_type(value);
+                    }
+                }
+
+                _size = count;
+
+                return;
+            }
+
+            if (!grow(__fst::next_power_of_two(count)))
+            {
+                fst_assert(count <= capacity());
+                return;
+            }
+
+            if constexpr (__fst::is_trivially_copyable_v<value_type>)
+            {
+                for (size_type i = size(); i < count; i++)
+                {
+                    __fst::copy_element((*this)[i], value);
+                }
+            }
+            else
+            {
+                for (size_type i = size(); i < count; i++)
+                {
+                    fst_placement_new(data() + i) value_type(value);
+                }
+            }
+
+            _size = count;
+        }
+
+        FST_ALWAYS_INLINE constexpr void resize_extra(size_type count) noexcept { resize(size() + count); }
+
+        FST_ALWAYS_INLINE constexpr void resize_extra(size_type count, const_reference value) noexcept { resize(size() + count, value); }
+
+        inline iterator find(const value_type& v) noexcept
+        {
+            for (size_type i = 0; i < size(); i++)
+            {
+                if (this->data()[i] == v)
+                {
+                    return begin() + i;
+                    ;
+                }
+            }
+            return end();
+        }
+
+        inline const_iterator find(const value_type& v) const noexcept
+        {
+            for (size_type i = 0; i < size(); i++)
+            {
+                if (this->data()[i] == v)
+                {
+                    return cbegin() + i;
+                    ;
+                }
+            }
+            return cend();
+        }
+
+      private:
+        __fst::pair<_T*, _MemoryZone> _data = {};
+        size_t _size = 0;
+        size_t _capacity = 0;
+
+        inline bool grow(size_t new_capacity) noexcept
+        {
+            _T* tmp_data = (_T*) _data.second().aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
+            if (!tmp_data) { return false; }
+
+            _capacity = new_capacity;
+
+            if (_data.first())
+            {
+                __fst::relocate(tmp_data, _data.first(), _size);
+                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
+            }
+
+            _data.first() = tmp_data;
+            return true;
+        }
+
+        template <class _Mod>
+        inline bool grow(size_t new_capacity, _Mod mod) noexcept
+        {
+            _T* tmp_data = (_T*) _data.second().aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
+            if (!tmp_data) { return false; }
+
+            _capacity = new_capacity;
+
+            if (_data.first())
+            {
+                mod(tmp_data, _data.first(), _size, new_capacity);
+                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
+            }
+
+            _data.first() = tmp_data;
+            return true;
+        }
+    };
+
+    // is_vector
+    template <class _T>
+    struct is_vector : __fst::false_t
+    {};
+
+    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
+    struct is_vector<__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>> : __fst::true_t
+    {};
+
+    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
+    inline __fst::output_stream<_T> byte_stream(__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone> & vec) noexcept
+    {
+        return __fst::output_stream<_T>{ &vec,
+            [](void* data, const _T* str, size_t size, stream_modifier) noexcept -> size_t
+            {
+                __fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>* vec_ptr = (__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>*) data;
+                size_t index = vec_ptr->size();
+                vec_ptr->resize(index + size);
+
+                __fst::memcpy(vec_ptr->data() + index, str, size);
+                return size;
+            } };
+    }
     //template <class _T, size_t _Size, size_t _Alignment = alignof(_T)>
     //class vector_range_base
     //{
@@ -223,85 +864,85 @@ FST_BEGIN_NAMESPACE
     //    size_t _size = 0;
     //};
 
-    template <typename _T, size_t _Alignment, class _MemoryZone, class _MemoryCategory>
-    class heap_vector_base : public _MemoryZone
-    {
-      public:
-        // static_assert(_Size == __fst::dynamic_size, "should be dynamic");
-        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+    //template <typename _T, size_t _Alignment, class _MemoryZone, class _MemoryCategory>
+    //class heap_vector_base : public _MemoryZone
+    //{
+    //  public:
+    //    // static_assert(_Size == __fst::dynamic_size, "should be dynamic");
+    //    static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-        using memory_zone_type = _MemoryZone;
-        FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type& get_memory_zone() const noexcept { return (memory_zone_type&) *this; }
+    //    using memory_zone_type = _MemoryZone;
+    //    FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type& get_memory_zone() const noexcept { return (memory_zone_type&) *this; }
 
-        inline ~heap_vector_base() noexcept
-        {
-            if (_data) { _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id()); }
-        }
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return true; }
+    //    inline ~heap_vector_base() noexcept
+    //    {
+    //        if (_data) { _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id()); }
+    //    }
+    //    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
+    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
+    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
+    //    FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
+    //    FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return true; }
 
-        inline void reset()
-        {
-            if (_data)
-            {
-                if constexpr (!__fst::is_trivially_destructible_v<_T>)
-                {
-                    for (size_t i = 0; i < size(); i++)
-                    {
-                        _data[i].~_T();
-                    }
-                }
+    //    inline void reset()
+    //    {
+    //        if (_data)
+    //        {
+    //            if constexpr (!__fst::is_trivially_destructible_v<_T>)
+    //            {
+    //                for (size_t i = 0; i < size(); i++)
+    //                {
+    //                    _data[i].~_T();
+    //                }
+    //            }
 
-                _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
-            }
+    //            _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
+    //        }
 
-            _data = nullptr;
-            _size = 0;
-            _capacity = 0;
-        }
+    //        _data = nullptr;
+    //        _size = 0;
+    //        _capacity = 0;
+    //    }
 
-        inline bool grow(size_t new_capacity) noexcept
-        {
-            _T* tmp_data = (_T*) _MemoryZone::aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
-            if (!tmp_data) { return false; }
+    //    inline bool grow(size_t new_capacity) noexcept
+    //    {
+    //        _T* tmp_data = (_T*) _MemoryZone::aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
+    //        if (!tmp_data) { return false; }
 
-            _capacity = new_capacity;
+    //        _capacity = new_capacity;
 
-            if (_data)
-            {
-                __fst::relocate(tmp_data, _data, _size);
-                _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
-            }
+    //        if (_data)
+    //        {
+    //            __fst::relocate(tmp_data, _data, _size);
+    //            _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
+    //        }
 
-            _data = tmp_data;
-            return true;
-        }
+    //        _data = tmp_data;
+    //        return true;
+    //    }
 
-        template <class _Mod>
-        inline bool grow(size_t new_capacity, _Mod mod) noexcept
-        {
-            _T* tmp_data = (_T*) _MemoryZone::aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
-            if (!tmp_data) { return false; }
+    //    template <class _Mod>
+    //    inline bool grow(size_t new_capacity, _Mod mod) noexcept
+    //    {
+    //        _T* tmp_data = (_T*) _MemoryZone::aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
+    //        if (!tmp_data) { return false; }
 
-            _capacity = new_capacity;
+    //        _capacity = new_capacity;
 
-            if (_data)
-            {
-                mod(tmp_data, _data, _size, new_capacity);
-                _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
-            }
+    //        if (_data)
+    //        {
+    //            mod(tmp_data, _data, _size, new_capacity);
+    //            _MemoryZone::aligned_deallocate((void*) _data, _MemoryCategory::id());
+    //        }
 
-            _data = tmp_data;
-            return true;
-        }
+    //        _data = tmp_data;
+    //        return true;
+    //    }
 
-        _T* _data = nullptr;
-        size_t _size = 0;
-        size_t _capacity = 0;
-    };
+    //    _T* _data = nullptr;
+    //    size_t _size = 0;
+    //    size_t _capacity = 0;
+    //};
 
     //
     //template <class _T, size_t _Size, class _ArrayType, size_t _Alignment = alignof(_T)>
@@ -862,636 +1503,4 @@ FST_BEGIN_NAMESPACE
     //struct is_vector_range<__fst::vector_range<_T, _Alignment>> : __fst::true_t {};
     //// clang-format on
 
-    template <typename _T, size_t _Alignment = alignof(_T), class _MemoryCategory = __fst::default_memory_category, class _MemoryZone = __fst::default_memory_zone>
-    class vector
-    {
-      public:
-        static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
-
-        using memory_zone_type = _MemoryZone;
-        FST_DECLARE_CONTAINER_TYPES(_T);
-
-        using storage_type = __fst::pair<_T*, _MemoryZone>;
-        using zone_reference = typename storage_type::second_reference;
-        using zone_const_reference = typename storage_type::second_const_reference;
-
-        FST_NODISCARD FST_ALWAYS_INLINE zone_const_reference get_memory_zone() const noexcept { return _data.second(); }
-        FST_NODISCARD FST_ALWAYS_INLINE zone_reference get_memory_zone() noexcept { return _data.second(); }
-
-        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_default_constructible_v<_Zone>, int> = 0>
-        inline vector() noexcept
-            : _data(nullptr, memory_zone_type{})
-            , _size(0)
-            , _capacity(0)
-
-        {}
-
-        template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_copy_constructible_v<_Zone>, int> = 0>
-        inline vector(const memory_zone_type& zone) noexcept
-            : _data(nullptr, zone)
-            , _size(0)
-            , _capacity(0)
-        {}
-
-        vector(const vector& vec) noexcept
-            : _data(nullptr, vec.get_memory_zone())
-        {
-
-            if (grow(vec.size()))
-            {
-                __fst::copy_construct_range(_data.first(), vec.data(), vec.size());
-                _size = vec.size();
-                _capacity = vec.size();
-            }
-            else { fst_error("CALADLKLADKA"); }
-        }
-
-        vector(vector&& vec) noexcept
-            : _data(nullptr, __fst::move(vec.get_memory_zone()))
-        {
-            _data.first() = vec._data.first();
-            _capacity = vec._capacity;
-            _size = vec._size;
-
-            vec._data.first() = nullptr;
-            vec._capacity = 0;
-            vec._size = 0;
-        }
-
-        inline ~vector() noexcept
-        {
-            if (_data.first())
-            {
-                __fst::destruct_range(data(), size());
-                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
-            }
-        }
-
-        inline vector& operator=(const vector& vec) noexcept
-        {
-            reset();
-
-            if (grow(vec.size()))
-            {
-                __fst::copy_construct_range(data(), vec.data(), vec.size());
-                _size = vec.size();
-                _capacity = vec.size();
-            }
-            else { fst_error("CALADLKLADKA"); }
-
-            return *this;
-        }
-
-        inline vector& operator=(vector&& vec) noexcept
-        {
-            reset();
-
-            _data.first() = vec._data.first();
-            _capacity = vec._capacity;
-            _size = vec._size;
-
-            vec._data.first() = nullptr;
-            vec._capacity = 0;
-            vec._size = 0;
-
-            return *this;
-        }
-
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t size() const noexcept { return _size; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t alignment() noexcept { return _Alignment; }
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr size_t max_size() noexcept { return __fst::dynamic_size; }
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr size_t capacity() const noexcept { return _capacity; }
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _data.first() == nullptr || _size == 0; }
-        FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_full() const noexcept { return (bool) _size == _capacity; }
-
-        FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_resizable() noexcept { return true; }
-
-        FST_DECLARE_CONTAINER_DATA(_data.first())
-
-        inline void reset()
-        {
-            if (_data.first())
-            {
-                __fst::destruct_range(data(), size());
-                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
-            }
-
-            _data.first() = nullptr;
-            _size = 0;
-            _capacity = 0;
-        }
-
-        FST_ALWAYS_INLINE constexpr void clear() noexcept
-        {
-
-            if (_data.first()) { __fst::destruct_range(data(), size()); }
-
-            _size = 0;
-        }
-
-        FST_ALWAYS_INLINE constexpr void push_back(const_reference value) noexcept
-        {
-            if (size() < capacity())
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
-                else { fst_placement_new(this->data() + _size++) value_type(value); }
-
-                return;
-            }
-
-            if (grow(__fst::next_power_of_two(capacity())))
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::copy_element((*this)[_size++], value); }
-                else { fst_placement_new(this->data() + _size++) value_type(value); }
-
-                return;
-            }
-
-            fst_error("DLKSJDKLSJDLS");
-        }
-
-        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
-        FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
-        {
-            if (size() < capacity())
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
-
-                return;
-            }
-
-            if (grow(__fst::next_power_of_two(capacity())))
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
-                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value)); }
-
-                return;
-            }
-
-            fst_error("DLKSJDKLSJDLS");
-        }
-
-        /*template <class U, __fst::enable_if_t<__fst::is_same_v<U, value_type>, int> = 0>
-        FST_ALWAYS_INLINE constexpr void push_back(U&& value) noexcept
-        {
-            if (size() < capacity())
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
-                else
-                {
-                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
-                }
-
-                return;
-            }
-
-            if (grow(__fst::next_power_of_two(capacity())))
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<U>(value)); }
-                else
-                {
-                    fst_placement_new(this->data() + _size++) value_type(__fst::forward<U>(value));
-                }
-
-                return;
-            }
-
-            fst_error("DLKSJDKLSJDLS");
-        }*/
-
-        template <typename... _Args>
-        FST_ALWAYS_INLINE constexpr reference emplace_back(_Args&&... args) noexcept
-        {
-            // push_back(value_type(__fst::forward<_Args>(args)...));
-            if (size() < capacity())
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
-                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
-
-                return this->back();
-            }
-
-            if (grow(__fst::next_power_of_two(capacity())))
-            {
-                if constexpr (__fst::is_trivially_copyable_v<_T>) { __fst::move_element((*this)[_size++], __fst::forward<_Args>(args)...); }
-                else { fst_placement_new(this->data() + _size++) value_type(__fst::forward<_Args>(args)...); }
-
-                return this->back();
-            }
-
-            fst_error("DLKSJDKLSJDLS");
-
-            return this->back();
-        }
-
-        inline constexpr iterator insert(const_iterator pos, const_reference value) noexcept
-        {
-            if (!_size || pos == cend())
-            {
-                push_back(value);
-                return end() - 1;
-            }
-
-            if (size() < capacity())
-            {
-                const size_type index = __fst::pdistance(cbegin(), pos);
-
-                if constexpr (__fst::is_trivially_copyable_v<_T>)
-                {
-                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    __fst::copy_element((*this)[index], value);
-                }
-                else
-                {
-                    fst_placement_new(end()) value_type(__fst::move(back()));
-
-                    for (size_type i = size() - 1; i > index; i--)
-                    {
-                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
-                    }
-
-                    __fst::copy_element((*this)[index], value);
-                }
-
-                _size++;
-                return begin() + index;
-            }
-
-            const size_type index = __fst::pdistance(cbegin(), pos);
-
-            if (!grow(__fst::next_power_of_two(capacity()),
-                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
-                    {
-                        __fst::relocate(ndata, data, index);
-                        __fst::relocate(ndata + index + 1, data + index, size - index);
-                        fst_placement_new(ndata + index) value_type(value);
-                    }))
-            {
-
-                fst_error("DSDS");
-                return end();
-            }
-
-            _size++;
-
-            return begin() + index;
-        }
-
-        template <class U = value_type, __fst::enable_if_t<!__fst::is_trivial_cref_v<U>, int> = 0>
-        inline constexpr iterator insert(const_iterator pos, U&& value) noexcept
-        {
-            if (!_size || pos == cend())
-            {
-                push_back(__fst::move(value));
-                return end() - 1;
-            }
-
-            if (size() < capacity())
-            {
-                const size_type index = __fst::pdistance(cbegin(), pos);
-
-                if constexpr (__fst::is_trivially_copyable_v<_T>)
-                {
-                    __fst::memmove(begin() + index + 1, begin() + index, (_size - index) * sizeof(value_type));
-                    __fst::copy_element((*this)[index], value);
-                }
-                else
-                {
-                    fst_placement_new(end()) value_type(__fst::move(back()));
-
-                    for (size_type i = size() - 1; i > index; i--)
-                    {
-                        __fst::move_element((*this)[i], __fst::move((*this)[i - 1]));
-                    }
-
-                    __fst::move_element((*this)[index], __fst::move(value));
-                }
-
-                _size++;
-                return begin() + index;
-            }
-
-            const size_type index = __fst::pdistance(cbegin(), pos);
-
-            if (!grow(__fst::next_power_of_two(capacity()),
-                    [&](pointer ndata, pointer data, size_type size, FST_ATTRIBUTE_UNUSED size_type new_capacity)
-                    {
-                        __fst::relocate(ndata, data, index);
-                        __fst::relocate(ndata + index + 1, data + index, size - index);
-                        fst_placement_new(ndata + index) value_type(__fst::move(value));
-                    }))
-            {
-
-                fst_error("DSDS");
-                return end();
-            }
-
-            _size++;
-            return begin() + index;
-        }
-
-        FST_ALWAYS_INLINE constexpr void pop_back() noexcept
-        {
-            fst_assert(_size > 0, "Can't pop_back an empty fixed_vector.");
-            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
-            --_size;
-        }
-
-        FST_ALWAYS_INLINE constexpr void move_element(size_type index, size_type dst) noexcept
-        {
-            fst_assert(index < _size, "Try to erase out of bounds index.");
-
-            if (index == dst) { return; }
-
-            /* iterator it = this->begin() + index; 
-            iterator dit = this->begin() + dst;*/
-
-            if (dst > index) { dst--; }
-            if (index == _size - 1)
-            {
-                value_type elem = __fst::move(back());
-                pop_back();
-                this->insert(this->begin() + dst, __fst::move(elem));
-                return;
-            }
-
-            if constexpr (__fst::is_trivially_copyable_v<value_type>)
-            {
-                value_type elem = __fst::move(this->operator[](index));
-                __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type));
-
-                _size--;
-                this->insert(this->begin() + dst, __fst::move(elem));
-            }
-            else
-            {
-                value_type elem = __fst::move(this->operator[](index));
-
-                for (size_type i = index; i < size() - 1; i++)
-                {
-                    this->data()[i] = __fst::move(this->data()[i + 1]);
-                }
-
-                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
-                _size--;
-                this->insert(this->begin() + dst, __fst::move(elem));
-            }
-        }
-
-        FST_ALWAYS_INLINE constexpr void erase_at(size_type index) noexcept
-        {
-            fst_assert(index < _size, "Try to erase out of bounds index.");
-
-            if (index == _size - 1)
-            {
-                pop_back();
-                return;
-            }
-
-            if constexpr (__fst::is_trivially_copyable_v<value_type>) { __fst::memmove(begin() + index, begin() + index + 1, (_size - index) * sizeof(value_type)); }
-            else
-            {
-                for (size_type i = index; i < size() - 1; i++)
-                {
-                    this->data()[i] = __fst::move(this->data()[i + 1]);
-                }
-
-                if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
-            }
-
-            _size--;
-        }
-
-        FST_ALWAYS_INLINE constexpr void erase(const_iterator it) noexcept { erase_at(__fst::pdistance(cbegin(), it)); }
-
-        FST_ALWAYS_INLINE constexpr void unordered_erase(size_type index) noexcept
-        {
-            fst_assert(index < _size, "Try to erase out of bounds index.");
-
-            if (index == _size - 1)
-            {
-                pop_back();
-                return;
-            }
-
-            __fst::move_element((*this)[index], __fst::move(this->back()));
-
-            if constexpr (!__fst::is_trivially_destructible_v<value_type>) { (*this)[_size].~value_type(); }
-            _size--;
-        }
-
-        void reserve(size_type count) noexcept
-        {
-            if (count <= capacity()) { return; }
-
-            if (!grow(count))
-            {
-                fst_error("ERROR");
-                return;
-            }
-        }
-
-        FST_ALWAYS_INLINE constexpr void resize(size_type count) noexcept
-        {
-            if (count <= size())
-            {
-                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
-                {
-                    for (size_type i = count; i < size(); i++)
-                    {
-                        (*this)[i].~value_type();
-                    }
-                }
-                _size = count;
-                return;
-            }
-
-            if (count <= capacity())
-            {
-                if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
-                {
-                    for (size_type i = size(); i < count; i++)
-                    {
-                        fst_placement_new(data() + i) value_type();
-                    }
-                }
-
-                _size = count;
-
-                return;
-            }
-
-            if (!grow(__fst::next_power_of_two(count)))
-            {
-                fst_assert(count <= capacity());
-                return;
-            }
-
-            if constexpr (!__fst::is_trivially_default_constructible_v<value_type>)
-            {
-                for (size_type i = size(); i < count; i++)
-                {
-                    fst_placement_new(data() + i) value_type();
-                }
-            }
-
-            _size = count;
-        }
-
-        FST_ALWAYS_INLINE constexpr void resize(size_type count, const_reference value) noexcept
-        {
-            if (count <= size())
-            {
-                if constexpr (!__fst::is_trivially_destructible_v<value_type>)
-                {
-                    for (size_type i = count; i < size(); i++)
-                    {
-                        (*this)[i].~value_type();
-                    }
-                }
-                _size = count;
-                return;
-            }
-
-            if (count <= capacity())
-            {
-                if constexpr (__fst::is_trivially_copyable_v<value_type>)
-                {
-                    for (size_type i = size(); i < count; i++)
-                    {
-                        __fst::copy_element((*this)[i], value);
-                    }
-                }
-                else
-                {
-                    for (size_type i = size(); i < count; i++)
-                    {
-                        fst_placement_new(data() + i) value_type(value);
-                    }
-                }
-
-                _size = count;
-
-                return;
-            }
-
-            if (!grow(__fst::next_power_of_two(count)))
-            {
-                fst_assert(count <= capacity());
-                return;
-            }
-
-            if constexpr (__fst::is_trivially_copyable_v<value_type>)
-            {
-                for (size_type i = size(); i < count; i++)
-                {
-                    __fst::copy_element((*this)[i], value);
-                }
-            }
-            else
-            {
-                for (size_type i = size(); i < count; i++)
-                {
-                    fst_placement_new(data() + i) value_type(value);
-                }
-            }
-
-            _size = count;
-        }
-
-        FST_ALWAYS_INLINE constexpr void resize_extra(size_type count) noexcept { resize(size() + count); }
-
-        FST_ALWAYS_INLINE constexpr void resize_extra(size_type count, const_reference value) noexcept { resize(size() + count, value); }
-
-        inline iterator find(const value_type& v) noexcept
-        {
-            for (size_type i = 0; i < size(); i++)
-            {
-                if (this->data()[i] == v)
-                {
-                    return begin() + i;
-                    ;
-                }
-            }
-            return end();
-        }
-
-        inline const_iterator find(const value_type& v) const noexcept
-        {
-            for (size_type i = 0; i < size(); i++)
-            {
-                if (this->data()[i] == v)
-                {
-                    return cbegin() + i;
-                    ;
-                }
-            }
-            return cend();
-        }
-
-      private:
-        __fst::pair<_T*, _MemoryZone> _data = {};
-        size_t _size = 0;
-        size_t _capacity = 0;
-
-        inline bool grow(size_t new_capacity) noexcept
-        {
-            _T* tmp_data = (_T*) _data.second().aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
-            if (!tmp_data) { return false; }
-
-            _capacity = new_capacity;
-
-            if (_data.first())
-            {
-                __fst::relocate(tmp_data, _data.first(), _size);
-                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
-            }
-
-            _data.first() = tmp_data;
-            return true;
-        }
-
-        template <class _Mod>
-        inline bool grow(size_t new_capacity, _Mod mod) noexcept
-        {
-            _T* tmp_data = (_T*) _data.second().aligned_allocate(new_capacity * sizeof(_T), _Alignment, _MemoryCategory::id());
-            if (!tmp_data) { return false; }
-
-            _capacity = new_capacity;
-
-            if (_data.first())
-            {
-                mod(tmp_data, _data.first(), _size, new_capacity);
-                _data.second().aligned_deallocate((void*) _data.first(), _MemoryCategory::id());
-            }
-
-            _data.first() = tmp_data;
-            return true;
-        }
-    };
-
-    // is_vector
-    template <class _T>
-    struct is_vector : __fst::false_t
-    {};
-
-    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
-    struct is_vector<__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>> : __fst::true_t
-    {};
-
-    template <class _T, size_t _Alignment, class _MemoryCategory, class _MemoryZone>
-    inline __fst::output_stream<_T> byte_stream(__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone> & vec) noexcept
-    {
-        return __fst::output_stream<_T>{ &vec,
-            [](void* data, const _T* str, size_t size, stream_modifier) noexcept -> size_t
-            {
-                __fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>* vec_ptr = (__fst::vector<_T, _Alignment, _MemoryCategory, _MemoryZone>*) data;
-                size_t index = vec_ptr->size();
-                vec_ptr->resize(index + size);
-
-                __fst::memcpy(vec_ptr->data() + index, str, size);
-                return size;
-            } };
-    }
 FST_END_NAMESPACE

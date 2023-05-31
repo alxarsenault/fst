@@ -29,6 +29,8 @@
 #include "fst/math.h"
 #include "fst/memory.h"
 #include "fst/traits.h"
+#include "fst/pair.h"
+#include "fst/pointer.h"
 #include "fst/utility.h"
 
 FST_BEGIN_NAMESPACE
@@ -39,8 +41,10 @@ FST_BEGIN_NAMESPACE
       public:
         static_assert(_Size != __fst::dynamic_size, "should be dynamic");
         static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
+        
+        using value_type = _T;
+        #include "fst/template/container_types.template"
 
-        FST_DECLARE_CONTAINER_TYPES(_T);
         using memory_zone_type = __fst::void_memory_zone;
         FST_NODISCARD FST_ALWAYS_INLINE memory_zone_type get_memory_zone() const noexcept { return memory_zone_type{}; }
 
@@ -101,7 +105,9 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool empty() const noexcept { return _size == 0; }
         FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_full() const noexcept { return _size == capacity(); }
 
-        FST_DECLARE_CONTAINER_DATA((pointer) &_data[0])
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) &_data[0]; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) &_data[0]; }
+#include "fst/template/container_data.template"
 
         inline void reset()
         {

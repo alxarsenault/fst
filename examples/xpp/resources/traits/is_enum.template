@@ -1,0 +1,6 @@
+// is_enum
+template <class _T>
+struct is_enum : __fst::bool_t<FST_IS_ENUM(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_enum_v = __fst::is_enum<_T>::value;

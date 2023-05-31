@@ -188,9 +188,6 @@ FST_END_NAMESPACE
 #include "fst/detail/__assert.h"
 
 //
-#include "fst/detail/__container.h"
-
-//
 #include "fst/detail/__builtin_traits.h"
 
 //
@@ -203,6 +200,9 @@ FST_END_NAMESPACE
 #include "fst/detail/__alignment.h"
 
 FST_BEGIN_NAMESPACE
+
+    FST_INLINE_VAR constexpr size_t dynamic_size = (__fst::numeric_limits<size_t>::max)();
+
     /// Endianness
     struct little_endian_tag
     {};
@@ -216,6 +216,10 @@ FST_BEGIN_NAMESPACE
 
     template <class _T>
     FST_INLINE_VAR constexpr bool is_endian_tag_v = is_endian_tag<_T>::value;
+
+    //
+    struct self_referential_tag
+    {};
 
     struct source_location
     {
@@ -241,5 +245,6 @@ FST_BEGIN_NAMESPACE
         const char* _Function = "";
     };
 FST_END_NAMESPACE
+
 //
 FST_PRAGMA_DISABLE_WARNING_MSVC(4505)

@@ -1,0 +1,4 @@
+// add_lvalue_reference
+template <class _T, class = void> struct add_lvalue_reference { using type = _T; };
+template <class _T> struct add_lvalue_reference<_T, __fst::void_t<_T&>> { using type = _T&; };
+template <class _T> using add_lvalue_reference_t = typename __fst::add_lvalue_reference<_T>::type;

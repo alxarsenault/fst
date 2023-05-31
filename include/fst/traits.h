@@ -72,7 +72,7 @@ FST_NODISCARD constexpr __fst::remove_reference_t<_T>&& move(_T&& _Arg) noexcept
 }
 
 template <class _T, __fst::enable_if_t<__fst::is_move_constructible_v<_T> && __fst::is_move_assignable_v<_T>, int> = 0>
-FST_ALWAYS_INLINE constexpr void memswap(_T& _Left, _T& _Right) noexcept {
+FST_ALWAYS_INLINE constexpr void mem_swap(_T& _Left, _T& _Right) noexcept {
     _T _Tmp = __fst::move(_Left);
     _Left = __fst::move(_Right);
     _Right = __fst::move(_Tmp);

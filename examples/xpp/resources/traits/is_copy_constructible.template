@@ -1,0 +1,6 @@
+// is_copy_constructible
+template <class _T>
+struct is_copy_constructible : __fst::bool_t<__fst::is_constructible_v<_T, __fst::add_lvalue_reference_t<const _T>>> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_copy_constructible_v = __fst::is_copy_constructible<_T>::value;

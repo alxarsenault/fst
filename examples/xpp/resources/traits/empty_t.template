@@ -1,0 +1,6 @@
+/// @struct empty_t
+template<class ...>
+struct empty_t {};
+
+/// empty_struct
+using empty_struct = empty_t<>;

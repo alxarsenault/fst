@@ -1,0 +1,6 @@
+// is_trivially_destructible
+template <class _T>
+struct is_trivially_destructible : __fst::bool_t<FST_IS_TRIVIALLY_DESTRUCTIBLE(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivially_destructible_v = __fst::is_trivially_destructible<_T>::value;

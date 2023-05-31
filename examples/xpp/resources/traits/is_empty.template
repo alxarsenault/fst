@@ -1,0 +1,6 @@
+// is_empty
+template <class _T>
+struct is_empty : __fst::bool_t<FST_IS_EMPTY(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_empty_v = __fst::is_empty<_T>::value;

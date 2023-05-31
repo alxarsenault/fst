@@ -107,9 +107,9 @@ function(fst_set_compile_options TARGET EXPOSURE)
             /wd5026
             /wd5027
         )
-
+        set(FST_MSVC_COMMON_OPTIONS_CONG ${FST_MSVC_COMMON_OPTIONS} CACHE INTERNAL "")
         set(FST_MSVC_DEBUG_OPTIONS ${FST_MSVC_COMMON_OPTIONS})
-
+        # file(STRINGS  "${FST_TRACE_DIRECTORY}/dskl.log" ${FST_MSVC_COMMON_OPTIONS})
         set(FST_MSVC_RELEASE_OPTIONS
             ${FST_MSVC_COMMON_OPTIONS}
             /MT # Causes the application to use the multithread, static version of the run-time library
@@ -135,7 +135,18 @@ function(fst_set_compile_options TARGET EXPOSURE)
             /wd4866 # compiler may not enforce left-to-right evaluation order for call to operator_name
             /wd4062 # enumerator in switch of enum is not handled
             /wd26812 # The enum type is unscoped. Prefer enum class over 'enum
+
+            /wd4061
+
+            /wd4244
+            /wd4242 # conversion from 'int' to 'unsigned short',
+            /wd5262
+            /wd4365
+            /wd4310 # cast truncates constant value
+
+            /wd4702 # unreachable
         )
+
 
         set(FST_MSVC_PRIVATE_DEBUG_OPTIONS ${FST_MSVC_PRIVATE_COMMON_OPTIONS})
         set(FST_MSVC_PRIVATE_RELEASE_OPTIONS ${FST_MSVC_PRIVATE_COMMON_OPTIONS})

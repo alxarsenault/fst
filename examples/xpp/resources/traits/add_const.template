@@ -1,0 +1,3 @@
+// add_const
+template <class _T> struct add_const { using type = const _T; };
+template <class _T> using add_const_t = typename __fst::add_const<_T>::type;

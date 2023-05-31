@@ -27,7 +27,7 @@
 #include "fst/string_view.h"
 #include "fst/memory.h"
 #include "fst/string.h"
-#include "fst/small_string.h"
+#include "fst/stack_string.h"
 
 FST_BEGIN_NAMESPACE
     namespace filesystem
@@ -38,12 +38,14 @@ FST_BEGIN_NAMESPACE
 #else
         static constexpr char separator = (char) '/';
 #endif
+        __fst::string_view get_filename(__fst::string_view p) noexcept;
 
         __fst::status create_directory(__fst::string_view name, bool exist_is_success = true) noexcept;
         __fst::status create_directories(__fst::string_view name) noexcept;
 
         __fst::string_view get_parent_directory(__fst::string_view p) noexcept;
 
+        bool is_file(__fst::string_view p) noexcept;
         bool is_directory(__fst::string_view p) noexcept;
 
         __fst::status delete_file(__fst::string_view name) noexcept;
@@ -163,6 +165,7 @@ FST_BEGIN_NAMESPACE
 
             inline path_iterator end() const noexcept { return path_iterator(_end); }
         };
+
         //
         struct path_range
         {

@@ -2401,7 +2401,7 @@ FST_BEGIN_NAMESPACE
     template <typename T>
     constexpr range<T>& range<T>::sort() noexcept
     {
-        if (!is_sorted()) { __fst::memswap(start, end); }
+        if (!is_sorted()) { __fst::mem_swap(start, end); }
 
         return *this;
     }

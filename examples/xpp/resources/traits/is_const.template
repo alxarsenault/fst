@@ -1,0 +1,9 @@
+// is_const
+template <class _T>
+FST_INLINE_VAR constexpr bool is_const_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_const_v<const _T> = true;
+
+template <class _T>
+struct is_const : __fst::bool_t<__fst::is_const_v<_T>> {};

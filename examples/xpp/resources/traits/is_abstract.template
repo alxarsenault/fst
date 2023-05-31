@@ -1,0 +1,3 @@
+// is_abstract
+template <class _T> struct is_abstract : __fst::bool_t<FST_IS_ABSTRACT(_T)> {};
+template <class _T> FST_INLINE_VAR constexpr bool is_abstract_v = __fst::is_abstract<_T>::value;

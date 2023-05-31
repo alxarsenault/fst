@@ -1,0 +1,6 @@
+// is_standard_layout
+template <class _T>
+struct is_standard_layout : __fst::bool_t<FST_IS_STANDARD_LAYOUT(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_standard_layout_v = __fst::is_standard_layout<_T>::value;

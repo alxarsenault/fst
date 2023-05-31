@@ -49,3 +49,11 @@
 #define __FST_ARGS_DUMMY(...) dummy, ##__VA_ARGS__
 #define __FST_SELECT_5(_1, _2, _3, _4, _5, num, ...) num
 #define __FST_IS_MACRO_EMPTY(...) FST_EXPAND(__FST_SELECT_5(__VA_ARGS__, 0, 0, 0, 0, 1))
+
+
+#define FST_DECLARE_DEFAULT_CTOR(NAME)                         \
+    constexpr NAME() noexcept = default;                       \
+    constexpr NAME(const NAME&) noexcept = default;            \
+    constexpr NAME(NAME&&) noexcept = default;                 \
+    constexpr NAME& operator=(const NAME&) noexcept = default; \
+    constexpr NAME& operator=(NAME&&) noexcept = default

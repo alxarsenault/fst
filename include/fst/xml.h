@@ -2865,7 +2865,7 @@ FST_BEGIN_NAMESPACE
                 break;
 
                 // Unknown
-            default: assert(0); break;
+            default: fst_error("error"); break;
             }
 
             // If indenting not disabled, add line break after node

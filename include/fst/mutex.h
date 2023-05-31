@@ -23,14 +23,15 @@
 //
 
 #pragma once
-#ifndef _FST_MUTEX_H // include guard for 3rd party interop
+#ifndef _FST_MUTEX_H
 #define _FST_MUTEX_H
-//#pragma system_header
 
 #include "fst/common.h"
 #include "fst/traits.h"
 #include "fst/aligned_storage.h"
 #include "fst/atomic.h"
+
+FST_SYSTEM_HEADER
 
 FST_BEGIN_NAMESPACE
     class mutex

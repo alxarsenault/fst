@@ -55,6 +55,9 @@ FST_BEGIN_NAMESPACE
     template <class... Types>
     struct tuple_size;
 
+    template<class ...Types>
+    FST_INLINE_VAR constexpr size_t tuple_size_v = tuple_size<Types...>::value;
+
     template <class... Ts>
     struct to_tuple;
 
@@ -99,9 +102,11 @@ FST_BEGIN_NAMESPACE
         {
             static constexpr size_t index = 0;
             constexpr tuple_imp() noexcept = default;
+
             inline constexpr tuple_imp(T&& t) noexcept
                 : indexed_value<T, 0>(__fst::forward<T>(t))
             {}
+
             template <size_t _Index>
             static inline constexpr size_t offset_of() noexcept
             {
@@ -180,6 +185,7 @@ FST_BEGIN_NAMESPACE
         static constexpr size_t size = sizeof...(_Args);
 
         constexpr tuple() noexcept = default;
+
         inline constexpr tuple(_Args&&... args) noexcept
             : detail::tuple_imp<_Args...>(__fst::forward<_Args>(args)...)
         {}
@@ -201,6 +207,12 @@ FST_BEGIN_NAMESPACE
         {
             return indexed_value<tuple_element_t<_Index, tuple>, size - _Index - 1>::get();
         }
+
+        template <size_t _Index, class _T>
+        inline constexpr void set(_T&& value) noexcept
+        {
+            indexed_value<tuple_element_t<_Index, tuple>, size - _Index - 1>::get() = __fst::forward<_T>(value);
+        }
     };
 
     template <class T, class... _Args>
@@ -215,13 +227,21 @@ FST_BEGIN_NAMESPACE
     {
         using type = tuple<Ts...>;
     };
+
     template <class... Ts>
     struct to_tuple<type_tuple<Ts...>>
     {
         using type = tuple<Ts...>;
     };
+
     template <class... Ts>
     struct to_tuple<tuple<Ts...>>
+    {
+        using type = tuple<Ts...>;
+    };
+
+    template <class... Ts>
+    struct to_tuple<__fst::type_list<Ts...>>
     {
         using type = tuple<Ts...>;
     };
@@ -232,11 +252,13 @@ FST_BEGIN_NAMESPACE
     {
         using type = type_tuple<Ts...>;
     };
+    
     template <class... Ts>
     struct to_type_tuple<type_tuple<Ts...>>
     {
         using type = type_tuple<Ts...>;
     };
+
     template <class... Ts>
     struct to_type_tuple<tuple<Ts...>>
     {
@@ -247,6 +269,7 @@ FST_BEGIN_NAMESPACE
     template <typename>
     struct is_tuple : __fst::false_t
     {};
+
     template <typename... Ts>
     struct is_tuple<__fst::tuple<Ts...>> : __fst::true_t
     {};

@@ -1,6 +1,6 @@
 #include "fst/stream.h"
 #include "fst/os/window.h"
-
+#include <random>
 #define dbg fst::debug<fst::info_flags::function>()
 
 class delegate : public fst::os::window::delegate

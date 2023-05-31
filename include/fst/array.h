@@ -28,8 +28,7 @@
 #include "fst/math.h"
 #include "fst/memory.h"
 #include "fst/traits.h"
-#include "fst/tuple.h"
-
+#include "fst/pair.h"
 #include "fst/utility.h"
 
 FST_BEGIN_NAMESPACE
@@ -135,8 +134,10 @@ FST_BEGIN_NAMESPACE
         template <class _T, size_t _Size, size_t _Alignment>
         struct basic_array
         {
-            FST_DECLARE_CONTAINER_TYPES(_T);
-            using memory_zone_type = __fst::void_memory_zone;
+
+        using value_type = _T;
+        #include "fst/template/container_types.template"
+                    using memory_zone_type = __fst::void_memory_zone;
 
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return memory_zone_type{}; }
 
@@ -154,7 +155,10 @@ FST_BEGIN_NAMESPACE
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return true; }
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return true; }
 
-            FST_DECLARE_CONTAINER_DATA(_data)
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data; }
+#include "fst/template/container_data.template"
 
             alignas(_Alignment) _T _data[_Size];
         };
@@ -171,7 +175,10 @@ FST_BEGIN_NAMESPACE
           public:
             static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-            FST_DECLARE_CONTAINER_TYPES(_T);
+
+        using value_type = _T;
+        #include "fst/template/container_types.template"
+
             using memory_zone_type = __fst::void_memory_zone;
 
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return memory_zone_type{}; }
@@ -190,7 +197,7 @@ FST_BEGIN_NAMESPACE
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return true; }
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return true; }
 
-            FST_DECLARE_CONTAINER_DEFAULT_CTOR(basic_array_range);
+            FST_DECLARE_DEFAULT_CTOR(basic_array_range);
 
             template <class _TT, size_t _TSize, size_t _TAlignment>
             FST_ALWAYS_INLINE constexpr basic_array_range(const basic_array_range<_TT, _TSize, _TAlignment>& r) noexcept
@@ -227,7 +234,10 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            FST_DECLARE_CONTAINER_DATA(_data)
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data; }
+#include "fst/template/container_data.template"
 
             FST_ALWAYS_INLINE constexpr void reset() noexcept { _data = nullptr; }
 
@@ -247,8 +257,11 @@ FST_BEGIN_NAMESPACE
           public:
             static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-            FST_DECLARE_CONTAINER_TYPES(_T);
-            using memory_zone_type = __fst::void_memory_zone;
+
+        using value_type = _T;
+        #include "fst/template/container_types.template"
+        
+                    using memory_zone_type = __fst::void_memory_zone;
 
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr memory_zone_type get_memory_zone() noexcept { return memory_zone_type{}; }
 
@@ -266,7 +279,7 @@ FST_BEGIN_NAMESPACE
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return false; }
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return false; }
 
-            FST_DECLARE_CONTAINER_DEFAULT_CTOR(basic_array_range);
+            FST_DECLARE_DEFAULT_CTOR(basic_array_range);
 
             template <class _TT, size_t _TSize, size_t _TAlignment, __fst::enable_if_t<__fst::is_convertible_v<_TT*, _T*> && _TAlignment >= _Alignment, int> = 0>
             FST_ALWAYS_INLINE constexpr basic_array_range(const basic_array_range<_TT, _TSize, _TAlignment>& r) noexcept
@@ -313,7 +326,10 @@ FST_BEGIN_NAMESPACE
                 return *this;
             }
 
-            FST_DECLARE_CONTAINER_DATA(_data)
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data; }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data; }
+#include "fst/template/container_data.template"
 
             FST_ALWAYS_INLINE constexpr void reset() noexcept
             {
@@ -339,7 +355,10 @@ FST_BEGIN_NAMESPACE
           public:
             static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-            FST_DECLARE_CONTAINER_TYPES(_T);
+
+        using value_type = _T;
+        #include "fst/template/container_types.template"
+
             using memory_zone_type = _MemoryZone;
 
             FST_NODISCARD FST_ALWAYS_INLINE constexpr memory_zone_type get_memory_zone() const noexcept { return _data.second(); }
@@ -358,7 +377,10 @@ FST_BEGIN_NAMESPACE
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return true; }
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return true; }
 
-            FST_DECLARE_CONTAINER_DATA(_data.first())
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data.first(); }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data.first(); }
+#include "fst/template/container_data.template"
 
             template <class _Zone = _MemoryZone, __fst::enable_if_t<__fst::is_default_constructible_v<_Zone>, int> = 0>
             inline basic_heap_array() noexcept
@@ -466,7 +488,10 @@ FST_BEGIN_NAMESPACE
           public:
             static_assert(__fst::is_power_of_two(_Alignment), "_Alignment must be a power of two");
 
-            FST_DECLARE_CONTAINER_TYPES(_T);
+           
+        using value_type = _T;
+        #include "fst/template/container_types.template"
+
             using memory_zone_type = _MemoryZone;
 
             FST_NODISCARD FST_ALWAYS_INLINE constexpr memory_zone_type get_memory_zone() const noexcept { return _data.second(); }
@@ -485,7 +510,10 @@ FST_BEGIN_NAMESPACE
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_size() noexcept { return true; }
             FST_NODISCARD FST_ALWAYS_INLINE static constexpr bool is_fixed_capacity() noexcept { return true; }
 
-            FST_DECLARE_CONTAINER_DATA(_data.first())
+
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr pointer data() noexcept { return (pointer) _data.first(); }
+        FST_NODISCARD FST_ALWAYS_INLINE constexpr const_pointer data() const noexcept { return (const_pointer) _data.first(); }
+#include "fst/template/container_data.template"
 
             template <class _Zone = memory_zone_type, __fst::enable_if_t<__fst::is_default_constructible_v<_Zone>, int> = 0>
             inline basic_heap_array() noexcept

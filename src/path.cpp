@@ -17,7 +17,7 @@ FST_BEGIN_NAMESPACE
 #if __FST_WINDOWS__
             namespace win32
             {
-                using string_type = __fst::basic_small_string<wchar_t, 1024>;
+                using string_type = __fst::basic_stack_string<wchar_t, 1024>;
                 inline string_type create_wstring(__fst::string_view name) noexcept
                 {
                     return __fst::utf_cvt(name);
@@ -29,6 +29,15 @@ FST_BEGIN_NAMESPACE
 
                     DWORD dwAttrib = GetFileAttributesW(p.data());
                     return (dwAttrib != INVALID_FILE_ATTRIBUTES) && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+                }
+
+                
+                bool is_file(__fst::wstring_range p) noexcept
+                {
+                    __fst::wstring_range::scoped_null ns = p.null_scope();
+
+                    DWORD dwAttrib = GetFileAttributesW(p.data());
+                    return (dwAttrib != INVALID_FILE_ATTRIBUTES) && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
                 }
 
                 __fst::wstring_range get_parent_directory(__fst::wstring_range p)
@@ -109,7 +118,7 @@ FST_BEGIN_NAMESPACE
             size_t last = __fst::string_view::npos;
             for (__fst::string_view it : __fst::utf::iterate(p))
             {
-                if (it == separator) { last = (size_t) (it.data() - p.data()); }
+                if (it ==  separator) { last = (size_t) (it.data() - p.data()); }
             }
 
             if (last != __fst::string_view::npos) return p.substr(0, last);
@@ -117,11 +126,36 @@ FST_BEGIN_NAMESPACE
             return p;
         }
 
+        __fst::string_view get_filename(__fst::string_view p) noexcept
+        {
+            size_t index = p.find_last_of('/');
+            return p.substr(index);
+            //size_t last = __fst::string_view::npos;
+            /*for (__fst::string_view it : __fst::utf::iterate(p))
+            {
+                if (it == separator) { last = (size_t) (it.data() - p.data()); }
+            }
+
+            if (last != __fst::string_view::npos) return p.substr(0, last);
+
+            return p;*/
+        }
+
         bool is_directory(__fst::string_view name) noexcept
         {
 #if __FST_WINDOWS__
             win32::string_type wname = win32::create_wstring(name);
             return win32::is_directory(wname);
+#else
+            return false;
+#endif
+        }
+
+        bool is_file(__fst::string_view name) noexcept
+        {
+#if __FST_WINDOWS__
+            win32::string_type wname = win32::create_wstring(name);
+            return win32::is_file(wname);
 #else
             return false;
 #endif

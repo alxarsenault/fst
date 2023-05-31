@@ -1,0 +1,6 @@
+// is_trivially_copyable
+template <class _T>
+struct is_trivially_copyable : __fst::bool_t<FST_IS_TRIVIALLY_COPYABLE(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivially_copyable_v = __fst::is_trivially_copyable<_T>::value;

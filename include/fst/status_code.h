@@ -171,7 +171,11 @@ FST_BEGIN_NAMESPACE
         server_certificate_not_yet_valid,
         client_certificate_rejected,
         client_certificate_required,
-        cannot_load_from_network
+        cannot_load_from_network,
+
+        runtime_error,
+        syntax_error,
+        script_error
     };
 
     /// @struct status
@@ -332,6 +336,10 @@ FST_BEGIN_NAMESPACE
             case status_code::client_certificate_rejected: return "client certificate rejected";
             case status_code::client_certificate_required: return "client certificate required";
             case status_code::cannot_load_from_network: return "cannot load from network";
+
+            case status_code::runtime_error: return "runtime error";
+            case status_code::syntax_error: return "syntax error";
+            case status_code::script_error: return "script error";
             }
 
             return "unknown";

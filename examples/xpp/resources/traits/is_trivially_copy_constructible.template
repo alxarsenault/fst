@@ -1,0 +1,7 @@
+// is_trivially_copy_constructible
+template <class _T>
+struct is_trivially_copy_constructible
+    : __fst::bool_t<FST_IS_TRIVIALLY_CONSTRUCTIBLE(_T, __fst::add_lvalue_reference_t<const _T>)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivially_copy_constructible_v = __fst::is_trivially_copy_constructible<_T>::value;

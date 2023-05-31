@@ -1,0 +1,10 @@
+/// Get the maximum of n values.
+template <typename _T0, typename _T1, typename... _Ts>
+FST_NODISCARD FST_ALWAYS_INLINE constexpr __fst::common_type_t<_T0, _T1, _Ts...> maximum(_T0 && v1, _T1 && v2, _Ts && ... vs) noexcept
+{
+    if constexpr (sizeof...(_Ts) == 0) { return v2 > v1 ? v2 : v1; }
+    else {
+        return v2 > v1
+            ? maximum(__fst::forward<_T1>(v2), __fst::forward<_Ts>(vs)...)
+            : maximum(__fst::forward<_T0>(v1), __fst::forward<_Ts>(vs)...); }
+}

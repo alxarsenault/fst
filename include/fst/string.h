@@ -73,7 +73,7 @@ FST_BEGIN_NAMESPACE
         {
             if (count <= small_capacity)
             {
-                __fst::memfill(small_data(), c, count);
+                __fst::mem_fill(small_data(), c, count);
                 small_data()[count] = 0;
                 set_small();
             }
@@ -81,7 +81,7 @@ FST_BEGIN_NAMESPACE
             {
                 const size_type alloc_length = count + 1;
                 big_data() = (pointer) _content.second().allocate(alloc_length);
-                __fst::memfill(big_data(), c, count);
+                __fst::mem_fill(big_data(), c, count);
                 big_data()[count] = 0;
                 big_size() = count;
                 big_capacity() = count;
@@ -647,7 +647,7 @@ FST_BEGIN_NAMESPACE
             if (count <= _capacity - _size)
             {
                 __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                __fst::memfill(_data + index, c, count);
+                __fst::mem_fill(_data + index, c, count);
                 _data[new_size] = 0;
                 return *this;
             }
@@ -656,7 +656,7 @@ FST_BEGIN_NAMESPACE
 
             pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            __fst::memfill(new_data + index, c, count);
+            __fst::mem_fill(new_data + index, c, count);
             new_data[new_size] = 0;
 
             deallocate_if_big();
@@ -955,7 +955,7 @@ FST_BEGIN_NAMESPACE
         {
             const size_type alloc_length = count + 1;
             _content.first().data = (pointer) _content.second().allocate(alloc_length);
-            __fst::memfill(_content.first().data, c, count);
+            __fst::mem_fill(_content.first().data, c, count);
             _content.first().data[count] = 0;
             _content.first().size = count;
             _content.first().capacity = count;
@@ -1432,7 +1432,7 @@ FST_BEGIN_NAMESPACE
             if (count <= _capacity - _size)
             {
                 __fst::memmove((void*) (_data + index + count), (const void*) (_data + index), delta * sizeof(value_type));
-                __fst::memfill(_data + index, c, count);
+                __fst::mem_fill(_data + index, c, count);
                 _data[new_size] = 0;
                 return *this;
             }
@@ -1441,7 +1441,7 @@ FST_BEGIN_NAMESPACE
 
             pointer new_data = grow_copy(new_capacity, _size, _data);
             __fst::memmove((void*) (new_data + index + count), (const void*) (new_data + index), delta * sizeof(value_type));
-            __fst::memfill(new_data + index, c, count);
+            __fst::mem_fill(new_data + index, c, count);
             new_data[new_size] = 0;
 
             if (_content.first().data) { _content.second().deallocate(_content.first().data); }

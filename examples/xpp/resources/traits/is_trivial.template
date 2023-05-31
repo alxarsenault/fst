@@ -1,0 +1,6 @@
+// is_trivial
+template <class _T>
+struct is_trivial : __fst::bool_t<FST_IS_TRIVIAL(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivial_v = __fst::is_trivial<_T>::value;

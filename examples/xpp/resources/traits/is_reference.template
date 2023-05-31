@@ -1,0 +1,12 @@
+// is_reference
+template <class _T>
+FST_INLINE_VAR constexpr bool is_reference_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_reference_v<_T&> = true;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_reference_v<_T&&> = true;
+
+template <class _T>
+struct is_reference : __fst::bool_t<__fst::is_reference_v<_T>> {};

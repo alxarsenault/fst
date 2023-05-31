@@ -1,0 +1,2 @@
+// nullptr_t
+using nullptr_t = decltype(nullptr);

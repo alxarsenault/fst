@@ -1,0 +1,6 @@
+// is_base_of
+template <class _Base, class _Derived>
+struct is_base_of : __fst::bool_t<FST_IS_BASE_OF(_Base, _Derived)> {};
+
+template <class _Base, class _Derived>
+FST_INLINE_VAR constexpr bool is_base_of_v = __fst::is_base_of<_Base, _Derived>::value;

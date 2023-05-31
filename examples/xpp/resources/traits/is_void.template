@@ -1,0 +1,6 @@
+// is_void
+template <class _T>
+FST_INLINE_VAR constexpr bool is_void_v = __fst::is_same_v<void, __fst::remove_cv_t<_T>>;
+
+template <class _T> 
+struct is_void : __fst::bool_t<is_void_v<_T>> {};

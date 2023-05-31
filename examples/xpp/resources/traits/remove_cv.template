@@ -1,0 +1,18 @@
+// remove_cv
+template <class _T>
+struct remove_cv { using type = _T; };
+
+template <class _T>
+struct remove_cv<const _T> { using type = _T; };
+
+template <class _T>
+struct remove_cv<volatile _T> { using type = _T; };
+
+template <class _T>
+struct remove_cv<const volatile _T> { using type = _T; };
+
+template <class _T>
+using remove_cv_t = typename __fst::remove_cv<_T>::type;
+
+template <class _T, class _T2>
+using is_same_rcv = __fst::is_same<_T, __fst::remove_cv_t<_T2>>;

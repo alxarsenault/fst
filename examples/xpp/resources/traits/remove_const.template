@@ -1,0 +1,9 @@
+// remove_const
+template <class _T>
+struct remove_const { using type = _T; };
+
+template <class _T>
+struct remove_const<const _T> { using type = _T; };
+
+template <class _T>
+using remove_const_t = typename __fst::remove_const<_T>::type;

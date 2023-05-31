@@ -1,0 +1,18 @@
+/// Clamps a value between a pair of boundary values.
+///
+/// @param v the value to clamp
+/// @param min the left boundary to clamp v to
+/// @param max the right boundary to clamp v to
+///
+/// @return If v compares less than min, returns min, otherwise if max compares less than v,
+///         returns max, otherwise returns v.
+///
+/// @note The behavior is undefined if the value of min is greater than max.
+///
+/// @note As opposed to std::clamp, all parameters and return type are not passed as reference.
+template <typename _T>
+FST_NODISCARD FST_ALWAYS_INLINE constexpr _T clamp(_T v, _T _min, _T _max) noexcept
+{
+    const _T t = v < _min ? _min : v;
+    return t > _max ? _max : t;
+}

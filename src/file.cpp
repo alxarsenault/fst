@@ -18,7 +18,7 @@ FST_BEGIN_NAMESPACE
         this->close();
     }
 
-    FST_NODISCARD bool file::is_open() const noexcept
+    FST_NODISCARD FST_ALWAYS_INLINE bool file::is_open() const noexcept
     {
         return _native != nullptr;
     }

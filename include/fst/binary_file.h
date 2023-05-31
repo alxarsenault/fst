@@ -32,7 +32,7 @@
 #include "fst/vector.h"
 #include "fst/small_vector.h"
 #include "fst/string.h"
-#include "fst/small_string.h"
+#include "fst/stack_string.h"
 #include "fst/memory_range.h"
 #include "fst/file_view.h"
 #include "fst/file.h"
@@ -233,7 +233,7 @@ FST_BEGIN_NAMESPACE
             using memory_category_type = _MemoryCategory;
             using memory_zone_type = _MemoryZone;
 
-            using string_type = __fst::small_string<data_file::chunk_id_size>;
+            using string_type = __fst::stack_string<data_file::chunk_id_size>;
 
             inline __fst::error_result add_chunk(const string_type& name, __fst::byte_view data, bool copy_data, uint16_t udata = 0) noexcept
             {

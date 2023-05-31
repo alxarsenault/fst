@@ -1,0 +1,3 @@
+// is_move_constructible
+template <class _T> struct is_move_constructible : __fst::bool_t<__fst::is_constructible_v<_T, _T>> {};
+template <class _T> FST_INLINE_VAR constexpr bool is_move_constructible_v = __fst::is_move_constructible<_T>::value;

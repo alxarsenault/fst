@@ -1,0 +1,22 @@
+
+set(EXAMPLE_NAME js)
+
+# set(EXAMPLE_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+
+set(EXAMPLE_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+file(GLOB_RECURSE FST_TESTS_HEADER_FILES "${EXAMPLE_SRC_DIR}/*.h")
+file(GLOB_RECURSE FST_TESTS_SOURCE_FILES "${EXAMPLE_SRC_DIR}/*.cpp")
+
+add_executable(${EXAMPLE_NAME} ${FST_TESTS_HEADER_FILES} ${FST_TESTS_SOURCE_FILES})
+target_link_libraries(${EXAMPLE_NAME} PUBLIC fst)
+
+source_group(TREE ${EXAMPLE_SRC_DIR} PREFIX include FILES ${FST_TESTS_HEADER_FILES})
+source_group(TREE ${EXAMPLE_SRC_DIR} PREFIX src FILES ${FST_TESTS_SOURCE_FILES})
+
+target_include_directories(${EXAMPLE_NAME} PUBLIC ${EXAMPLE_SRC_DIR})
+# fst_set_compile_options(${EXAMPLE_NAME} PUBLIC)
+
+# fst_include_config(${EXAMPLE_NAME})
+set_target_properties(${EXAMPLE_NAME} PROPERTIES FOLDER examples)
+
+target_compile_definitions(${EXAMPLE_NAME} PUBLIC -DRESOURCES_DIRECTORY="${CMAKE_CURRENT_SOURCE_DIR}/resources")

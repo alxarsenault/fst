@@ -21,7 +21,7 @@ namespace
 
          
         fst::string base_dir_path = fst::filesystem::join<fst::string>("C:", "Users", "aarsenault", "Desktop", "d0", "d1", "d2");
-          fst::small_string<50> dir_path = fst::filesystem::join < fst::small_string<50> > (base_dir_path, "d3");
+          fst::stack_string<50> dir_path = fst::filesystem::join < fst::stack_string<50> > (base_dir_path, "d3");
 
         REQUIRE(fst::filesystem::create_directories(dir_path));
         REQUIRE(fst::filesystem::is_directory(dir_path));

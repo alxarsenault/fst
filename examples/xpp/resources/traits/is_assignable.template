@@ -1,0 +1,3 @@
+// is_assignable
+template <class _To, class _From> struct is_assignable : __fst::bool_t<FST_IS_ASSIGNABLE(_To, _From)> {};
+template <class _To, class _From> FST_INLINE_VAR constexpr bool is_assignable_v = __fst::is_assignable<_To, _From>::value;

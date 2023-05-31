@@ -1,0 +1,9 @@
+// is_volatile
+template <class _T>
+FST_INLINE_VAR constexpr bool is_volatile_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_volatile_v<volatile _T> = true;
+
+template <class _T>
+struct is_volatile : __fst::bool_t<__fst::is_volatile_v<_T>> {};

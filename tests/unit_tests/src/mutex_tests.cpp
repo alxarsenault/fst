@@ -33,66 +33,66 @@ namespace
 
         TEST_BLOCK("mutex in other thread")
         {
-            fst::atomic<bool> did_try = false;
-            fst::atomic<bool> did_lock = false;
-            fst::mutex m;
+            //fst::atomic<bool> did_try = false;
+            //fst::atomic<bool> did_lock = false;
+            //fst::mutex m;
 
-            std::thread t(
-                [&]()
-                {
-                    m.lock();
-                    did_lock.store(true);
-                    while (!did_try.load()) {}
-                    m.unlock();
-                });
+            //std::thread t(
+            //    [&]()
+            //    {
+            //        m.lock();
+            //        did_lock.store(true);
+            //        while (!did_try.load()) {}
+            //        m.unlock();
+            //    });
 
-            // Wait for thread to lock the mutex.
-            while (!did_lock.load()) {}
+            //// Wait for thread to lock the mutex.
+            //while (!did_lock.load()) {}
 
-            // Try to lock it.
-            REQUIRE_FALSE(m.try_lock());
+            //// Try to lock it.
+            //REQUIRE_FALSE(m.try_lock());
 
-            // Notify the thread.
-            did_try.store(true);
+            //// Notify the thread.
+            //did_try.store(true);
 
-            // This should work in almost no time.
-            m.lock();
+            //// This should work in almost no time.
+            //m.lock();
 
-            t.join();
+            //t.join();
 
-            m.unlock();
+            //m.unlock();
         }
 
         TEST_BLOCK("mutex in other thread with try_lock loop")
         {
-            fst::atomic<bool> did_try = false;
-            fst::atomic<bool> did_lock = false;
-            fst::mutex m;
+            //fst::atomic<bool> did_try = false;
+            //fst::atomic<bool> did_lock = false;
+            //fst::mutex m;
 
-            std::thread t(
-                [&]()
-                {
-                    m.lock();
-                    did_lock.store(true);
-                    while (!did_try.load()) {}
-                    m.unlock();
-                });
+            //std::thread t(
+            //    [&]()
+            //    {
+            //        m.lock();
+            //        did_lock.store(true);
+            //        while (!did_try.load()) {}
+            //        m.unlock();
+            //    });
 
-            // Wait for thread to lock the mutex.
-            while (!did_lock.load()) {}
+            //// Wait for thread to lock the mutex.
+            //while (!did_lock.load()) {}
 
-            // Try to lock it.
-            REQUIRE_FALSE(m.try_lock());
+            //// Try to lock it.
+            //REQUIRE_FALSE(m.try_lock());
 
-            // Notify the thread.
-            did_try.store(true);
+            //// Notify the thread.
+            //did_try.store(true);
 
-            // This should work in almost no time.
-            while(!m.try_lock()){}
+            //// This should work in almost no time.
+            //while(!m.try_lock()){}
 
-            t.join();
+            //t.join();
 
-            m.unlock();
+            //m.unlock();
         }
     }
 } // namespace

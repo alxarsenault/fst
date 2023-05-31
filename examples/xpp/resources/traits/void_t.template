@@ -1,0 +1,3 @@
+/// void_t
+template <class... _Types>
+using void_t = void;

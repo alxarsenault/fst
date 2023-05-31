@@ -1,0 +1,6 @@
+// is_final
+template <class _T>
+struct is_final : __fst::bool_t<FST_IS_FINAL(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_final_v = __fst::is_final<_T>::value;

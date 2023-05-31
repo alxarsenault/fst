@@ -1,0 +1,24 @@
+/// integral_constant
+template <class _T, _T _Value>
+struct integral_constant {
+    static constexpr _T value = _Value;
+    using value_type = _T;
+    using type = integral_constant;
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr operator value_type() const noexcept { return value; }
+    FST_NODISCARD FST_ALWAYS_INLINE constexpr value_type operator()() const noexcept { return value; }
+};
+
+/// size_constant
+template<size_t _Size>
+using size_constant = integral_constant<size_t, _Size>;
+
+/// bool_constant
+template <bool _Value>
+using bool_constant = __fst::integral_constant<bool, _Value>;
+
+template <bool _Value>
+using bool_t = __fst::bool_constant<_Value>;
+
+using true_t = bool_t<true>;
+
+using false_t = bool_t<false>;

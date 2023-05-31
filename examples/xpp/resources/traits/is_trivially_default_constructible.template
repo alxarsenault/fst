@@ -1,0 +1,7 @@
+// is_trivially_default_constructible
+template <class _T>
+struct is_trivially_default_constructible : __fst::bool_t<FST_IS_TRIVIALLY_CONSTRUCTIBLE(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivially_default_constructible_v
+    = __fst::is_trivially_default_constructible<_T>::value;

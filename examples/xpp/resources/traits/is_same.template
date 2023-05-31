@@ -1,0 +1,16 @@
+// is_same
+template <class, class>
+FST_INLINE_VAR constexpr bool is_same_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_same_v<_T, _T> = true;
+
+template <class _T1, class _T2>
+struct is_same : __fst::bool_t<__fst::is_same_v<_T1, _T2>> {};
+
+// is_different
+template <class _T1, class _T2>
+FST_INLINE_VAR constexpr bool is_different_v = !__fst::is_same_v<_T1, _T2>;
+
+template <class _T1, class _T2>
+struct is_different : __fst::bool_t<__fst::is_different_v<_T1, _T2>> {};

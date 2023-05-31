@@ -1,0 +1,6 @@
+// remove_cvref
+template <typename T>
+using remove_cvref = __fst::remove_cv<__fst::remove_reference_t<T>>;
+
+template <typename T>
+using remove_cvref_t = typename __fst::remove_cvref<T>::type;

@@ -1,0 +1,7 @@
+///
+template <typename _T, typename _T1, typename... _Ts>
+FST_NODISCARD FST_ALWAYS_INLINE constexpr bool is_one_of(_T t, _T1 t1, _Ts... ts) noexcept
+{
+    if constexpr (sizeof...(_Ts) == 0) { return t == t1; }
+    else { return (t == t1) || is_one_of(t, ts...); }
+}

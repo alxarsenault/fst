@@ -1,0 +1,18 @@
+// remove_pointer
+template <class _T>
+struct remove_pointer { using type = _T; };
+
+template <class _T>
+struct remove_pointer<_T*> { using type = _T; };
+
+template <class _T>
+struct remove_pointer<_T* const> { using type = _T; };
+
+template <class _T>
+struct remove_pointer<_T* volatile> { using type = _T; };
+
+template <class _T>
+struct remove_pointer<_T* const volatile> { using type = _T; };
+
+template <class _T>
+using remove_pointer_t = typename __fst::remove_pointer<_T>::type;

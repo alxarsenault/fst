@@ -36,8 +36,8 @@ namespace
 
     TEST_CASE("non_zero_number")
     {
-        fst::dsp_float_number<float> d = 0;
-
+        fst::dsp_float_number<float> d = 0.3f;
+        REQUIRE_EQ(d, 0.3f);
         fst::float_number<float> f = 3232.0f;
         REQUIRE_EQ(f, 3232.0f);
 

@@ -1,0 +1,6 @@
+// is_class
+template <class _T>
+struct is_class : __fst::bool_t<FST_IS_CLASS(_T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_class_v = __fst::is_class<_T>::value;

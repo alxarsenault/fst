@@ -323,7 +323,7 @@ FST_BEGIN_NAMESPACE
     template <class T>
     FST_ALWAYS_INLINE void mem_copy(T * dst, const T* src, size_t size) noexcept
     {
-        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy(dst, src, size * sizeof(T)); }
+        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy((void*)dst, (const void*)src, size * sizeof(T)); }
         else
         {
             for (size_t i = 0; i < size; i++)
@@ -334,12 +334,12 @@ FST_BEGIN_NAMESPACE
     }
 
     template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void mem_copy(T * dst, const T* src, size_t size) noexcept
+    FST_ALWAYS_INLINE void aligned_mem_copy(T * dst, const T* src, size_t size) noexcept
     {
         fst_assert(__fst::is_aligned(dst, _Alignment));
         fst_assert(__fst::is_aligned(src, _Alignment));
 
-        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy(dst, src, size * sizeof(T)); }
+        if constexpr (__fst::is_trivially_copyable_v<T>) { __fst::memcpy((void*)dst, (const void*)src, size * sizeof(T)); }
         else
         {
             for (size_t i = 0; i < size; i++)
@@ -380,7 +380,7 @@ FST_BEGIN_NAMESPACE
 
     ///
     template <class T>
-    FST_ALWAYS_INLINE void memfill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
+    FST_ALWAYS_INLINE void mem_fill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
     {
         for (size_t i = 0; i < size; i++)
         {
@@ -390,9 +390,10 @@ FST_BEGIN_NAMESPACE
 
     ///
     template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void memfill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
+    FST_ALWAYS_INLINE void aligned_mem_fill(T * dst, __fst::cref_t<T> value, size_t size) noexcept
     {
         fst_assert(__fst::is_aligned(dst, _Alignment));
+
         for (size_t i = 0; i < size; i++)
         {
             dst[i] = value;
@@ -414,10 +415,21 @@ FST_BEGIN_NAMESPACE
 
     ///
     template <size_t _Alignment, class T>
-    FST_ALWAYS_INLINE void mem_zero(T * dst, size_t size) noexcept
+    FST_ALWAYS_INLINE void aligned_mem_zero(T * dst, size_t size) noexcept
     {
         fst_assert(__fst::is_aligned(dst, _Alignment));
-        __fst::memset(dst, 0, size * sizeof(T));
+        __fst::memset((void*)dst, 0, size * sizeof(T));
+    }
+
+    template <class _T, class _U>
+    FST_ALWAYS_INLINE void move_construct_element(_T & dst, _U && src) noexcept
+    {
+        if constexpr (__fst::is_trivially_copyable_v<_T>)
+        {
+            if constexpr (__fst::is_trivial_cref_v<_T> || !__fst::is_same_rcv<_T, _U>::value) { dst = src; }
+            else { __fst::memcpy((void*)&dst, (const void*)&src, sizeof(_T)); }
+        }
+        else { fst_placement_new(&dst) _T(__fst::forward<_U>(src)); }
     }
 
     template <class _T>
@@ -440,7 +452,7 @@ FST_BEGIN_NAMESPACE
         const size_t size = src_last - src_first;
         for (size_t i = 0; i < size; i++)
         {
-            __fst::memswap(dst[i], src_first[i]);
+            __fst::mem_swap(dst[i], src_first[i]);
         }
 
         return dst;
@@ -596,7 +608,7 @@ FST_BEGIN_NAMESPACE
         uint8_t* data = (uint8_t*) &value;
         for (uint8_t *begin = data, *end = data + end_offset; begin < end;)
         {
-            __fst::memswap(*begin++, *end--);
+            __fst::mem_swap(*begin++, *end--);
         }
 
         return *(T*) data;

@@ -1,0 +1,7 @@
+// is_copy_assignable
+template <class _T>
+struct is_copy_assignable
+    : __fst::bool_t<FST_IS_ASSIGNABLE(__fst::add_lvalue_reference_t<_T>, __fst::add_lvalue_reference_t<const _T>)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_copy_assignable_v = __fst::is_copy_assignable<_T>::value;

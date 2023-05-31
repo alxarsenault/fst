@@ -29,7 +29,7 @@ namespace
         }
 
         {
-            fst::function<void(int)> f([](int a) { /*fst::print("A", a);*/ });
+            fst::function<void(int)> f([](int a) { REQUIRE(a == 33); });
             f(33);
         }
 
@@ -49,7 +49,16 @@ namespace
             {
                 int b = 35;
                 fst::array<char, 1024> data;
-                fst::function<void(int)> f([=](int a) { /*fst::print("A", a, b, data[0]);*/ });
+                data[32] = 90;
+
+                fst::function<void(int)> f(
+                    [=](int a)
+                    {
+                        REQUIRE(data[32] == 90);
+                        FST_TODO("Fix this")
+                        //REQUIRE(b == 35);
+                        REQUIRE(a == 33);
+                    });
                 f2 = f;
             }
             f2(33);

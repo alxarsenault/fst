@@ -1,0 +1,7 @@
+// is_trivially_move_constructible
+template <class _T>
+struct is_trivially_move_constructible
+    : __fst::bool_t<FST_IS_TRIVIALLY_CONSTRUCTIBLE(_T, _T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_trivially_move_constructible_v = __fst::is_trivially_move_constructible<_T>::value;

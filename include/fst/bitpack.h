@@ -134,7 +134,7 @@ FST_BEGIN_NAMESPACE
 
         ///
         template <size_t I>
-        FST_NODISCARD FST_ALWAYS_INLINE void set(value_type_at<I> v) noexcept
+        FST_ALWAYS_INLINE void set(value_type_at<I> v) noexcept
         {
             static_assert(I < sizeof...(_Args), "Wronf idsdsdsdsdsng");
             fst_assert(type_at<I>::in_range(v));

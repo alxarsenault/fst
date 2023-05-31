@@ -1,0 +1,5 @@
+// is_array
+template <class _T> FST_INLINE_VAR constexpr bool is_c_array_v = false;
+template <class _T, size_t _Size> FST_INLINE_VAR constexpr bool is_c_array_v<_T[_Size]> = true;
+template <class _T> FST_INLINE_VAR constexpr bool is_c_array_v<_T[]> = true;
+template <class _T> struct is_c_array : __fst::bool_t<__fst::is_c_array_v<_T>> {};

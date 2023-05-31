@@ -1,0 +1,9 @@
+// is_lvalue_reference
+template <class _T>
+FST_INLINE_VAR constexpr bool is_lvalue_reference_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_lvalue_reference_v<_T&> = true;
+
+template <class _T>
+struct is_lvalue_reference : __fst::bool_t<__fst::is_lvalue_reference_v<_T>> {};

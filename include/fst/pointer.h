@@ -28,7 +28,7 @@
 #include "fst/memory.h"
 #include "fst/traits.h"
 #include "fst/iterator.h"
-#include "fst/tuple.h"
+#include "fst/pair.h"
 
 FST_BEGIN_NAMESPACE
 

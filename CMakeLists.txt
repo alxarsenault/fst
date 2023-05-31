@@ -1,20 +1,26 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-# set_property(GLOBAL PROPERTY EXPORT_COMPILE_COMMANDS ON)
+set_property(GLOBAL PROPERTY EXPORT_COMPILE_COMMANDS ON)
+set_property(GLOBAL PROPERTY CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+set(CMAKE_SUPPRESS_REGENERATION true)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/tools/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake")
 include(fst_version)
 include(fst_compile_options)
 include(fst_platform)
 
 # Parse version file.
-set(FST_VERSION_FILE_PATH "${CMAKE_SOURCE_DIR}/tools/version.txt")
+set(FST_VERSION_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/version.txt")
 fst_parse_version(${FST_VERSION_FILE_PATH})
 
 # Setup fst project.
-project("fst" VERSION ${FST_VERSION_MAJOR}.${FST_VERSION_MINOR}.${FST_VERSION_PATCH} DESCRIPTION "Generic C++ tools"
-        HOMEPAGE_URL "https://github.com/alxarsenault/fst")
+project(
+    "fst" #
+    VERSION ${FST_VERSION_MAJOR}.${FST_VERSION_MINOR}.${FST_VERSION_PATCH} #
+    DESCRIPTION "Generic C++ tools" #
+    HOMEPAGE_URL "https://github.com/alxarsenault/fst")
 
 # Options
 option(FST_BUILD_TESTS "Build tests" ON)
@@ -83,7 +89,7 @@ if(FST_USE_CUSTOM_CONFIG)
 
 else()
     set(FST_DEFAULT_CONFIG_DEFAULT TRUE)
-set(FST_TRACE_LEVEL 5)
+    set(FST_TRACE_LEVEL 5)
     # namespace
     set(FST_NAMESPACE "fst")
 
@@ -93,9 +99,7 @@ set(FST_TRACE_LEVEL 5)
     #
     set(FST_CONFIG_ASSERT_HOOK "#define FST_ASSERT_HOOK(Expr, File, Line) FST_UNUSED(Expr)")
 
-    # set(FST_USE_SIMD_128 OFF)
-    # set(FST_USE_SIMD_256 OFF)
-    # set(FST_USE_SIMD_512 OFF)
+    # set(FST_USE_SIMD_128 OFF) set(FST_USE_SIMD_256 OFF) set(FST_USE_SIMD_512 OFF)
 
     set(FST_USE_PROFILER ${FST_CONFIG_USE_PROFILER})
     set(FST_PROFILER_WARNING_IS_ERROR ${FST_CONFIG_PROFILER_WARNING_IS_ERROR})
@@ -118,16 +122,20 @@ set(FST_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 file(GLOB_RECURSE FST_HEADER_FILES "${FST_INCLUDE_DIRECTORY}/fst/*.h")
 file(GLOB_RECURSE FST_SOURCE_FILES "${FST_SOURCE_DIRECTORY}/*.cpp" "${FST_SOURCE_DIRECTORY}/*.h")
+file(GLOB_RECURSE FST_TEMPLATE_FILES "${FST_INCLUDE_DIRECTORY}/fst/*.template")
 
 source_group(TREE ${FST_INCLUDE_DIRECTORY} PREFIX include FILES ${FST_HEADER_FILES})
+source_group(TREE ${FST_INCLUDE_DIRECTORY} PREFIX include FILES ${FST_TEMPLATE_FILES})
 source_group(TREE ${FST_SOURCE_DIRECTORY} PREFIX src FILES ${FST_SOURCE_FILES})
 
 # fst static lib
-add_library(${FST_STATIC_LIB_NAME} STATIC ${FST_HEADER_FILES} ${FST_SOURCE_FILES})
+add_library(${FST_STATIC_LIB_NAME} STATIC ${FST_HEADER_FILES} ${FST_SOURCE_FILES} ${FST_TEMPLATE_FILES})
 target_include_directories(${FST_STATIC_LIB_NAME} PUBLIC ${FST_INCLUDE_DIRECTORY})
 target_compile_features(${FST_STATIC_LIB_NAME} PUBLIC ${FST_CPP_VERSION})
 
-fst_set_compile_options(${FST_STATIC_LIB_NAME} PUBLIC)
+fst_set_compile_options(${FST_STATIC_LIB_NAME} PRIVATE)
+
+# fst_set_compile_options(${FST_STATIC_LIB_NAME} PUBLIC)
 fst_add_version_definition(${FST_STATIC_LIB_NAME})
 fst_include_config(${FST_STATIC_LIB_NAME})
 
@@ -137,7 +145,7 @@ endif()
 
 fst_link_dependencies(${FST_STATIC_LIB_NAME})
 
-# Clang-format
+# clang-format
 if(FST_CLANG_FORMAT_TARGET)
     include(fst_clang_format)
     target_clangformat_setup(${FST_STATIC_LIB_NAME})
@@ -159,5 +167,3 @@ endif()
 if(FST_BUILD_PRIVATE)
     add_subdirectory(private)
 endif()
-
-set(CMAKE_SUPPRESS_REGENERATION true)

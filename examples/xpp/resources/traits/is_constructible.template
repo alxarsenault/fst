@@ -1,0 +1,6 @@
+// is_constructible
+template <class _T, class... _Args>
+struct is_constructible : __fst::bool_t<FST_IS_CONSTRUCTIBLE(_T, _Args...)> {};
+
+template <class _T, class... _Args>
+FST_INLINE_VAR constexpr bool is_constructible_v = __fst::is_constructible<_T, _Args...>::value;

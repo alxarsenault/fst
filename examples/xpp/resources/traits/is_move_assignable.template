@@ -1,0 +1,6 @@
+// is_move_assignable
+template <class _T>
+struct is_move_assignable : __fst::bool_t<FST_IS_ASSIGNABLE(__fst::add_lvalue_reference_t<_T>, _T)> {};
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_move_assignable_v = __fst::is_move_assignable<_T>::value;

@@ -1,0 +1,18 @@
+// is_pointer
+template <class>
+FST_INLINE_VAR constexpr bool is_pointer_v = false;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_pointer_v<_T*> = true;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_pointer_v<_T* const> = true;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_pointer_v<_T* volatile> = true;
+
+template <class _T>
+FST_INLINE_VAR constexpr bool is_pointer_v<_T* const volatile> = true;
+
+template <class _T>
+struct is_pointer : __fst::bool_t<__fst::is_pointer_v<_T>> {};

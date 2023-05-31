@@ -1,0 +1,12 @@
+// remove_reference
+template <class _T>
+struct remove_reference { using type = _T; };
+
+template <class _T>
+struct remove_reference<_T&> { using type = _T; };
+
+template <class _T>
+struct remove_reference<_T&&> { using type = _T; };
+
+template <class _T>
+using remove_reference_t = typename __fst::remove_reference<_T>::type;

@@ -36,7 +36,7 @@ FST_BEGIN_NAMESPACE
         FST_NODISCARD static constexpr bool constraint(T) noexcept { return true; }
     };
 
-#if __FST_DEBUG_BUILD__ == 0
+#if __FST_DEBUG_BUILD__
     template <class T, class _Constraint = arithmetic_number_constraint<T>>
     class number
     {

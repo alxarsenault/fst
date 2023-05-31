@@ -1,0 +1,6 @@
+// is_convertible
+template <class _From, class _To>
+struct is_convertible : __fst::bool_t<FST_IS_CONVERTIBLE_TO(_From, _To)> {};
+
+template <class _From, class _To>
+FST_INLINE_VAR constexpr bool is_convertible_v = __fst::is_convertible<_From, _To>::value;

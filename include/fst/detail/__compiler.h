@@ -97,6 +97,15 @@
 
 #define FST_MESSAGE(msg) FST_PRAGMA(message(msg))
 
+#define __FST_SYSTEM_HEADER__ FST_PRAGMA(system_header)
+
+//#pragma system_header
+
+//#if defined(__GNUC__)
+//// We need to silence "empty __VA_ARGS__ warning", and using just _Pragma does not work
+//#pragma GCC system_header
+//#endif
+
 #elif __FST_CLANG__
 #define FST_PRAGMA_(x) _Pragma(#x)
 #define FST_PRAGMA(x) FST_PRAGMA_(x)
@@ -107,6 +116,7 @@
 #define FST_DISABLE_ALL_WARNINGS_BEGIN FST_PRAGMA_PUSH() FST_PRAGMA_DISABLE_WARNING_CLANG("-Weverything")
 #define FST_DISABLE_ALL_WARNINGS_END FST_PRAGMA_POP()
 #define FST_MESSAGE(desc)
+#define __FST_SYSTEM_HEADER__
 
 #elif __FST_GCC__
 #define FST_PRAGMA_(x) _Pragma(#x)
@@ -119,6 +129,7 @@
     FST_PRAGMA_PUSH() FST_PRAGMA_DISABLE_WARNING_GCC("-Wall") FST_PRAGMA_DISABLE_WARNING_GCC("-Wextra") FST_PRAGMA_DISABLE_WARNING_GCC("-Wunused-value")
 #define FST_DISABLE_ALL_WARNINGS_END FST_PRAGMA_POP()
 #define FST_MESSAGE(desc)
+#define __FST_SYSTEM_HEADER__
 
 #else
 #define FST_PRAGMA_(x)
@@ -129,6 +140,8 @@
 #define FST_DISABLE_ALL_WARNINGS_BEGIN
 #define FST_DISABLE_ALL_WARNINGS_END
 #define FST_MESSAGE(desc)
+#define __FST_SYSTEM_HEADER__
+
 #endif //
 
 #ifndef FST_PRAGMA_DISABLE_WARNING_MSVC
@@ -146,3 +159,10 @@
 // clang-format off
 #define FST_TODO(desc) FST_MESSAGE("fst - [TODO] : " __FILE__ "(" FST_STRINGIFY(__LINE__) ") : " desc)
 // clang-format on
+
+// FST_SYSTEM_HEADER does nothing when __FST_DEV_BUILD__ == 1
+#if defined(__FST_DEV_BUILD__) && __FST_DEV_BUILD__
+#define FST_SYSTEM_HEADER
+#else
+#define FST_SYSTEM_HEADER __FST_SYSTEM_HEADER__
+#endif

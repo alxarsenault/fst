@@ -400,7 +400,7 @@ FST_BEGIN_NAMESPACE
         };
 
         template <class _Ty, class DstType>
-        static inline constexpr _Ty clamp(_Ty value)
+        static inline constexpr DstType clamp(_Ty value)
         {
             return value > audio_format_range<DstType>::max()   ? audio_format_range<DstType>::max()
                    : value < audio_format_range<DstType>::min() ? audio_format_range<DstType>::min()
