@@ -49,16 +49,32 @@ FST_BEGIN_NAMESPACE
 #endif
     }
 
+    /// Returns the number of characters in the string, not including the terminating null character.
+    /// If there's no null terminator within the first `max_length` bytes of the string,
+    /// then `max_length` is returned to indicate the error condition.
+    /// null-terminated strings have lengths that are strictly less than `max_length`.
+    ///
+    /// strnlen is not a replacement for strlen, strnlen is intended to be used only to calculate
+    /// the size of incoming untrusted data in a buffer of known size�for example, a network packet.
+    /// strnlen calculates the length but doesn't walk past the end of the buffer if the string is unterminated.
+    /// For other situations, use strlen.
     FST_NODISCARD FST_ALWAYS_INLINE size_t strnlen(const char* str, size_t max_length) noexcept
     {
+#if __FST_WINDOWS__
         return ::strnlen(str, max_length);
+
+#elif __FST_CLANG__
+        if (const char* end = __builtin_char_memchr(str, 0, max_length)) { return (size_t) (end - str); }
+        return max_length;
+#else
+        if (const char* end = ::memchr(str, 0, max_length)) { return (size_t) (end - str); }
+        return max_length;
+#endif
     }
-    
 
     ///
     FST_NODISCARD FST_ALWAYS_INLINE int strncmp(const char* a, const char* b, size_t size) noexcept
     {
-
 #if __FST_CLANG__
         return __builtin_strncmp(a, b, size);
 #else
@@ -303,8 +319,6 @@ FST_BEGIN_NAMESPACE
             return (const char_type*) ::memchr(_First, _Ch, _Count);
 #endif
         }
-
-
     };
 
     template <>
@@ -2058,6 +2072,5 @@ FST_BEGIN_NAMESPACE
 
     template <class _Container, __fst::enable_if_t<__fst::is_container_v<_Container>, int> = 0>
     line_range(const _Container&) -> line_range<__fst::container_data_type_t<_Container>>;
-   
 
 FST_END_NAMESPACE
